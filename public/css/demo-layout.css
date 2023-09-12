@@ -1,0 +1,374 @@
+/**
+ * Copyright 2023 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@font-face {
+  font-family: "Product Sans";
+  font-style: normal;
+  font-weight: 300;
+  src: local("Open Sans"), local("OpenSans"), url(https://fonts.gstatic.com/s/productsans/v5/HYvgU2fE2nRJvZ5JFAumwegdm0LZdjqr5-oayXSOefg.woff2) format("woff2");
+}
+html, body {
+  font: 300 16px/24px "Product Sans", "Roboto", "Noto Sans", "Noto Sans JP", "Noto Sans KR", "Noto Naskh Arabic", "Noto Sans Thai", "Noto Sans Hebrew", "Noto Sans Bengali", "sans-serif";
+  background-color: #e8eaed;
+  color: #595a5a;
+}
+
+p, ul, li, a, button, .alert {
+  font: 400 16px/24px "Roboto", "Noto Sans", "Noto Sans JP", "Noto Sans KR", "Noto Naskh Arabic", "Noto Sans Thai", "Noto Sans Hebrew", "Noto Sans Bengali", "sans-serif";
+}
+
+p {
+  margin: 16px 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+}
+
+.navbar {
+  padding: 0 24px;
+  font-size: 14px;
+  border-bottom: 1px solid #bebfbf;
+  background-color: #fff;
+  box-shadow: none;
+}
+
+.navbar-brand {
+  padding: 12px;
+}
+.navbar-brand img {
+  width: 200px;
+}
+
+.primary-nav {
+  z-index: 100;
+}
+.primary-nav .nav-link {
+  padding: 12px 0;
+  padding-left: 0;
+  padding-right: 0;
+  margin: 0 14px;
+  color: #595a5a;
+  font: 300 16px/24px "Product Sans", "Roboto", "Noto Sans", "Noto Sans JP", "Noto Sans KR", "Noto Naskh Arabic", "Noto Sans Thai", "Noto Sans Hebrew", "Noto Sans Bengali", "sans-serif";
+  font-size: 14px;
+}
+.primary-nav .dropdown-menu {
+  border-radius: 2px;
+  margin:0;
+}
+.primary-nav .dropdown-menu .dropdown-item {
+  font: 300 16px/24px "Product Sans", "Roboto", "Noto Sans", "Noto Sans JP", "Noto Sans KR", "Noto Naskh Arabic", "Noto Sans Thai", "Noto Sans Hebrew", "Noto Sans Bengali", "sans-serif";
+  font-size: 14px;
+  color: #595a5a !important;
+}
+
+.documentation-nav {
+  margin-top: 50px;
+  -webkit-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+  position: fixed;
+  padding-left: 0;
+  width: 100%;
+  z-index: 1;
+}
+.documentation-nav .nav-item {
+  margin-left: 10px;
+}
+.documentation-nav .nav-item .nav-link {
+  font-weight: 400;
+  padding: 12px;
+  padding-left: 0;
+  padding-right: 0;
+  margin: 0 10px;
+  font: 300 16px/24px "Product Sans", "Roboto", "Noto Sans", "Noto Sans JP", "Noto Sans KR", "Noto Naskh Arabic", "Noto Sans Thai", "Noto Sans Hebrew", "Noto Sans Bengali", "sans-serif";
+  font-size: 14px;
+  color: #595a5a;
+}
+
+.nav-tabs {
+  border: 1px solid #dcdbdb;
+}
+.nav-tabs li.nav-item {
+  margin: 0 !important;
+}
+.nav-tabs li.nav-item .nav-link {
+  border-radius: 0;
+  border: 0;
+  padding: 12px 24px;
+  color: #595a5a;
+}
+.nav-tabs li.nav-item .nav-link.active, .nav-tabs li.nav-item .nav-link.active:hover {
+  border-bottom: 2px solid #4285f4 !important;
+  margin-bottom: 0;
+  color: #4285f4;
+}
+
+.auth .auth-content {
+  max-width: 500px;
+  padding: 40px;
+  background-color: #fff;
+  -webkit-box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+  border-radius: 2px;
+  margin-top: 80px;
+  margin-bottom: 24px;
+}
+.auth .auth-content .btn-auth {
+  width: 100%;
+  margin: 10px 0;
+}
+.auth .auth-content .quicker-access {
+  color: #848484;
+}
+.auth .auth-content .abcRioButtonContents {
+  margin-left: -20px;
+}
+
+.docs h1 {
+  font-size: 32px;
+  line-height: 40px;
+  margin-bottom: 24px;
+}
+.docs h2 {
+  font-size: 24px;
+  line-height: 32px;
+  margin: 48px 0 24px;
+}
+.docs h3 {
+  font-size: 20px;
+  line-height: 30px;
+  margin: 32px 0 16px;
+}
+.docs h3.card-title {
+  margin-top: 0;
+}
+.docs .code-sample-list li.disabled a {
+  color: #a3a3a3;
+}
+.docs .devsite-content {
+  margin-top: 50px;
+}
+.docs .devsite-content .devsite-content-details {
+  max-width: 1000px;
+  padding: 40px;
+  margin:0 auto;
+  background-color: #fff;
+  -webkit-box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+  border-radius: 2px;
+  margin-top:20px;
+}
+.docs .devsite-content .devsite-content-details .btn-refresh {
+  color:#fff;
+  margin: 10px 0;
+}
+.docs .devsite-content .devsite-content-details ul li, .docs .devsite-content .devsite-content-details ol li {
+  margin: 12px 0;
+}
+.docs .developer-site-nav {
+  width: 260px;
+  height: 100%;
+  background-color: #fff;
+  overflow: auto;
+  position: fixed;
+  z-index:99;
+  -webkit-box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+  padding-bottom: 50px;
+}
+.docs .developer-site-nav .developer-site-nav-list {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 20px;
+}
+.docs .developer-site-nav .developer-site-nav-list li {
+  font-size: 13px;
+  display: block;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  padding: 0 0 0 24px;
+  margin-right: 12px;
+}
+.docs .developer-site-nav .developer-site-nav-list li a {
+  display: block;
+  font-size: 13px;
+  line-height: 16px;
+  color: #2d2d2d;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+.docs .developer-site-nav .developer-site-nav-list li.current {
+  background-color: #e8f0fe;
+}
+.docs .developer-site-nav .developer-site-nav-list li.current a {
+  font-weight: 500;
+  color: #4285f4;
+}
+.docs .developer-site-nav .developer-site-nav-list li.disabled {
+  background-color: #f2f2f3;
+  margin-right: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.docs .developer-site-nav .developer-site-nav-list li.disabled a {
+  font-weight: 300;
+  font-size: 0.9em;
+  color: #595a5a;
+}
+.docs .developer-site-nav .developer-site-nav-list li:hover {
+  background-color: #f2f2f3;
+}
+.docs .developer-site-nav .developer-site-nav-list li.developer-site-nav-header,
+.docs .developer-site-nav h3.developer-site-nav-header {
+  font: 400 16px/24px "Roboto", "Noto Sans", "Noto Sans JP", "Noto Sans KR", "Noto Naskh Arabic", "Noto Sans Thai", "Noto Sans Hebrew", "Noto Sans Bengali", "sans-serif";
+  font-size: 13px;
+  line-height: 16px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  font-weight: 700;
+}
+.docs .developer-site-nav .developer-site-nav-list li.developer-site-nav-header:hover,
+.docs .developer-site-nav h3.developer-site-nav-header:hover {
+  background-color: transparent;
+}
+
+.docs .developer-site-nav h3.developer-site-nav-header {
+  padding-left: 24px;
+  margin: 20px auto 0 auto;
+}
+
+.docs .developer-site-nav h3.developer-site-nav-header + ul.developer-site-nav-list {
+  margin-top:0;
+}
+
+.docs .developer-site-nav hr {
+  margin: 0;
+}
+
+.docs .devsite-content-container{
+  margin-left:260px;
+  width: calc(100% - 260px);
+  float:left;
+}
+
+.alert-primary {
+  color: #01579b;
+  background-color: #e1f5fe;
+}
+
+.full-alert {
+  border: 0;
+  border-radius: 0;
+  padding: 16px 40px;
+  margin: 0 -40px 40px -40px;
+}
+.full-alert span {
+  display: inline-block;
+  vertical-align: middle;
+}
+.full-alert span .material-icons{
+  margin-right:5px;
+}
+
+pre.prettyprint{
+  width:100%;
+  padding:20px;
+}
+
+.material-icons{
+  font-size:16px;
+}
+
+
+/* Responsive */
+@media (min-width: 992px) {
+  .developer-site-nav{
+    display:block;
+  }
+}
+
+@media screen and (max-width: 1268px) {
+  .docs .devsite-content .devsite-content-details {
+    margin-top:0;
+  }
+}
+@media screen and (max-width: 992px) {
+  .docs .devsite-content-container{
+    margin-left:0;
+    width: 100%;
+    float:left;
+  }
+  .docs .devsite-content .devsite-content-details {
+    margin-top:0;
+  }
+  .developer-site-nav{
+    display:none;
+  }
+
+  .developer-site-nav.displayed {
+    display: block;
+  }
+
+  .dropdown-menu{
+    border:0;
+    padding:0;
+    margin:0;
+  }
+  .mr-auto{
+    padding-bottom:10px;
+  }
+}
+
+
+/* === Adding AMP viewer border === */
+
+#amp-viewer {
+  border-width:medium;
+  border-style: solid;
+  position: relative;
+  border-radius: 15px;
+  height: 160mm;
+  width: 75mm;
+}
+
+/* === Adding Card CSS and Button correctif font === */
+
+
+.card {
+  font-weight: 400;
+  border: 0;
+  -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
+}
+
+button.swg-smart-button {
+  font-size: 14px;
+}
+
+pre code.hljs {
+  border-radius: 0.5rem;
+}
+
+.displayed { 
+  display: block;
+}
