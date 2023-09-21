@@ -1,0 +1,49 @@
+{
+  "name": "reader-revenue-manager-demo",
+  "version": "0.1.0",
+  "description": "A sample app that illustrates using the Reader Revenue Manager suite of APIs",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "local": "env $(cat .env) node server.js"
+  },
+  "dependencies": {
+    "@google-cloud/datastore": "^7.5.1",
+    "@google-cloud/firestore": "^6.5.0",
+    "@google-cloud/pubsub": "^3.7.0",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-handlebars": "^7.0.2",
+    "express-oas-generator": "github:mpashkovskiy/express-oas-generator",
+    "google-auth-library": "^8.7.0",
+    "googleapis": "^113.0.0",
+    "highlight.js": "^11.8.0",
+    "jsonwebtoken": "^9.0.0",
+    "marked": "^9.0.3",
+    "marked-admonition-extension": "^0.0.4",
+    "marked-custom-heading-id": "^2.0.4",
+    "marked-engine": "^0.2.0",
+    "marked-highlight": "^2.0.6",
+    "node-fetch": "^3.3.1",
+    "redirect-ssl": "^3.0.0"
+  },
+  "engines": {
+    "node": "18.x"
+  },
+  "repository": {
+    "url": "https://github.com/reader-revenue/reader-revenue-demo"
+  },
+  "type": "module",
+  "license": "Apache 2.0",
+  "keywords": [
+    "node",
+    "express",
+    "reader-revenue"
+  ],
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.6.0",
+    "eslint": "^8.49.0",
+    "jest": "^29.6.4"
+  }
+}

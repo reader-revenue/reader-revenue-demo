@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<!--
+ Copyright 2023 Google LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<html lang="en">
+<head>
+  <base href="/" />
+  <title>Reader Revenue Manager: Demo</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  {{#data.env.GOOGLE_SITE_VERIFICATION}}
+  <meta name="google-site-verification" content="{{this}}" />
+  {{/data.env.GOOGLE_SITE_VERIFICATION}}
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <link rel="shortcut icon" href="https://www.gstatic.com/devrel-devsite/prod/v35095b53655653106712feb44f96c6929ce012ae38486ad7db1de265cbd9b7ec/developers/images/favicon.png">
+
+  <!-- Noto Sans and Roboto -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans|Noto+Sans+JP|Noto+Sans+KR|Noto+Sans+TC|Noto+Serif|Noto+Serif+JP|Roboto:300,300i,400,400i,500,500i,700,700i,900,900i&display=swap">
+
+  <!-- Material Design [unpkg.com belongs to Google and many devs are using it in g3, maybe we can ignore the error messages] -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
+  <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+
+  <!-- Bootstrap hosted on gStatic -->
+  <link href="https://www.gstatic.com/external_hosted/twitter_bootstrap_css/v4/bootstrap.css" rel="stylesheet">
+
+  <!-- Google APIs -->
+  <script src="https://apis.google.com/js/platform.js"></script>
+  {{#data.env.OAUTH_CLIENT_ID}}
+  <meta name="google-signin-client_id" content="{{this}}">
+  {{/data.env.OAUTH_CLIENT_ID}}
+
+  <!-- Reader Revenue Demo Site CSS : styles.css -->
+  <link rel="stylesheet" href="css/demo-layout.css" />
+  <link rel="stylesheet" href="css/admonition.css" />
+
+  <!-- Highlight.js code-block stylesheet via https://highlightjs.org/usage/#importing-the-library -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
+
+  {{#data.script}}
+
+  <script defer type="module" src="{{this}}"></script>
+
+  {{/data.script}}
+
+  {{> "structured-data-markup"}}
+
+  <script defer type="module" src="js/demo-layout.js"></script>
+
+</head>
+
+<body class="docs subscribe-with-google">
+  <!--  Top Navigation Bar -->
+  <nav class="navbar navbar-expand-lg fixed-top primary-nav">
+    <button class="navbar-toggler side-menu">
+      <span class="material-icons">menu</span>
+    </button>
+    <a class="navbar-brand" href="/">Reader Revenue Manager: Demo</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basic-example-nav"
+      aria-controls="basic-example-nav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="material-icons">arrow_drop_down</span>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="basic-example-nav">
+      <ul class="navbar-nav mr-auto" style="display:none;">
+       <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Documentation</a>
+          <div class="dropdown-menu dropdown-primary">
+            <a class="dropdown-item" target="_blank" href="https://developers.google.com/news/subscribe/guides/how-subscribe-with-google-works">How Subscribe with Google works [DevSite]</a>
+            <a class="dropdown-item" target="_blank" href="https://github.com/subscriptions-project/swg-js/tree/master/docs">subscriptions-project/swg-js [GitHub]</a>
+            <a class="dropdown-item" target="_blank" href="https://amp.dev/documentation/components/amp-subscriptions/">&lt;amp-subscriptions/> [amp.dev]</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Developer Tools</a>
+          <div class="dropdown-menu dropdown-primary">
+            <a class="dropdown-item" target="_blank" href="https://search.google.com/structured-data/testing-tool/u/0/">Structured Data Testing Tool</a>
+            <a class="dropdown-item" target="_blank" href="https://search.google.com/test/amp">AMP Testing Tool</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Full Examples</a>
+          <div class="dropdown-menu dropdown-primary">
+            <a class="dropdown-item" target="_blank" href="https://scenic-2017.appspot.com/">[Scenic App] Subscribe with Google</a>
+            <a class="dropdown-item" href="html/">[Coming Soon] Contribute with Google</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="content devsite-content">
+      <div class="developer-site-nav">
+
+        {{#each data.nav}}
+        <hr />
+          <h3 class="developer-site-nav-header developer-site-nav-title" >{{this.section}}</h3>
+          <ul class="developer-site-nav-list">
+            {{#each this.links}}
+              <li id="{{this.id}}" class="{{this.current}}">
+                <a href="{{this.url}}">
+                  {{this.label}}
+                </a>
+              </li>
+            {{/each}}
+          </ul>
+        {{/each}}
+      </div>
+
+    <div class="devsite-content-container">
+        <div class="devsite-content-details">
+         {{{body}}}
+        </div>
+    </div>
+
+  </div>
+
+  <!-- Footer
+  TODO: Add in terms into the footer?
+  <footer class="page-footer font-small white pt-4">
+    <div class="container-fluid text-center text-md-left"></div>
+  </footer>
+ -->
+</body>
+</html>
