@@ -22,12 +22,14 @@ import readme from './app/routes/readme.js';
 // Proxy handles https and reverse proxy settings for running locally
 import proxy from './middleware/proxy.js';
 import ssl from './middleware/ssl.js';
+import overrides from './middleware/overrides.js'
 
 // Configure app globals
 const app = express();
 app.set('trust proxy', 'loopback');
 app.use(proxy);
 app.use(ssl);
+app.use(overrides);
 
 app.use('/readme', readme);
 app.use('/', readerRevenue);
