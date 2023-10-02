@@ -4,7 +4,8 @@
 
 ---
 
-> [!NOTE] This application can be previewed on the live
+> [!NOTE] 
+> This application can be previewed on the live
 > [reader-revenue-demo](https://reader-revenue-demo.ue.r.appspot.com/) site.
 
 ## Installation and usage
