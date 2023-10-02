@@ -15,21 +15,21 @@
  */
 
 const overrides = (req, res, next) => {
-  
-    const validOverrides = process.env.ENV_OVERRIDES.split(',');
+  const validOverrides = process.env.ENV_OVERRIDES.split(',');
 
-    for (let override of validOverrides) {
-        try {
-            if(override in req.query) {
-                process.env[override] = req.query[override];
-                console.log(`successfully set ${override} to ${req.query[override]}`)
-            }
-        } catch (e) {
-            //override not set, do nothing
-        }
+  for (let override of validOverrides) {
+    try {
+      if (override in req.query) {
+        process.env[override] = req.query[override];
+        console.log(`
+                    successfully set ${override} to ${req.query[override]}`);
+      }
+    } catch (e) {
+      // override not set, do nothing
     }
+  }
 
-    next();
+  next();
 };
-  
+
 export default overrides;

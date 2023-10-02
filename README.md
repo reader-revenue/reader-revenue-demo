@@ -4,10 +4,8 @@
 
 ---
 
-> [!NOTE]
-> This application can be previewed on the live 
+> [!NOTE] This application can be previewed on the live
 > [reader-revenue-demo](https://reader-revenue-demo.ue.r.appspot.com/) site.
-
 
 ## Installation and usage
 
@@ -71,6 +69,8 @@ GOOGLE_SITE_VERIFICATION=public-abc-1234
 
 ## Next Steps
 
-- For the complete list of `reader-revenue-manager` apis, please see the [site's interactive demos](https://reader-revenue-demo.ue.r.appspot.com/).
-- For more information on working with this application, please see the complete editing instructions in 
-the [contributing instructions](https://reader-revenue-demo.ue.r.appspot.com/contributing).
+-   For the complete list of `reader-revenue-manager` apis, please see the
+    [site's interactive demos](https://reader-revenue-demo.ue.r.appspot.com/).
+-   For more information on working with this application, please see the
+    complete editing instructions in the
+    [contributing instructions](https://reader-revenue-demo.ue.r.appspot.com/contributing).
