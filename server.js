@@ -19,6 +19,10 @@ import express from 'express';
 import readerRevenue from './app/routes/documentation.js';
 import readme from './app/routes/readme.js';
 
+//APIs for content sections
+import subscriptionLinkingApi from './app/routes/subscription-linking/api.js'
+
+
 // Proxy handles https and reverse proxy settings for running locally
 import proxy from './middleware/proxy.js';
 import ssl from './middleware/ssl.js';
