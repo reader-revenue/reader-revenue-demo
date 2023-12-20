@@ -33,11 +33,10 @@ function generateHighlightedJson(json) {
 
   const textString = JSON.stringify(json, null, 2);
   const formattedTextString = hljs.highlight(textString, {language: 'json'});
-  const textNodeFromString = document
-    .createRange()
-    .createContextualFragment(formattedTextString.value);
-  code.append(textNodeFromString);
-  output.append(code);
+  const textNodeFromString = document.createRange().createContextualFragment(
+      formattedTextString.value);
+  code.append(textNodeFromString)
+  output.append(code)
   return output;
 }
 
@@ -66,19 +65,19 @@ function insertHighlightedJson(id, json, label = undefined) {
  * @returns {string}
  */
 function parseJwt(token) {
-  const base64Url = token.split('.')[1];
-  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  const jsonPayload = decodeURIComponent(
-    atob(base64)
-      .split('')
-      .map(function (c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      })
-      .join('')
-  );
+  let base64Url = token.split('.')[1];
+  let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  let jsonPayload = decodeURIComponent(
+      atob(base64)
+          .split('')
+          .map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join(''));
 
   return JSON.parse(jsonPayload);
 }
+
 
 /**
  * Redirect
@@ -88,7 +87,7 @@ function parseJwt(token) {
  */
 function redirect(from, to = undefined) {
   const REDIRECT =
-    to === undefined ? `${location.origin}/reference/publication-api` : to;
+      to === undefined ? `${location.origin}/reference/publication-api` : to;
   console.log(`Redirecting from ${from}`);
   window.location.replace(REDIRECT);
 }
@@ -102,7 +101,7 @@ class Loader {
     this.output = output;
     this.loader = document.createElement('img');
     this.loader.src = 'img/spinner.gif';
-  }
+  };
 
   start() {
     this.output.append(this.loader);
@@ -118,5 +117,5 @@ export {
   insertHighlightedJson,
   parseJwt,
   redirect,
-  Loader,
-};
+  Loader
+}

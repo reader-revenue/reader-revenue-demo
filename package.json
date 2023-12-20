@@ -20,7 +20,7 @@
     "googleapis": "^113.0.0",
     "highlight.js": "^11.8.0",
     "jsonwebtoken": "^9.0.0",
-    "marked": "^9.0.3",
+    "marked": "^9.1.6",
     "marked-admonition-extension": "^0.0.4",
     "marked-custom-heading-id": "^2.0.4",
     "marked-engine": "^0.2.0",
