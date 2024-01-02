@@ -21,7 +21,7 @@ import {renderHtml, renderMarkdown} from '../../lib/renderers.js';
 
 const router = express.Router();
 
-router.use(express.static('./public'));
+// router.use(express.static('./public'));
 
 /*
   bootstrap routes from the nav
