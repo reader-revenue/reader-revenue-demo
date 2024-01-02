@@ -42,14 +42,22 @@ app.use('/readme', readme);
 app.use('/', readerRevenue);
 
 app.get('/js/*', async (req, res)=>{
-  console.log(req.path)
-  const renderedStaticFile = await renderStaticFile(`public/${req.path}`, {"test":true} )
-  res.set('Content-Type','text/javascript').end(renderedStaticFile)
+  try {
+    console.log(req.path)
+    const renderedStaticFile = await renderStaticFile(`public/${req.path}`, {"test":true} )
+    res.set('Content-Type','text/javascript').end(renderedStaticFile)
+  } catch(e) {
+    res.status(500).end(`Error: failed to render ${req.path}`)
+  }
 })
 
 app.get('/css/*', async (req, res)=>{
-  const renderedStaticFile = await renderStaticFile(`public/${req.path}`, {"test":true} )
-  res.set('Content-Type','text/css').end(renderedStaticFile)
+  try {
+    const renderedStaticFile = await renderStaticFile(`public/${req.path}`, {"test":true} )
+    res.set('Content-Type','text/css').end(renderedStaticFile)
+  } catch(e) {
+    res.status(500).end(`Error: failed to render ${req.path}`)
+  }
 })
 
 // Boot the server
