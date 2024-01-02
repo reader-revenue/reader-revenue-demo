@@ -21,7 +21,7 @@ import readme from './app/routes/readme.js';
 
 //APIs for content sections
 import subscriptionLinkingApi from './app/routes/subscription-linking/api.js'
-
+import publicationApi from './app/routes/publication-api.js'
 
 // Proxy handles https and reverse proxy settings for running locally
 import proxy from './middleware/proxy.js';
@@ -38,6 +38,7 @@ app.use(proxy);
 app.use(ssl);
 app.use(overrides);
 
+// Mount APIs for content sections
 app.use('/readme', readme);
 app.use('/', readerRevenue);
 
@@ -59,6 +60,9 @@ app.get('/css/*', async (req, res)=>{
     res.status(500).end(`Error: failed to render ${req.path}`);
   }
 })
+
+app.use('/api/subscription-linking', subscriptionLinkingApi)
+app.use('/api/publication', publicationApi)
 
 // Boot the server
 console.log(
