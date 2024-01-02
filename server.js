@@ -43,20 +43,20 @@ app.use('/', readerRevenue);
 
 app.get('/js/*', async (req, res)=>{
   try {
-    console.log(req.path)
-    const renderedStaticFile = await renderStaticFile(`public/${req.path}`, {"test":true} )
-    res.set('Content-Type','text/javascript').end(renderedStaticFile)
+    console.log(req.path);
+    const renderedStaticFile = await renderStaticFile(`public/${req.path}`);
+    res.set('Content-Type','text/javascript').end(renderedStaticFile);
   } catch(e) {
-    res.status(500).end(`Error: failed to render ${req.path}`)
+    res.status(500).end(`Error: failed to render ${req.path}`);
   }
 })
 
 app.get('/css/*', async (req, res)=>{
   try {
-    const renderedStaticFile = await renderStaticFile(`public/${req.path}`, {"test":true} )
-    res.set('Content-Type','text/css').end(renderedStaticFile)
+    const renderedStaticFile = await renderStaticFile(`public/${req.path}`);
+    res.set('Content-Type','text/css').end(renderedStaticFile);
   } catch(e) {
-    res.status(500).end(`Error: failed to render ${req.path}`)
+    res.status(500).end(`Error: failed to render ${req.path}`);
   }
 })
 
