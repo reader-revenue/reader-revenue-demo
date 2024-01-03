@@ -13,7 +13,7 @@ const REQUESTED_SCOPES = [
 const REQUESTED_SCOPE = REQUESTED_SCOPES.join(' ');
 const REDIRECT = `${location.origin}/reference/publication-api`;
 const OAUTH_CLIENT_ID =
-    '695298810691-emkq4ltk1bmmbrhpl5n38un1cus8i5ob.apps.googleusercontent.com';
+    'process.env.OAUTH_CLIENT_ID';
 
 /**
  * initializeClient
