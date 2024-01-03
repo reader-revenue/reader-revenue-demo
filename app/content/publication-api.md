@@ -165,4 +165,4 @@ We suggest instantiatiating this flow by calling the GIS SDK's `google.accounts.
 
 ## Server-side code sample
 
-Read the [documentation](https://developers.google.com/news/subscribe/reference/publication-api).
+Read about how to [manually check for entitlements](https://developers.google.com/news/reader-revenue/monetization/sell/check-for-entitlements) with the Publication API, and its [api documentation](https://developers.google.com/news/reader-revenue/monetization/reference/publication-api).
