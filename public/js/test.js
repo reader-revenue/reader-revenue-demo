@@ -19,3 +19,5 @@
  */
 
 console.log('hello, script tag in the nav...');
+
+//Current env: process.env.ENV_NAME

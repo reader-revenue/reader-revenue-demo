@@ -28,6 +28,9 @@ import proxy from './middleware/proxy.js';
 import ssl from './middleware/ssl.js';
 import overrides from './middleware/overrides.js'
 
+//test
+import { renderStaticFile } from './lib/renderers.js';
+
 // Configure app globals
 const app = express();
 app.set('trust proxy', 'loopback');
@@ -37,6 +40,26 @@ app.use(overrides);
 
 app.use('/readme', readme);
 app.use('/', readerRevenue);
+
+app.get('/js/*', async (req, res)=>{
+  try {
+    console.log(req.path);
+    const renderedStaticFile = await renderStaticFile(`public/${req.path}`);
+    res.set('Content-Type','text/javascript').end(renderedStaticFile);
+  } catch(e) {
+    res.status(500).end(`Error: failed to render ${req.path}`);
+  }
+})
+
+app.get('/css/*', async (req, res)=>{
+  try {
+    const renderedStaticFile = await renderStaticFile(`public/${req.path}`);
+    res.set('Content-Type','text/css').end(renderedStaticFile);
+  } catch(e) {
+    res.status(500).end(`Error: failed to render ${req.path}`);
+  }
+})
+
 // Boot the server
 console.log(
   `Booted at ${new Date().toUTCString()} at ${process.env.HOST}:${
