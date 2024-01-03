@@ -5,11 +5,14 @@ import {hasAuthzCred} from './publication-api-storage.js';
 
 document.addEventListener('DOMContentLoaded', async function() {
   initializeClient();
-  renderButton('#siwgButton');
+  renderButton('#siwgButton .button');
   if (hasAuthzCred('accessToken')) {
-    renderFetchEntitlementsPlansButton('#entitlementsPlans');
-    renderRevokeButton('#revokeButton');
-    renderFetchEntitlementsButton('#accessToken');
+    renderFetchEntitlementsPlansButton('#entitlementsPlans .button');
+    document.querySelector('#entitlementsPlans').classList.remove('hidden');
+    renderRevokeButton('#revokeButton .button');
+    document.querySelector('#revokeButton').classList.remove('hidden');
+    renderFetchEntitlementsButton('#accessToken .button');
+    document.querySelector('#accessToken').classList.remove('hidden');
   }
 
   // handle redirect
@@ -21,6 +24,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   if (hasAuthzCred('refreshToken')) {
     handleCachedCredentials();
-    renderRefreshButton('#refreshButton');
+    renderRefreshButton('#refreshButton .button');
+    document.querySelector('#refreshButton').classList.remove('hidden');
   }
 });

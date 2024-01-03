@@ -31,7 +31,7 @@ function renderRefreshButton(selector) {
     loader.stop();
     insertHighlightedJson('#GISOutput', tokens, 'Refresh token');
   };
-  button.innerText = 'Refresh tokens with refreshToken';
+  button.innerText = 'Refresh tokens';
   document.querySelector(selector).appendChild(button);
 }
 
@@ -50,18 +50,11 @@ function renderFetchEntitlementsButton(selector) {
     const loader = new Loader(loaderOutput);
     loader.start();
     const entitlements = await queryLocalEntitlements(accessToken);
-
-    const readerId = entitlements.entitlements[0].readerId;
-    const entitlementsplans =
-        await queryLocalEntitlementsPlans(accessToken, readerId);
-
     loader.stop();
     insertHighlightedJson(
         '#GISOutput', entitlements, 'Manually queried entitlements');
-    insertHighlightedJson(
-        '#GISOutput', entitlementsplans, 'Manually queried entitlementsplans');
   };
-  button.innerText = 'Query entitlements with accessToken';
+  button.innerText = 'Query entitlements';
   document.querySelector(selector).appendChild(button);
 }
 
@@ -79,20 +72,15 @@ function renderFetchEntitlementsPlansButton(selector) {
     document.querySelector('#GISOutput').append(loaderOutput);
     const loader = new Loader(loaderOutput);
     loader.start();
-    const readerId = '4df0faf26630a56329a137ccbfc5d464';  // replace
-    const entitlements =
-        await queryLocalEntitlementsPlans(accessToken, readerId);
-    // const readerId = entitlements.entitlements[0].readerId;
+    const entitlements = await queryLocalEntitlements(accessToken);
+    const readerId = entitlements.entitlements[0].readerId;
     const entitlementsplans =
         await queryLocalEntitlementsPlans(accessToken, readerId);
-
     loader.stop();
-    insertHighlightedJson(
-        '#GISOutput', entitlements, 'Manually queried entitlements');
     insertHighlightedJson(
         '#GISOutput', entitlementsplans, 'Manually queried entitlementsplans');
   };
-  button.innerText = 'Query plan entitlements with accessToken';
+  button.innerText = 'Query entitlement plans';
   document.querySelector(selector).appendChild(button);
 }
 

@@ -23,15 +23,62 @@ As an alternative to the GIS' SIWG button, you can use the [GIS' One Tap user ex
 
 Click on the SIWG button below to authenticate and give GTech Demo an Authorization Code that it will exchange for an Access Token in order to call the Publication API and display your GTech Demo Entitlements in the console below. If you don't have a subscription to GTech Demo, you will be seeing and empty bracket: `{}` (see [this page](https://github.com/subscriptions-project/swg-js/blob/main/docs/entitlements-flow.md#entitlement-response) for a mock entitlement response).
 
-#### Sign-in with Google button
+#### Sign-in with Google and Interactive buttons
 
-<div style="display:flex;">
-  <div id="siwgButton"></div>
-  <div id="entitlementsPlans"></div>
-  <div id="revokeButton" style="padding-left: 5px;"></div>
-  <div id="refreshButton" style="padding-left: 5px;"></div>
-  <div id="accessToken" style="padding-left: 5px;"></div>
-</div>
+<table>
+  <thead>
+    <tr>
+      <th>
+        Button
+      </th>
+      <th>
+        Details
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id="siwgButton">
+      <td>
+        <div class="button"></div>
+      </td>
+      <td>
+        <p>Sign-in with Google button that is personalized on repeat use.</p>
+      </td>
+    </tr>
+    <tr id="accessToken" class="hidden">
+      <td>
+        <div class="button"></div>
+      </td>
+      <td>
+        <p>Use the Publication API's <code>entitlements</code> endpoint with the logged-in user's <code>accessToken</code>.</p>
+      </td>
+    </tr>
+    <tr id="entitlementsPlans" class="hidden">
+      <td>
+        <div class="button"></div>
+      </td>
+      <td>
+        <p>Use the Publication API's <code>entitlementsPlans</code> endpoint to query the full detail of an entitlement for a logged-in user.</p>
+      </td>
+    </tr>
+    <tr id="refreshButton" class="hidden">
+      <td>
+        <div class="button"></div>
+      </td>
+      <td>
+        <p>Use the <code>refreshToken</code> to generate a new <code>accessToken<code>.</p>
+      </td>
+    </tr>
+    <tr id="revokeButton" class="hidden">
+      <td>
+        <div class="button"></div>
+      </td>
+      <td>
+        <p>Revoke the current <code>accessToken</code> and log out the current user.</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 <div id="GISOutput"></div>
 

@@ -32,7 +32,6 @@ async function handleCachedCredentials() {
   insertHighlightedJson(
       '#GISOutput', entitlements, 'Entitlements from cached credentials');
 
-  document.querySelector('#revokeButton').classList.add('displayed');
 }
 
 export {handleRedirectFromOAuth, handleCachedCredentials};
