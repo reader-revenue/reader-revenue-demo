@@ -22,6 +22,7 @@ import readme from './app/routes/readme.js';
 //APIs for content sections
 import subscriptionLinkingApi from './app/routes/subscription-linking/api.js'
 import publicationApi from './app/routes/publication-api.js'
+import pubSub from './app/routes/pub-sub.js'
 
 // Proxy handles https and reverse proxy settings for running locally
 import proxy from './middleware/proxy.js';
@@ -61,8 +62,9 @@ app.get('/css/*', async (req, res)=>{
   }
 })
 
-app.use('/api/subscription-linking', subscriptionLinkingApi)
-app.use('/api/publication', publicationApi)
+app.use('/api/subscription-linking', subscriptionLinkingApi);
+app.use('/api/publication', publicationApi);
+app.use('/api/pub-sub', pubSub);
 
 // Boot the server
 console.log(
