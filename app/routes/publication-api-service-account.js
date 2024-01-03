@@ -19,6 +19,11 @@ import express from 'express';
 
 const router = express.Router();
 
+/**
+ * PublicationApi
+ * A sample class that uses the GoogleApis node.js client and a service
+ * account for interacting with the Publication API.
+ */
 class PublicationApi {
   constructor() {
     this.auth = new subscribewithgoogle.auth.GoogleAuth({
@@ -35,22 +40,24 @@ class PublicationApi {
   }
 }
 
-
-router.get('/', async (req, res) => {
+/**
+ * GET /:readerId
+ * A sample route that accepts a readerId as a url parameter, and uses
+ * a service account for querying the Publication API's 
+ * entitlementsPlans endpoint without an accesstoken.
+ */
+router.get('/:readerId', async (req, res) => {
   const api = new PublicationApi;
   const client = api.init();
 
-  console.log(client.publications.readers.entitlementsplans)
+  console.log(client.publications.readers.entitlementsplans);
 
   const plans = await client.publications.readers.entitlementsplans.get({
     name:
-        `publications/CAowqfCKCw/readers/8bd10f3a16570b3975d0e2b1a5bbd32a/entitlementsplans`
-  })
+        `publications/${process.env.PUBLICATION_ID}/readers/${req.params.readerId}/entitlementsplans`
+  });
 
-  console.log(plans)
-
-  // console.log(subscribewithgoogle)
-  res.json(plans.data)
+  res.json(plans.data);
 });
 
 export default router;
