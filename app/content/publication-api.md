@@ -1,27 +1,31 @@
 <script src="https://accounts.google.com/gsi/client"></script>
 
 
-# Publication API with GIS
+# Manually check for entitlements with the Publication API
 
 !!! hint **Using Google Identity Services**
-This example page uses the Google Identity Services (GIS) OAuth Client and the SwG Publication API to retrieve user entitlements in cases where 3P cookies are blocked.
+This example page uses the Google Identity Services (GIS) OAuth Client and the Reader Revenue Manager: Enterprise (RRM:E) Publication API to retrieve user entitlements.
 !!!
 
-swg.js `getEntitlements` on article runtime may not function as intended when some cookies are blocked. Publishers are required to use the Publication API right after Sign In With Google, and in order to retrieve user's entitlements from Google to perform deferred account creation or logging in of linked account. The Publication API takes in two parameters: the `PublicationID` and an `ACCESS_TOKEN`.
+Publishers are required to use the Publication API right after Sign In With Google in order to retrieve user's entitlements from Google to perform deferred account creation or logging in of the linked account. The Publication API takes in two parameters: the `publicationId` and an `accessToken`.
 
+*   The `publicationId` is defined for your publication in Publisher Center.
+*   The `accessToken` is obtained using the OAuth flow, which we implement here using the GIS SDK.
 
-
-*   The `PublicationID` is defined for your publication in Publisher Center.
-*   The `ACCESS_TOKEN` is obtained using the OAuth flow, which we implement here using the GIS SDK.
-
-Note that it is critical that the [OAuth 2.0 Authorization code flow](https://www.ietf.org/rfc/rfc6749.txt) standard is implemented, as this flow provides you with a refresh token, and thereby lets you query the Publication API without having to repeatedly prompt the user for consent to get a new Access Token. In this flow, the user's consent is materialized by an Authorization code which you can swap for an Access Token and a Refresh Token (see [here ](https://developers.google.com/identity/protocols/oauth2/web-server#handlingresponse)for specific documentation).
+Note that it is critical that the [OAuth 2.0 Authorization code flow](https://www.ietf.org/rfc/rfc6749.txt) standard is implemented, as this flow provides you with a refresh token, and thereby lets you query the Publication API without having to repeatedly prompt the user for consent to get a new `accessToken`. In this flow, the user's consent is materialized by an Authorization code which you can swap for an `accessToken` and a `refreshToken` (see [here ](https://developers.google.com/identity/protocols/oauth2/web-server#handlingresponse)for specific documentation).
 
 As an alternative to the GIS' SIWG button, you can use the [GIS' One Tap user experience](https://developers.google.com/identity/gsi/web/guides/features) by calling `google.accounts.id.prompt()` instead of `google.accounts.id.renderButton()`.
 
+!!! caution **Scope requirements for `accessToken` usage**
+When generating an `accessToken`, it is important to request the correct scopes for
+the intended use. With the Publication API, you **must** use `https://www.googleapis.com/auth/subscribewithgoogle.publications.entitlements.readonly`, and can **optionally** use `https://www.googleapis.com/auth/userinfo.email` to fetch addtional user profile information. Please see the article [Get an Access Token with Necessary Scopes](https://developers.google.com/news/reader-revenue/monetization/sell/check-for-entitlements?#access_token) for more details.
+!!!
 
-## Demo: GIS Authenticate / Authorize + SwG Publication API
+## Demo: GIS Authenticate / Authorize + RRM:E Publication API
 
-Click on the SIWG button below to authenticate and give GTech Demo an Authorization Code that it will exchange for an Access Token in order to call the Publication API and display your GTech Demo Entitlements in the console below. If you don't have a subscription to GTech Demo, you will be seeing and empty bracket: `{}` (see [this page](https://github.com/subscriptions-project/swg-js/blob/main/docs/entitlements-flow.md#entitlement-response) for a mock entitlement response).
+Click on the Sign in with Google button below to authenticate. Doing so uses the Authorization Code flow, and gives this demo application an Authorization Code that it exchanges for an `accessToken` in order to call the Publication API. Once it has completed the exchange, your entitlements will be displayed in the console below. 
+
+If you don't have a subscription to the publication that this demo application is configured with, you will be seeing and empty bracket: `{}` (see the [Publication API reference](https://developers.google.com/news/reader-revenue/monetization/reference/publication-api?#entitlements) for a mock entitlement response). You can purchase a subscription by using the buyflow from the [Add Subscribe with Google button](/swg/add-button) article, or push entitlements to your linked account with the [Subscription Linking](/subscription-linking/client-side) article. 
 
 #### Sign-in with Google and Interactive buttons
 
@@ -86,7 +90,7 @@ Click on the SIWG button below to authenticate and give GTech Demo an Authorizat
 
 ### Entitlements Response
 
-Access tokens periodically expire but you can [obtain new ones using the Refresh Token ](https://developers.google.com/identity/protocols/oauth2/web-server#offline)without prompting the user for permission (including when the user is not present). As a returning user, you will see above the Refresh Token which was stored. When you click again on SIWG, the corresponding Access Token is used but no new Authorization code is needed.
+Access tokens periodically expire but you can [obtain new ones using the Refresh Token ](https://developers.google.com/identity/protocols/oauth2/web-server#offline)without prompting the user for permission (including when the user is not present). As a returning user, you will see above the Refresh Token which was stored. When you click again on Sign in with Google, the corresponding Access Token is used but no new Authorization code is needed.
 
 
 # Implementation Samples
@@ -98,7 +102,7 @@ that should happen at each layer.
 
 ## Client-side code sample
 
-We suggest instantiatiating this flow by calling the GIS SDK's `google.accounts.oauth2.initCodeClient` function in the callback of the SIWG button.
+We suggest instantiatiating this flow by calling the GIS SDK's `google.accounts.oauth2.initCodeClient` function in the callback of the Sign in with Google button.
 
 
 ```html
@@ -115,15 +119,25 @@ We suggest instantiatiating this flow by calling the GIS SDK's `google.accounts.
       }
 
       function initGISAuthCodeClientRedirect(hint) { // GIS Authorization client
+        const REQUESTED_SCOPES = [
+          'https://www.googleapis.com/auth/userinfo.email',
+          'https://www.googleapis.com/auth/subscribewithgoogle.publications.entitlements.readonly'
+        ].join(' ');
+
         return google.accounts.oauth2.initCodeClient({
           client_id: YOUR_OAUTH_CLIENT_ID,
-          scope: 'email',
+          scope: REQUESTED_SCOPES,
           hint: hint,
           ux_mode: 'redirect',
           redirect_uri: REDIRECT_URL, // Add to list of allowed redirects in Cloud Console
           state: 'redirect_from_gis_authz_client',
           select_account: false
         });
+      }
+
+      function process_entitlements(entitlements) {
+        // TODO: Publisher implemented function that stores and processes
+        // newly retreived subscriber entitlements
       }
 
       // Initialise the GIS Authentication client

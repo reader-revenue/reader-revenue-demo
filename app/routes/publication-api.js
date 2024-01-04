@@ -60,9 +60,6 @@ router.post('/refresh', express.json(), async (req, res) => {
   return res.json(response);
 });
 
-// https://subscribewithgoogle.googleapis.com/v1/publications/publicationId/entitlements?access_token=access_token
-// https://subscribewithgoogle.googleapis.com/v1/publications/publicationId/readers/user_id/entitlementsplans?access_token=access_token
-
 router.post('/entitlements', express.json(), async (req, res) => {
   const {accessToken} = req.body;
   const base = `https://subscribewithgoogle.googleapis.com/v1/publications`;
