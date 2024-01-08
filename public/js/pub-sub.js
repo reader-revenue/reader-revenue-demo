@@ -1,5 +1,7 @@
 /**
- * @fileoverview Description of this file.
+ * @fileoverview This client-side js file is used to 
+ * poll and display received notifications issued from
+ * Cloud Pub/Sub, and stored in Cloud Datastore.
  */
 import {insertHighlightedJson, Loader} from './utils.js';
 
