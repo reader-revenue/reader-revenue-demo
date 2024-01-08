@@ -19,10 +19,17 @@ import express from 'express';
 import readerRevenue from './app/routes/documentation.js';
 import readme from './app/routes/readme.js';
 
+//APIs for content sections
+import subscriptionLinkingApi from './app/routes/subscription-linking/api.js'
+import publicationApi from './app/routes/publication-api.js'
+
 // Proxy handles https and reverse proxy settings for running locally
 import proxy from './middleware/proxy.js';
 import ssl from './middleware/ssl.js';
 import overrides from './middleware/overrides.js'
+
+//test
+import { renderStaticFile } from './lib/renderers.js';
 
 // Configure app globals
 const app = express();
@@ -31,8 +38,32 @@ app.use(proxy);
 app.use(ssl);
 app.use(overrides);
 
+// Mount APIs for content sections
 app.use('/readme', readme);
 app.use('/', readerRevenue);
+
+app.get('/js/*', async (req, res)=>{
+  try {
+    console.log(req.path);
+    const renderedStaticFile = await renderStaticFile(`public/${req.path}`);
+    res.set('Content-Type','text/javascript').end(renderedStaticFile);
+  } catch(e) {
+    res.status(500).end(`Error: failed to render ${req.path}`);
+  }
+})
+
+app.get('/css/*', async (req, res)=>{
+  try {
+    const renderedStaticFile = await renderStaticFile(`public/${req.path}`);
+    res.set('Content-Type','text/css').end(renderedStaticFile);
+  } catch(e) {
+    res.status(500).end(`Error: failed to render ${req.path}`);
+  }
+})
+
+app.use('/api/subscription-linking', subscriptionLinkingApi)
+app.use('/api/publication', publicationApi)
+
 // Boot the server
 console.log(
   `Booted at ${new Date().toUTCString()} at ${process.env.HOST}:${

@@ -14,10 +14,23 @@
  * limitations under the License.
  */
 
-/**
- * @fileoverview Description of this file.
- */
+import {readerrevenuesubscriptionlinking_v1, Auth} from 'googleapis'
+const subscriptionLinking = readerrevenuesubscriptionlinking_v1.Readerrevenuesubscriptionlinking
 
-console.log('hello, script tag in the nav...');
+class SubscriptionLinking {
+  constructor() {
+    this.auth = new Auth.GoogleAuth({
+      keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+      scopes: [
+        'https://www.googleapis.com/auth/readerrevenue.subscriptionlinking.manage'
+      ],
+    })
+  }
 
-//Current env: process.env.ENV_NAME
+  init() {
+    return new subscriptionLinking(
+        {version: 'v1', auth: this.auth})
+  }
+}
+
+export {SubscriptionLinking}

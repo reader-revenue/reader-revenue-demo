@@ -41,6 +41,14 @@ body {
   flex-direction: column;
 }
 
+.hidden {
+  display:none;
+}
+
+table td {
+  padding: 5px;
+}
+
 .content {
   flex: 1;
 }
