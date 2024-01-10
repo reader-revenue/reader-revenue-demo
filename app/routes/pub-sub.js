@@ -21,7 +21,7 @@ const router = express.Router();
 
 const storage = new Storage('pub-sub');
 router.post('/receive', express.json(), async (req, res) => {
-  // The message is a unicode string encoded in base64.
+  // The message from the Pub/Sub notification is a unicode string encoded in base64.
   const message =
       Buffer.from(req.body.message.data, 'base64').toString('utf-8');
   await storage.create('message', message);
