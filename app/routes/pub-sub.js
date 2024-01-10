@@ -24,6 +24,7 @@ router.post('/receive', express.json(), async (req, res) => {
   // The message from the Pub/Sub notification is a unicode string encoded in base64.
   const message =
       Buffer.from(req.body.message.data, 'base64').toString('utf-8');
+  // Add the message from the Pub/Sub notification to the datastore in the `message` index
   await storage.create('message', message);
   return res.status(200).end();
 })
