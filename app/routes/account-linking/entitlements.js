@@ -23,19 +23,25 @@ class Entitlements {
   fetch(productId) {
 
     try {
+      
+      //A mock of an opaque token that has meaning for publisher
+      const subscriptionToken = Buffer.from(JSON.stringify({
+        accessToken: this.accessToken,
+        productId,
+        publicationId: this.publicationId,
+        timestamp: Date.now()
+      }), "utf8").toString("base64")
 
       console.log(`Returned ${this.publicationId}:${productId} for accessToken: ${this.accessToken}`)
       return {
         "source": this.publicationId,
         "products": [`${this.publicationId}:${productId}`],
-        "subscriptionToken": "An opaque token that has meaning for publisher.",
+        "subscriptionToken": subscriptionToken,
         "detail" : `A ${productId} entitlement for the ${this.publicationId} publication, for accessToken ${this.accessToken}`
       };
 
     } catch (e) {
-
-      console.log(`Failed to fetch entitlements for ${this.publicationId}:${productId}`)
-    
+      console.log(`Failed to fetch entitlements for ${this.publicationId}:${productId}`, e);
     }
   }
 }

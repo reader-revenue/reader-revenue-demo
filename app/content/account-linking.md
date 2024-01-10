@@ -36,9 +36,10 @@ The Console DevTool is available to test account linking. For more information, 
 
 ## Sample Implementation
 
-1. Include `swg.js`: `<script async src="https://news.google.com/swg/js/v1/swg.js"></script>`
-1. Include Google Platform Library: `<script async src="https://apis.google.com/js/platform.js"></script>`
-1. Click on "Link your account"
+1. Include [swg.js](https://developers.google.com/news/reader-revenue/monetization/prerequisites/configure-javascript): `<script async src="https://news.google.com/swg/js/v1/swg.js"></script>`.
+1. Include the appropriate [structured data markup](https://developers.google.com/news/reader-revenue/monetization/prerequisites/structured-data-markup) for the page.
+1. Include and configure [Sign in with Google](https://developers.google.com/identity/gsi/web/guides/overview): `<script async src="https://apis.google.com/js/platform.js"></script>`.
+1. Load the sample page and click on "Link your account" button.
 
 ```html
 <script async type="application/javascript" src="https://news.google.com/swg/js/v1/swg.js"></script>
@@ -46,7 +47,7 @@ The Console DevTool is available to test account linking. For more information, 
   {
     "@context": "http://schema.org",
     "@type": "NewsArticle",
-    "headline": "gTech Swg Demo",
+    "headline": "Reader Revenue Demo",
     "image": "/icons/icon-2x.png",
     "datePublished": "2025-02-05T08:00:00+08:00",
     "dateModified": "2025-02-05T09:20:00+08:00",
@@ -55,9 +56,9 @@ The Console DevTool is available to test account linking. For more information, 
     "name": "John Doe"
     },
     "publisher": {
-        "name": "GTech Demo Pub News",
+        "name": "Reader Revenue Demo",
         "@type": "Organization",
-        "@id": "gtech-demo-staging.appspot.com",
+        "@id": "CAowqfCKCw",
         "logo": {
         "@type": "ImageObject",
         "url": "/icons/icon-2x.png"
@@ -67,8 +68,8 @@ The Console DevTool is available to test account linking. For more information, 
     "isAccessibleForFree": "False",
     "isPartOf": {
         "@type": ["CreativeWork", "Product"],
-        "name" : "GTech Demo Pub News basic",
-        "productID": "gtech-demo-staging.appspot.com:basic"
+        "name" : "Reader Revenue Demo",
+        "productID": "CAowqfCKCw:basic"
     }
   }
 </script>
