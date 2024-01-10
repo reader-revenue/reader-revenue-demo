@@ -4,7 +4,7 @@ This page helps debug pub/sub notifications. To configure and use this, you must
 
 ## Steps to configure Cloud Datastore
 
-1. Specify the region your app will run in your environmental variable `.env` file or configuration  (e.g. `us-east1`).
+1. Specify the [region](https://cloud.google.com/about/locations#regions) your app will run in your environmental variable `.env` file or configuration  (e.g. `us-east1`).
 2. Create a Cloud Datastore database in [GCP](https://console.cloud.google.com/datastore/databases). 
 
 !!! caution **Choose `Datastore mode` as the database type**
