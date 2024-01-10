@@ -30,6 +30,7 @@ router.post('/receive', express.json(), async (req, res) => {
 })
 
 router.get('/received', async (req, res) => {
+  // Read all messages stored in the `message` index
   const messages = await storage.read('message');
   return res.json(messages);
 })
