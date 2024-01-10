@@ -20,10 +20,7 @@ class Entitlements {
     this.accessToken = accessToken;
   }
 
-  fetch() {
-
-    //basic placeholder for all responses
-    const productId = 'basic';
+  fetch(productId) {
 
     try {
 
