@@ -15,7 +15,7 @@
  */
 
 /**
- * @fileoverview Description of this file.
+ * @fileoverview A test client-side js file.
  */
 
 console.log('hello, script tag in the nav...');

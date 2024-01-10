@@ -15,7 +15,7 @@
  */
 
 /**
- * @fileoverview Description of this file.
+ * @fileoverview A sample client-side file for illustrating how to add features to this app.
  */
 
 /**
