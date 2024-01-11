@@ -8,7 +8,7 @@
 
 ## Client-side Javascript Demo
 
-This button will attempt to link your account. Afterwards, if you authenticate 
+This button will attempt to link your Google account to a "publisher" account. Afterwards, if you authenticate 
 as the same user in the [Publication API](/reference/publication-api) example,
 the default linked entitlements will be visible via the `/entitlements` endpoint.
 
@@ -38,7 +38,6 @@ The Console DevTool is available to test account linking. For more information, 
 
 1. Include [swg.js](https://developers.google.com/news/reader-revenue/monetization/prerequisites/configure-javascript): `<script async src="https://news.google.com/swg/js/v1/swg.js"></script>`.
 1. Include the appropriate [structured data markup](https://developers.google.com/news/reader-revenue/monetization/prerequisites/structured-data-markup) for the page.
-1. Include and configure [Sign in with Google](https://developers.google.com/identity/gsi/web/guides/overview): `<script async src="https://apis.google.com/js/platform.js"></script>`.
 1. Load the sample page and click on "Link your account" button.
 
 ```html

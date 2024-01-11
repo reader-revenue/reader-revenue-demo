@@ -21,6 +21,13 @@ const router = express.Router();
 
 router.get('/', async (req, res)=>{
 
+  /**
+ * Fetch and return 'basic' entitlements
+ * In a production environment, a publisher would fetch entitlements for
+ * the access_token by quering their user/entitlements store and
+ * returning the appropriate entitlements. In this example, a 'basic'
+ * entitlement is returned for all access_tokens.
+ */
   const entitlements = new Entitlements(req.query["access_token"]);
 
   return res.json(entitlements.fetch('basic'));

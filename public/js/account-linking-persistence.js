@@ -15,9 +15,21 @@
  */
 
 /**
- * @fileoverview Class for use with managing 
+ * @fileoverview Class for use with managing and persisting account linking
+ * state in the browser's localStorage. 
  */
 
+
+/**
+ * accountLinkingPersistence
+ * A class that exposes convenience functions for managing account linking
+ * state, using the browser's localStorage as a cache. 
+ * 
+ * Note: In a production environment, a class like this could be used to 
+ * store and retrieve access_tokens and state information from a database.
+ * This example class mocks access_token generation, and stores state only
+ * in the browser's localStorage, which is temporary.
+ */
 class accountLinkingPersistence {
   constructor() {
     this._linked = false;
@@ -27,8 +39,8 @@ class accountLinkingPersistence {
     this.generateAccessToken();
   }
 
-  set linked(item) {
-    this._linked = item;
+  set linked(isLinked) {
+    this._linked = isLinked;
     this.save()
   }
 
@@ -36,8 +48,8 @@ class accountLinkingPersistence {
     return this._linked;
   }
 
-  set declined(declineState) {
-    this._declined = declineState;
+  set declined(isDeclined) {
+    this._declined = isDeclined;
     this.save();
   }
 
