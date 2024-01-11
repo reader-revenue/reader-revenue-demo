@@ -15,7 +15,7 @@
  */
 
 /**
- * @fileoverview Description of this file.
+ * @fileoverview A set of utility functions for use by client-side js functions.
  */
 
 import hljs from 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/es/highlight.min.js';
