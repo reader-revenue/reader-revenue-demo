@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Google LLC
+ * Copyright 2024 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,10 @@
  */
 
 /**
- * @fileoverview This client-side js file to initiate and manage account
- * linking state.
+ * @fileoverview This client-side js file to initiate and manage
+ * Extended Access registration and entitlements
  */
 
-
-
-console.log('ea-registration.js file loaded correctly')
-    
-  
 import { insertHighlightedJson } from './utils.js';
 
 function revokeIDToken() {
@@ -132,7 +127,7 @@ function InitGaaMetering() {
     GaaMetering.getGaaUserPromise().then((gaaUser) => {
       createCookie('jwtSub', gaaUser.credential.sub)
 
-      insertHighlightedJson("#output", parseJwt(gaaUser.credential))
+      insertHighlightedJson("#output", parseJwt(gaaUser.credential), "GAA User Credentials from the JWT")
 
       createCookie('jwtSub', parseJwt(gaaUser.credential).sub)
       // gaaUser - registration JWT that is returned by Sign In with Google
@@ -162,7 +157,7 @@ function InitGaaMetering() {
         granted: false,
       };
 
-      insertHighlightedJson("#output", {message:"User identified via Publisher's sign in"})
+      insertHighlightedJson("#output", {message:"User identified via Publisher's sign in"}, "User with Publisher Login")
       resolve(userState);
     });
   });
@@ -225,7 +220,6 @@ function InitGaaMetering() {
   // Do not copy the parameters bellow. See documentation at:
   // https://developers.google.com/news/subscribe/extended-access/integration-steps/web-implementation#initialize-the-extended-access-library
 
-
   GaaMetering.init({
     googleApiClientId: '695298810691-sue9beofr6jstu5e227oh4jpatljlt1p.apps.googleusercontent.com',
     allowedReferrers: allowedReferrers,
@@ -238,8 +232,6 @@ function InitGaaMetering() {
     publisherEntitlementPromise: publisherEntitlementPromise, // Optional
   });
 }
-
-
 
 document.addEventListener("DOMContentLoaded", (event) => {
   InitGaaMetering()
