@@ -33,7 +33,7 @@ import overrides from './middleware/overrides.js';
 import cookies from './middleware/cookies.js';
 
 //test
-import { renderStaticFile } from './lib/renderers.js';
+import { renderStaticFile, renderStaticImage } from './lib/renderers.js';
 
 // Configure app globals
 const app = express();
@@ -46,6 +46,15 @@ app.use(cookies);
 // Mount APIs for content sections
 app.use('/readme', readme);
 app.use('/', readerRevenue);
+
+app.get('/img/*', async (req, res)=>{
+  try {
+    const image = await renderStaticImage(`public/${req.path}`);
+    res.set('Content-Type',`image/${req.path.split('.').pop()}`).end(image);
+  } catch(e) {
+    res.status(500).end(`Error: failed to render ${req.path}`);
+  }
+})
 
 app.get('/js/*', async (req, res)=>{
   try {
