@@ -29,7 +29,8 @@ import extendedAccess from './app/routes/extended-access.js'
 // Proxy handles https and reverse proxy settings for running locally
 import proxy from './middleware/proxy.js';
 import ssl from './middleware/ssl.js';
-import overrides from './middleware/overrides.js'
+import overrides from './middleware/overrides.js';
+import cookies from './middleware/cookies.js';
 
 //test
 import { renderStaticFile } from './lib/renderers.js';
@@ -40,6 +41,7 @@ app.set('trust proxy', 'loopback');
 app.use(proxy);
 app.use(ssl);
 app.use(overrides);
+app.use(cookies);
 
 // Mount APIs for content sections
 app.use('/readme', readme);
