@@ -56,6 +56,9 @@ PROXY_URL=local.domain
 HOST=0.0.0.0
 DISABLE_SSL=true
 
+# Settings for signed cookies
+COOKIE_SECRET=secret
+
 # GCP-specific env vars for external service communication
 GOOGLE_CLOUD_REGION=us-east1
 GOOGLE_APPLICATION_CREDENTIALS=/path/to/application_default_credentials.json
