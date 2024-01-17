@@ -15,10 +15,58 @@
  */
 
 import express from 'express';
-const router = express.Router();
+import bodyParser from 'body-parser';
 
+const router = express.Router();
+/**
+ * GET /api/extended-access/cookie/:cookieName
+ * A getter method that returns the current httpOnly cookie.
+ * This can be done client-side too, and is here for consistency.
+ */
+router.get('/cookie/:cookieName', async (req, res) =>{
+  try {
+    const cookie = req.cookies[req.params['cookieName']];
+    return res.json({cookie});
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({error:e});
+  }
+})
+
+/**
+ * POST /api/extended-access/cookie
+ * Create an httpOnly cookie. Parses the POST body to set an
+ * expiry date.
+ */
+router.post('/cookie', bodyParser.json(), async (req, res) =>{
+  try {
+    const { name, value, expiresInDays } = req.body;
+
+    res.cookie(name, value, {
+      expires: new Date(Date.now() + expiresInDays),
+      httpOnly: true
+    })
+
+    res.send("Cookie set");
+
+  } catch (e) {
+    console.log(e);
+    return res.status(500).end("Body unparseable");
+  }
+})
+
+/**
+ * GET /api/extended-access
+ * In this example implementation, Extended Access does not require
+ * and server-side api access, so this is intentionally left blank.
+ * In a real world configuration, a publisher may use this either
+ * for the server-side EA access flow, or as an aid to parts of the
+ * entitlements handling or user registration completion.
+ */
 router.get('/', async (req, res, next) => {
   return res.end('Extended Access route loaded');
 });
+
+
 
 export default router;

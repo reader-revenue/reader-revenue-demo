@@ -21,43 +21,49 @@
 
 import { insertHighlightedJson } from './utils.js';
 
-function revokeIDToken() {
-  google.accounts.id.revoke(readCookie('jwtSub'), done => {
-    console.log(done.error);
+async function revokeIDToken() {
+  google.accounts.id.revoke(await readCookie('jwtSub'), done => {
+    console.log(done.successful ? 'Successfully revoked token' : done.error);
   });
-  eraseCookie('jwtSub');
+  await eraseCookie('jwtSub');
 }
 
-function createCookie(name, value, days=15) {
-  var expires = '',
-      date = new Date();
-  if (days) {
-      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-      expires = '; expires=' + date.toGMTString();
-  }
-  document.cookie = name + '=' + value + expires + '; path=/';
+async function createCookie(name, value, days=15) {
+
+  const expiresInDays = days * 24 * 60 * 60 * 1000;
+
+  const setCookie = await fetch ('/api/extended-access/cookie', {
+    credentials: 'include',
+    headers:{
+      'Content-Type': 'application/json'
+    },
+    method: 'POST',
+    body: JSON.stringify({
+      name, 
+      value,
+      expiresInDays 
+    })
+  })
+
+  return setCookie;
 }
 
-function readCookie(name) {
-    var cookies = document.cookie.split(';'),
-        length = cookies.length,
-        i,
-        cookie,
-        nameEQ = name + '=';
-    for (i = 0; i < length; i += 1) {
-        cookie = cookies[i];
-        while (cookie.charAt(0) === ' ') {
-            cookie = cookie.substring(1, cookie.length);
-        }
-        if (cookie.indexOf(nameEQ) === 0) {
-            return cookie.substring(nameEQ.length, cookie.length);
-        }
-    }
+async function readCookie(name) {
+
+  const savedCookie = await fetch (`/api/extended-access/cookie/${name}`, {
+    credentials: 'include'
+  }).then(r=>r.json());
+
+  try {
+    return savedCookie[name];
+  } catch (e) {
+    console.log(e);
     return null;
+  }
 }
 
-function eraseCookie(name) {
-    createCookie(name, '', -1);
+async function eraseCookie(name) {
+    await createCookie(name, '', -1);
 }
 
 function parseJwt (token) {
@@ -71,7 +77,7 @@ function parseJwt (token) {
 }
 
 function redirect() {
-  console.log("redirect happening...")
+  console.log('redirect happening...')
   const url = `https://play.google.com/newsstand/api/v3/articleaccess?testurl=https://${window.location.host}/extended-access/registration`;
   window.location.href = url
 }
@@ -99,7 +105,7 @@ function InitGaaMetering() {
   // Do not copy the implementation for the callback and see documentation for your own implementation at:
   // https://developers.google.com/news/subscribe/extended-access/integration-steps/web-implementation#handle-extended-access-grants
   function unlockArticle() {
-    document.getElementById("paywalledContent").style.filter = "blur(0px)"
+    document.getElementById('paywalledContent').style.filter = 'blur(0px)';
     console.log('Example: unlock article');
   };
 
@@ -124,12 +130,10 @@ function InitGaaMetering() {
   // Do not copy the implementation for the promise and see documentation for your own implementation at:
   // https://developers.google.com/news/subscribe/extended-access/integration-steps/web-implementation#handle-registration-for-new-users
   const registerUserPromise = new Promise ((resolve) => {
-    GaaMetering.getGaaUserPromise().then((gaaUser) => {
-      createCookie('jwtSub', gaaUser.credential.sub)
+    GaaMetering.getGaaUserPromise().then(async (gaaUser) => {
+      insertHighlightedJson('#output', parseJwt(gaaUser.credential), 'GAA User Credentials from the JWT')
 
-      insertHighlightedJson("#output", parseJwt(gaaUser.credential), "GAA User Credentials from the JWT")
-
-      createCookie('jwtSub', parseJwt(gaaUser.credential).sub)
+      await createCookie('jwtSub', parseJwt(gaaUser.credential).sub)
       // gaaUser - registration JWT that is returned by Sign In with Google
       // https://developers.google.com/identity/gsi/web/reference/js-reference?hl=en#credential
       const gaaUserDecoded = parseJwt(gaaUser.credential);
@@ -157,7 +161,7 @@ function InitGaaMetering() {
         granted: false,
       };
 
-      insertHighlightedJson("#output", {message:"User identified via Publisher's sign in"}, "User with Publisher Login")
+      insertHighlightedJson('#output', {message:'User identified via Publisher\'s sign in'}, 'User with Publisher Login')
       resolve(userState);
     });
   });
@@ -207,15 +211,7 @@ function InitGaaMetering() {
   // for new users or Handle login for existing users flows.
   // Do not copy the constant and see documentation at:
   // https://developers.google.com/news/subscribe/extended-access/integration-steps/web-implementation#initialize-the-extended-access-library
-  const allowedReferrers = ["ea-upgrade-dot-reader-revenue-demo.ue.r.appspot.com",
-                            "ea-upgrade-to-rrme-dot-reader-revenue-demo.ue.r.appspot.com",
-                            "b2607f8b04800100000144d90c0a821641f90000000000000000001.proxy.googlers.com"]
-
-  // User's Showcase entitlement determined on your server
-  // Optional - server side only
-  // Do not copy the constant and see documentation at:
-  // https://developers.google.com/news/subscribe/guides/check-for-entitlements-on-web
-  const showcaseEntitlement = urlParams.get("showcaseEntitlement");
+  const allowedReferrers = ["reader-revenue-demo.ue.r.appspot.com", "process.env.PROXY_URL"]
 
   // Do not copy the parameters bellow. See documentation at:
   // https://developers.google.com/news/subscribe/extended-access/integration-steps/web-implementation#initialize-the-extended-access-library
