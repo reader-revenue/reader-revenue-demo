@@ -65,6 +65,14 @@ If you don't have a subscription to the publication that this demo application i
         <p>Use the Publication API's <code>entitlementsPlans</code> endpoint to query the full detail of an entitlement for a logged-in user.</p>
       </td>
     </tr>
+    <tr id="member" class="hidden">
+      <td>
+        <div class="button"></div>
+      </td>
+      <td>
+        <p>Use the Publication API to query information on any <code>reader_id</code>. Note: does not require an <code>access_token</code>.</p>
+      </td>
+    </tr>
     <tr id="refreshButton" class="hidden">
       <td>
         <div class="button"></div>
