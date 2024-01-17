@@ -19,7 +19,8 @@ import {
   exchangeRefreshTokenForTokens, 
   queryLocalEntitlements, 
   queryLocalEntitlementsPlans,
-  queryMemberData
+  queryMemberData,
+  queryOrderData
 } from './publication-api-entitlements.js';
 import {getAuthzCred, revokeAuthCode, setAuthzCred} from './publication-api-storage.js';
 import {insertHighlightedJson, Loader} from './utils.js';
@@ -133,6 +134,37 @@ function renderFetchMemberButton(selector) {
 }
 
 
+/**
+ * renderFetchOrderButton
+ * Creates a button to fetch order details manually
+ * @param {string} selector
+ */
+function renderFetchOrderButton(selector) {
+  const accessToken = getAuthzCred('accessToken');
+  const button = document.createElement('button');
+  button.classList.add('btn', 'btn-primary');
+  button.onclick = async () => {
+    const loaderOutput = document.createElement('div');
+    document.querySelector('#GISOutput').append(loaderOutput);
+    const loader = new Loader(loaderOutput);
+    loader.start();
+    const entitlements = await queryLocalEntitlements(accessToken);
+    const readerId = entitlements.entitlements[0].readerId;
+
+    const entitlementsplans = await queryLocalEntitlementsPlans(accessToken, readerId);
+    const filteredPlans = entitlementsplans.userEntitlementsPlans.filter((plan)=>{
+      return plan.recurringPlanDetails.recurringPlanState != 'CANCELED'
+    })
+    const orderId = filteredPlans[0].purchaseInfo.latestOrderId;
+
+    const readerData = await queryOrderData(accessToken, readerId, orderId);
+    loader.stop();
+    insertHighlightedJson(
+        '#GISOutput', readerData, 'Order data for the current user\'s most recent order that is not canceled.');
+  };
+  button.innerText = 'Query order data';
+  document.querySelector(selector).appendChild(button);
+}
 
 /**
  * renderRevokeButton
@@ -153,5 +185,6 @@ export {
   renderFetchEntitlementsButton,
   renderFetchEntitlementsPlansButton,
   renderFetchMemberButton,
+  renderFetchOrderButton,
   renderRevokeButton
 };

@@ -100,4 +100,17 @@ router.post('/readers/:user_id', express.json(), async (req, res) => {
   return res.json(response);
 })
 
+router.post('/readers/:user_id/orders/:order_id', express.json(), async (req, res) => {
+  const {accessToken} = req.body;
+  const {user_id, order_id} = req.params;
+  console.log(user_id, order_id, accessToken)
+  const base = `https://subscribewithgoogle.googleapis.com/v1/publications`;
+  const endpoint = `readers/${user_id}/orders/${order_id}`;
+  const params = `access_token=${accessToken}`;
+  const url = `${base}/${publicationId}/${endpoint}?${params}`;
+  console.log('readers/:reader_id', url);
+  const response = await fetch(url).then(r => r.json());
+  return res.json(response);
+})
+
 export default router;

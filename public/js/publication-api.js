@@ -19,6 +19,7 @@ import {
   renderFetchEntitlementsButton, 
   renderFetchEntitlementsPlansButton,
   renderFetchMemberButton,
+  renderFetchOrderButton,
   renderRefreshButton, 
   renderRevokeButton
 } from './publication-api-buttons.js';
@@ -38,6 +39,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.querySelector('#accessToken').classList.remove('hidden');
     renderFetchMemberButton('#member .button');
     document.querySelector('#member').classList.remove('hidden');
+    renderFetchOrderButton('#order .button');
+    document.querySelector('#order').classList.remove('hidden');    
   }
 
   // handle redirect

@@ -73,6 +73,15 @@ If you don't have a subscription to the publication that this demo application i
         <p>Use the Publication API to query information on any <code>reader_id</code>. Note: does not require an <code>access_token</code>.</p>
       </td>
     </tr>
+    <tr id="order" class="hidden">
+      <td>
+        <div class="button"></div>
+      </td>
+      <td>
+        <p>Use the Publication API to query order information for a particular <code>reader_id</code>
+        for a particular <code>plan_id</code>.</p>
+      </td>
+    </tr>    
     <tr id="refreshButton" class="hidden">
       <td>
         <div class="button"></div>

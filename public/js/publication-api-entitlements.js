@@ -108,10 +108,30 @@ async function queryMemberData(accessToken, userId) {
   return entitlements;
 }
 
+/**
+ * queryOrderData
+ * Queries the Publication API, but via a local endpoint
+ * @param {string} accessToken
+ * @params {string} userId
+ * @params {string} orderId
+ * @returns {{object}}
+ */
+async function queryOrderData(accessToken, userId, orderId) {
+  const url = `${location.origin}/api/publication/readers/${userId}/orders/${orderId}`;
+  const requestOptions = {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({accessToken})
+  };
+  const entitlements = await fetch(url, requestOptions).then(r => r.json());
+  return entitlements;
+}
+
 export {
   exchangeAuthCodeForTokens,
   exchangeRefreshTokenForTokens,
   queryLocalEntitlements,
   queryLocalEntitlementsPlans,
-  queryMemberData
+  queryMemberData,
+  queryOrderData
 };
