@@ -19,6 +19,7 @@
     "express-oas-generator": "github:mpashkovskiy/express-oas-generator",
     "google-auth-library": "^8.7.0",
     "googleapis": "^113.0.0",
+    "@googleapis/subscribewithgoogle": "file:lib/client/googleapis-subscribewithgoogle-0.1.0.tgz",
     "highlight.js": "^11.8.0",
     "jsonwebtoken": "^9.0.0",
     "marked": "^9.1.6",
