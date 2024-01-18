@@ -25,7 +25,7 @@ import publicationApi from './app/routes/publication-api.js';
 import pubSub from './app/routes/pub-sub.js';
 import accountLinkingApi from './app/routes/account-linking/api.js';
 import extendedAccess from './app/routes/extended-access.js';
-import monetizationApi from './app/routes/monetization-api.js';
+import monetizationApi from './app/routes/monetization/api.js';
 
 // Proxy handles https and reverse proxy settings for running locally
 import proxy from './middleware/proxy.js';
