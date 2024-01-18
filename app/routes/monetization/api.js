@@ -33,9 +33,9 @@ router.get('/readers/:readerId', express.json(), async (req, res) => {
   const base = `publications/${process.env.PUBLICATION_ID}`;
   const endpoint = `readers/${readerId}`;
   const name = `${base}/${endpoint}`;
-  const plans = await client.publications.readers.get({name});
+  const response = await client.publications.readers.get({name});
 
-  return res.json(plans.data);
+  return res.json(response.data);
 })
 
 /**
@@ -50,9 +50,9 @@ router.get('/readers/:readerId/entitlementsplans', express.json(), async (req, r
   const base = `publications/${process.env.PUBLICATION_ID}`;
   const endpoint = `readers/${readerId}/entitlementsplans`;
   const name = `${base}/${endpoint}`;
-  const plans = await client.publications.readers.entitlementsplans.get({name});
+  const response = await client.publications.readers.entitlementsplans.get({name});
 
-  return res.json(plans.data);
+  return res.json(response.data);
 })
 
 /**
@@ -67,9 +67,9 @@ router.get('/readers/:readerId/orders/:orderId', express.json(), async (req, res
   const base = `publications/${process.env.PUBLICATION_ID}`;
   const endpoint = `readers/${readerId}/orders/${orderId}`;
   const name = `${base}/${endpoint}`;
-  const plans = await client.publications.readers.entitlementsplans.get({name});
+  const response = await client.publications.readers.orders.get({name});
 
-  return res.json(plans.data);
+  return res.json(response.data);
 })
 
 export default router;
