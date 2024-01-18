@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Google LLC
+ * Copyright 2023-2024 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,24 +40,24 @@ class PublicationApi {
   }
 }
 
+const api = new PublicationApi;
+const client = api.init();
+
 /**
- * GET /:readerId
- * A sample route that accepts a readerId as a url parameter, and uses
- * a service account for querying the Publication API's 
- * entitlementsPlans endpoint without an accesstoken.
+ * GET /entitlementsplans
+ * A POST route that uses the reader_id from the body to query
+ * the Monetization API's entitlementsPlans endpoint using a
+ * service account instead of an access_token.
  */
-router.get('/:readerId', async (req, res) => {
-  const api = new PublicationApi;
-  const client = api.init();
+router.post('/entitlementsplans', express.json(), async (req, res) => {
+  const {reader_id} = req.body;
 
-  console.log(client.publications.readers.entitlementsplans);
+  const base = `publications/${process.env.PUBLICATION_ID}`;
+  const endpoint = `readers/${reader_id}/entitlementsplans`;
+  const name = `${base}/${endpoint}`;
+  const plans = await client.publications.readers.entitlementsplans.get({name});
 
-  const plans = await client.publications.readers.entitlementsplans.get({
-    name:
-        `publications/${process.env.PUBLICATION_ID}/readers/${req.params.readerId}/entitlementsplans`
-  });
-
-  res.json(plans.data);
-});
+  return res.json(plans.data);
+})
 
 export default router;
