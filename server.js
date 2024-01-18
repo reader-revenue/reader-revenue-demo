@@ -24,7 +24,8 @@ import subscriptionLinkingApi from './app/routes/subscription-linking/api.js';
 import publicationApi from './app/routes/publication-api.js';
 import pubSub from './app/routes/pub-sub.js';
 import accountLinkingApi from './app/routes/account-linking/api.js';
-import extendedAccess from './app/routes/extended-access.js'
+import extendedAccess from './app/routes/extended-access.js';
+import monetizationApi from './app/routes/monetization/api.js';
 
 // Proxy handles https and reverse proxy settings for running locally
 import proxy from './middleware/proxy.js';
@@ -53,6 +54,7 @@ app.use('/api/publication', publicationApi);
 app.use('/api/pub-sub', pubSub);
 app.use('/api/account-linking', accountLinkingApi);
 app.use('/api/extended-access', extendedAccess);
+app.use('/api/monetization', monetizationApi);
 
 // Mount custom static file handlers
 app.use('/img', img);
