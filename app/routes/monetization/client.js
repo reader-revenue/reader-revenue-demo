@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Google LLC
+ * Copyright 2024 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,13 @@
  */
 
 import subscribewithgoogle from '@googleapis/subscribewithgoogle';
-import express from 'express';
-
-const router = express.Router();
 
 /**
- * PublicationApi
+ * MonetizationApi
  * A sample class that uses the GoogleApis node.js client and a service
  * account for interacting with the Publication API.
  */
-class PublicationApi {
+class MonetizationApi {
   constructor() {
     this.auth = new subscribewithgoogle.auth.GoogleAuth({
       keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
@@ -40,24 +37,4 @@ class PublicationApi {
   }
 }
 
-/**
- * GET /:readerId
- * A sample route that accepts a readerId as a url parameter, and uses
- * a service account for querying the Publication API's 
- * entitlementsPlans endpoint without an accesstoken.
- */
-router.get('/:readerId', async (req, res) => {
-  const api = new PublicationApi;
-  const client = api.init();
-
-  console.log(client.publications.readers.entitlementsplans);
-
-  const plans = await client.publications.readers.entitlementsplans.get({
-    name:
-        `publications/${process.env.PUBLICATION_ID}/readers/${req.params.readerId}/entitlementsplans`
-  });
-
-  res.json(plans.data);
-});
-
-export default router;
+export default MonetizationApi;

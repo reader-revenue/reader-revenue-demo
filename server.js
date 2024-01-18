@@ -24,7 +24,8 @@ import subscriptionLinkingApi from './app/routes/subscription-linking/api.js';
 import publicationApi from './app/routes/publication-api.js';
 import pubSub from './app/routes/pub-sub.js';
 import accountLinkingApi from './app/routes/account-linking/api.js';
-import extendedAccess from './app/routes/extended-access.js'
+import extendedAccess from './app/routes/extended-access.js';
+import monetizationApi from './app/routes/monetization/api.js';
 
 // Proxy handles https and reverse proxy settings for running locally
 import proxy from './middleware/proxy.js';
@@ -32,8 +33,8 @@ import ssl from './middleware/ssl.js';
 import overrides from './middleware/overrides.js';
 import cookies from './middleware/cookies.js';
 
-//test
-import { renderStaticFile, renderStaticImage } from './lib/renderers.js';
+// Static routers with some custom behavior
+import { css, js, img } from './app/routes/static-handlers.js';
 
 // Configure app globals
 const app = express();
@@ -43,43 +44,22 @@ app.use(ssl);
 app.use(overrides);
 app.use(cookies);
 
-// Mount APIs for content sections
+// Mount content sections
 app.use('/readme', readme);
 app.use('/', readerRevenue);
 
-app.get('/img/*', async (req, res)=>{
-  try {
-    const image = await renderStaticImage(`public/${req.path}`);
-    res.set('Content-Type',`image/${req.path.split('.').pop()}`).end(image);
-  } catch(e) {
-    res.status(500).end(`Error: failed to render ${req.path}`);
-  }
-})
-
-app.get('/js/*', async (req, res)=>{
-  try {
-    console.log(req.path);
-    const renderedStaticFile = await renderStaticFile(`public/${req.path}`);
-    res.set('Content-Type','text/javascript').end(renderedStaticFile);
-  } catch(e) {
-    res.status(500).end(`Error: failed to render ${req.path}`);
-  }
-})
-
-app.get('/css/*', async (req, res)=>{
-  try {
-    const renderedStaticFile = await renderStaticFile(`public/${req.path}`);
-    res.set('Content-Type','text/css').end(renderedStaticFile);
-  } catch(e) {
-    res.status(500).end(`Error: failed to render ${req.path}`);
-  }
-})
-
+// Mount APIs for content sections
 app.use('/api/subscription-linking', subscriptionLinkingApi);
 app.use('/api/publication', publicationApi);
 app.use('/api/pub-sub', pubSub);
 app.use('/api/account-linking', accountLinkingApi);
 app.use('/api/extended-access', extendedAccess);
+app.use('/api/monetization', monetizationApi);
+
+// Mount custom static file handlers
+app.use('/img', img);
+app.use('/js', js);
+app.use('/css', css);
 
 // Boot the server
 console.log(
