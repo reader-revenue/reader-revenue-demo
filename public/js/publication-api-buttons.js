@@ -17,10 +17,7 @@
 import {
   exchangeAuthCodeForTokens, 
   exchangeRefreshTokenForTokens, 
-  queryLocalEntitlements, 
-  queryLocalEntitlementsPlans,
-  queryMemberData,
-  queryOrderData
+  queryLocalEntitlements
 } from './publication-api-entitlements.js';
 import {getAuthzCred, revokeAuthCode, setAuthzCred} from './publication-api-storage.js';
 import {insertHighlightedJson, Loader} from './utils.js';
@@ -82,91 +79,6 @@ function renderFetchEntitlementsButton(selector) {
 }
 
 /**
- * renderFetchEntitlementsPlansButton
- * Creates a button to fetch entitlements manually
- * @param {string} selector
- */
-function renderFetchEntitlementsPlansButton(selector) {
-  const accessToken = getAuthzCred('accessToken');
-  const button = document.createElement('button');
-  button.classList.add('btn', 'btn-primary');
-  button.onclick = async () => {
-    const loaderOutput = document.createElement('div');
-    document.querySelector('#GISOutput').append(loaderOutput);
-    const loader = new Loader(loaderOutput);
-    loader.start();
-    const entitlements = await queryLocalEntitlements(accessToken);
-    const readerId = entitlements.entitlements[0].readerId;
-    const entitlementsplans =
-        await queryLocalEntitlementsPlans(accessToken, readerId);
-    loader.stop();
-    insertHighlightedJson(
-        '#GISOutput', entitlementsplans, 'Manually queried entitlementsplans');
-  };
-  button.innerText = 'Query entitlement plans';
-  document.querySelector(selector).appendChild(button);
-}
-
-
-/**
- * renderFetchMemberButton
- * Creates a button to fetch entitlements manually
- * @param {string} selector
- */
-function renderFetchMemberButton(selector) {
-  const accessToken = getAuthzCred('accessToken');
-  const button = document.createElement('button');
-  button.classList.add('btn', 'btn-primary');
-  button.onclick = async () => {
-    const loaderOutput = document.createElement('div');
-    document.querySelector('#GISOutput').append(loaderOutput);
-    const loader = new Loader(loaderOutput);
-    loader.start();
-    const entitlements = await queryLocalEntitlements(accessToken);
-    const readerId = entitlements.entitlements[0].readerId;
-    const readerData = await queryMemberData(accessToken, readerId);
-    loader.stop();
-    insertHighlightedJson(
-        '#GISOutput', readerData, 'Member data for the current user');
-  };
-  button.innerText = 'Query member data';
-  document.querySelector(selector).appendChild(button);
-}
-
-
-/**
- * renderFetchOrderButton
- * Creates a button to fetch order details manually
- * @param {string} selector
- */
-function renderFetchOrderButton(selector) {
-  const accessToken = getAuthzCred('accessToken');
-  const button = document.createElement('button');
-  button.classList.add('btn', 'btn-primary');
-  button.onclick = async () => {
-    const loaderOutput = document.createElement('div');
-    document.querySelector('#GISOutput').append(loaderOutput);
-    const loader = new Loader(loaderOutput);
-    loader.start();
-    const entitlements = await queryLocalEntitlements(accessToken);
-    const readerId = entitlements.entitlements[0].readerId;
-
-    const entitlementsplans = await queryLocalEntitlementsPlans(accessToken, readerId);
-    const filteredPlans = entitlementsplans.userEntitlementsPlans.filter((plan)=>{
-      return plan.recurringPlanDetails.recurringPlanState != 'CANCELED'
-    })
-    const orderId = filteredPlans[0].purchaseInfo.latestOrderId;
-
-    const readerData = await queryOrderData(accessToken, readerId, orderId);
-    loader.stop();
-    insertHighlightedJson(
-        '#GISOutput', readerData, 'Order data for the current user\'s most recent order that is not canceled.');
-  };
-  button.innerText = 'Query order data';
-  document.querySelector(selector).appendChild(button);
-}
-
-/**
  * renderRevokeButton
  * Creates a button to revoke authorization
  * @param {string} selector
@@ -183,8 +95,5 @@ export {
   renderButton,
   renderRefreshButton,
   renderFetchEntitlementsButton,
-  renderFetchEntitlementsPlansButton,
-  renderFetchMemberButton,
-  renderFetchOrderButton,
   renderRevokeButton
 };
