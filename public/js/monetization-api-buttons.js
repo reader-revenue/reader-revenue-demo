@@ -73,7 +73,7 @@ function renderFetchEntitlementsPlansButton(selector) {
         await queryLocalEntitlementsPlans(readerId);
     loader.stop();
     insertHighlightedJson(
-        '#GISOutput', entitlementsplans, 'Manually queried entitlementsplans');
+        '#GISOutput', entitlementsplans, 'Manually queried entitlementsplans for the given <code>readerId</code>');
   };
   button.innerText = 'Query entitlement plans';
   document.querySelector(selector).appendChild(button);
@@ -96,7 +96,7 @@ function renderFetchMemberButton(selector) {
     const readerData = await queryMemberData(readerId);
     loader.stop();
     insertHighlightedJson(
-        '#GISOutput', readerData, 'Member data for the current user');
+        '#GISOutput', readerData, 'Member data for given <code>readerId</code>');
   };
   button.innerText = 'Query member data';
   document.querySelector(selector).appendChild(button);
@@ -125,7 +125,7 @@ function renderFetchOrderButton(selector) {
     const readerData = await queryOrderData(readerId, orderId);
     loader.stop();
     insertHighlightedJson(
-        '#GISOutput', readerData, 'Order data for the current user\'s most recent order that is not canceled.');
+        '#GISOutput', readerData, 'Order data for the given <code>readerId</code>\'s most recent order that is not canceled.');
   };
   button.innerText = 'Query order data';
   document.querySelector(selector).appendChild(button);

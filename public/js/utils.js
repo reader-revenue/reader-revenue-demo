@@ -51,7 +51,7 @@ function insertHighlightedJson(id, json, label = undefined) {
   const formattedJson = generateHighlightedJson(json);
   if (label) {
     const header = document.createElement('h3');
-    header.innerText = label;
+    header.innerHTML = label;
     container.appendChild(header);
   }
   container.appendChild(formattedJson);
