@@ -67,24 +67,6 @@ router.post('/entitlements', express.json(), async (req, res) => {
   const params = `access_token=${accessToken}`;
   const url = `${base}/${publicationId}/${endpoint}?${params}`;
   const response = await fetch(url).then(r => r.json());
-  try {
-    // if ('entitlements' in response) {
-    //   response.entitlements[0].userId = '4df0faf26630a56329a137ccbfc5d464'
-    // }
-  } catch (e) {
-    console.log('no entitlements to mock a userId into')
-  }
-  return res.json(response);
-})
-
-router.post('/entitlementsplans', express.json(), async (req, res) => {
-  const {accessToken, user_id} = req.body;
-  const base = `https://subscribewithgoogle.googleapis.com/v1/publications`;
-  const endpoint = `readers/${user_id}/entitlementsplans`;
-  const params = `access_token=${accessToken}`;
-  const url = `${base}/${publicationId}/${endpoint}?${params}`;
-  console.log('entitlementsplans', url);
-  const response = await fetch(url).then(r => r.json());
   return res.json(response);
 })
 

@@ -60,7 +60,6 @@ async function exchangeRefreshTokenForTokens(refreshToken) {
   }
 }
 
-
 /**
  * queryLocalEntitlements
  * Queries the Publication API, but via a local endpoint
@@ -78,21 +77,8 @@ async function queryLocalEntitlements(accessToken) {
   return entitlements;
 }
 
-async function queryLocalEntitlementsPlans(accessToken, user_id) {
-  const url = `${location.origin}/api/publication/entitlementsplans`;
-  const requestOptions = {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({accessToken, user_id})
-  };
-  const entitlementsplans =
-      await fetch(url, requestOptions).then(r => r.json());
-  return entitlementsplans;
-}
-
 export {
   exchangeAuthCodeForTokens,
   exchangeRefreshTokenForTokens,
-  queryLocalEntitlements,
-  queryLocalEntitlementsPlans
+  queryLocalEntitlements
 };

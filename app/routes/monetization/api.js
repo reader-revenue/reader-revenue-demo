@@ -20,6 +20,28 @@ import express from 'express';
 const router = express.Router();
 const api = new MonetizationApi;
 const client = api.init();
+const base = `publications/${process.env.PUBLICATION_ID}`;
+
+/**
+ * GET /readers/:readerId
+ * A GET route that uses the readerId to query
+ * the Monetization API's readers endpoint using a
+ * service account instead of an access_token.
+ */
+router.get('/readers/:readerId', express.json(), async (req, res) => {
+  try {
+    const {readerId} = req.params;
+
+    const endpoint = `readers/${readerId}`;
+    const name = `${base}/${endpoint}`;
+    const response = await client.publications.readers.get({name});
+
+    return res.json(response.data);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({errors: e.errors});
+  }
+})
 
 /**
  * GET /entitlementsplans
@@ -27,15 +49,40 @@ const client = api.init();
  * the Monetization API's entitlementsPlans endpoint using a
  * service account instead of an access_token.
  */
-router.post('/entitlementsplans', express.json(), async (req, res) => {
-  const {reader_id} = req.body;
+router.get('/readers/:readerId/entitlementsplans', express.json(), async (req, res) => {
+  try {
+    const {readerId} = req.params;
 
-  const base = `publications/${process.env.PUBLICATION_ID}`;
-  const endpoint = `readers/${reader_id}/entitlementsplans`;
-  const name = `${base}/${endpoint}`;
-  const plans = await client.publications.readers.entitlementsplans.get({name});
+    const endpoint = `readers/${readerId}/entitlementsplans`;
+    const name = `${base}/${endpoint}`;
+    const response = await client.publications.readers.entitlementsplans.get({name});
 
-  return res.json(plans.data);
+    return res.json(response.data);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({errors: e.errors});
+  }
+})
+
+/**
+ * GET /readers/:readerId/orders/:orderId
+ * A GET route that uses the readerId and orderId to query
+ * the Monetization API's orders endpoint using a
+ * service account instead of an access_token.
+ */
+router.get('/readers/:readerId/orders/:orderId', express.json(), async (req, res) => {
+  try {
+    const {readerId, orderId} = req.params;
+
+    const endpoint = `readers/${readerId}/orders/${orderId}`;
+    const name = `${base}/${endpoint}`;
+    const response = await client.publications.readers.orders.get({name});
+
+    return res.json(response.data);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({errors: e.errors});
+  }
 })
 
 export default router;

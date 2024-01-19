@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import {exchangeAuthCodeForTokens, exchangeRefreshTokenForTokens, queryLocalEntitlements, queryLocalEntitlementsPlans} from './publication-api-entitlements.js';
+import {
+  exchangeAuthCodeForTokens, 
+  exchangeRefreshTokenForTokens, 
+  queryLocalEntitlements
+} from './publication-api-entitlements.js';
 import {getAuthzCred, revokeAuthCode, setAuthzCred} from './publication-api-storage.js';
 import {insertHighlightedJson, Loader} from './utils.js';
 
@@ -75,32 +79,6 @@ function renderFetchEntitlementsButton(selector) {
 }
 
 /**
- * renderFetchEntitlementsPlansButton
- * Creates a button to fetch entitlements manually
- * @param {string} selector
- */
-function renderFetchEntitlementsPlansButton(selector) {
-  const accessToken = getAuthzCred('accessToken');
-  const button = document.createElement('button');
-  button.classList.add('btn', 'btn-primary');
-  button.onclick = async () => {
-    const loaderOutput = document.createElement('div');
-    document.querySelector('#GISOutput').append(loaderOutput);
-    const loader = new Loader(loaderOutput);
-    loader.start();
-    const entitlements = await queryLocalEntitlements(accessToken);
-    const readerId = entitlements.entitlements[0].readerId;
-    const entitlementsplans =
-        await queryLocalEntitlementsPlans(accessToken, readerId);
-    loader.stop();
-    insertHighlightedJson(
-        '#GISOutput', entitlementsplans, 'Manually queried entitlementsplans');
-  };
-  button.innerText = 'Query entitlement plans';
-  document.querySelector(selector).appendChild(button);
-}
-
-/**
  * renderRevokeButton
  * Creates a button to revoke authorization
  * @param {string} selector
@@ -117,6 +95,5 @@ export {
   renderButton,
   renderRefreshButton,
   renderFetchEntitlementsButton,
-  renderFetchEntitlementsPlansButton,
   renderRevokeButton
 };

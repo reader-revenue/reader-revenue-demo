@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import {renderButton, renderFetchEntitlementsButton, renderFetchEntitlementsPlansButton, renderRefreshButton, renderRevokeButton} from './publication-api-buttons.js';
+import {
+  renderButton, 
+  renderFetchEntitlementsButton, 
+  renderRefreshButton, 
+  renderRevokeButton
+} from './publication-api-buttons.js';
 import {initializeClient} from './publication-api-google-client.js';
 import {handleCachedCredentials, handleRedirectFromOAuth} from './publication-api-handlers.js';
 import {hasAuthzCred} from './publication-api-storage.js';
@@ -23,8 +28,6 @@ document.addEventListener('DOMContentLoaded', async function() {
   initializeClient();
   renderButton('#siwgButton .button');
   if (hasAuthzCred('accessToken')) {
-    renderFetchEntitlementsPlansButton('#entitlementsPlans .button');
-    document.querySelector('#entitlementsPlans').classList.remove('hidden');
     renderRevokeButton('#revokeButton .button');
     document.querySelector('#revokeButton').classList.remove('hidden');
     renderFetchEntitlementsButton('#accessToken .button');
