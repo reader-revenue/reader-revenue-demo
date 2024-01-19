@@ -66,14 +66,14 @@ function renderFetchEntitlementsPlansButton(selector) {
   button.setAttribute('disabled','true');
   button.onclick = async () => {
     const loaderOutput = document.createElement('div');
-    document.querySelector('#GISOutput').append(loaderOutput);
+    document.querySelector('#APIOutput').append(loaderOutput);
     const loader = new Loader(loaderOutput);
     loader.start();
     const entitlementsplans =
         await queryLocalEntitlementsPlans(readerId);
     loader.stop();
     insertHighlightedJson(
-        '#GISOutput', entitlementsplans, 'Manually queried entitlementsplans for the given <code>readerId</code>');
+        '#APIOutput', entitlementsplans, 'Manually queried entitlementsplans for the given <code>readerId</code>');
   };
   button.innerText = 'Query entitlement plans';
   document.querySelector(selector).appendChild(button);
@@ -90,13 +90,13 @@ function renderFetchMemberButton(selector) {
   button.setAttribute('disabled','true');
   button.onclick = async () => {
     const loaderOutput = document.createElement('div');
-    document.querySelector('#GISOutput').append(loaderOutput);
+    document.querySelector('#APIOutput').append(loaderOutput);
     const loader = new Loader(loaderOutput);
     loader.start();
     const readerData = await queryMemberData(readerId);
     loader.stop();
     insertHighlightedJson(
-        '#GISOutput', readerData, 'Member data for given <code>readerId</code>');
+        '#APIOutput', readerData, 'Member data for given <code>readerId</code>');
   };
   button.innerText = 'Query member data';
   document.querySelector(selector).appendChild(button);
@@ -113,7 +113,7 @@ function renderFetchOrderButton(selector) {
   button.setAttribute('disabled','true');
   button.onclick = async () => {
     const loaderOutput = document.createElement('div');
-    document.querySelector('#GISOutput').append(loaderOutput);
+    document.querySelector('#APIOutput').append(loaderOutput);
     const loader = new Loader(loaderOutput);
     loader.start();
     const entitlementsplans = await queryLocalEntitlementsPlans(readerId);
@@ -125,7 +125,7 @@ function renderFetchOrderButton(selector) {
     const readerData = await queryOrderData(readerId, orderId);
     loader.stop();
     insertHighlightedJson(
-        '#GISOutput', readerData, 'Order data for the given <code>readerId</code>\'s most recent order that is not canceled.');
+        '#APIOutput', readerData, 'Order data for the given <code>readerId</code>\'s most recent order that is not canceled.');
   };
   button.innerText = 'Query order data';
   document.querySelector(selector).appendChild(button);

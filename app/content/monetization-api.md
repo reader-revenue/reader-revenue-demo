@@ -1,6 +1,3 @@
-<script src="https://accounts.google.com/gsi/client"></script>
-
-
 # Manually query member and order details with the Monetization API
 
 Publishers can use the Monetization API to find out more information about members
@@ -24,7 +21,7 @@ entitlement, and the  [Publication API](/reference/publication-api) example to g
 After setting a `readerId`, the buttons will become available.
 
 !!! hint **Logged-in user is not required**
-While the Publication API uses Sign in with Google to log in a user and generate an `accessToken`,
+Unlike the Publication API, which uses Sign in with Google to log in a user and generate an `accessToken`,
 the Monetization API does not require this. Any `readerId` for the current publication may be used.
 !!!
 
@@ -68,7 +65,7 @@ the Monetization API does not require this. Any `readerId` for the current publi
   </tbody>
 </table>
 
-<div id="GISOutput"></div>
+<div id="APIOutput"></div>
 
 # Implementation Samples
 

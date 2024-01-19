@@ -20,6 +20,7 @@ import express from 'express';
 const router = express.Router();
 const api = new MonetizationApi;
 const client = api.init();
+const base = `publications/${process.env.PUBLICATION_ID}`;
 
 /**
  * GET /readers/:readerId
@@ -30,7 +31,6 @@ const client = api.init();
 router.get('/readers/:readerId', express.json(), async (req, res) => {
   const {readerId} = req.params;
 
-  const base = `publications/${process.env.PUBLICATION_ID}`;
   const endpoint = `readers/${readerId}`;
   const name = `${base}/${endpoint}`;
   const response = await client.publications.readers.get({name});
@@ -47,7 +47,6 @@ router.get('/readers/:readerId', express.json(), async (req, res) => {
 router.get('/readers/:readerId/entitlementsplans', express.json(), async (req, res) => {
   const {readerId} = req.params;
 
-  const base = `publications/${process.env.PUBLICATION_ID}`;
   const endpoint = `readers/${readerId}/entitlementsplans`;
   const name = `${base}/${endpoint}`;
   const response = await client.publications.readers.entitlementsplans.get({name});
@@ -64,7 +63,6 @@ router.get('/readers/:readerId/entitlementsplans', express.json(), async (req, r
 router.get('/readers/:readerId/orders/:orderId', express.json(), async (req, res) => {
   const {readerId, orderId} = req.params;
 
-  const base = `publications/${process.env.PUBLICATION_ID}`;
   const endpoint = `readers/${readerId}/orders/${orderId}`;
   const name = `${base}/${endpoint}`;
   const response = await client.publications.readers.orders.get({name});
