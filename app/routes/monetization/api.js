@@ -29,13 +29,18 @@ const base = `publications/${process.env.PUBLICATION_ID}`;
  * service account instead of an access_token.
  */
 router.get('/readers/:readerId', express.json(), async (req, res) => {
-  const {readerId} = req.params;
+  try {
+    const {readerId} = req.params;
 
-  const endpoint = `readers/${readerId}`;
-  const name = `${base}/${endpoint}`;
-  const response = await client.publications.readers.get({name});
+    const endpoint = `readers/${readerId}`;
+    const name = `${base}/${endpoint}`;
+    const response = await client.publications.readers.get({name});
 
-  return res.json(response.data);
+    return res.json(response.data);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({errors: e.errors});
+  }
 })
 
 /**
@@ -45,13 +50,18 @@ router.get('/readers/:readerId', express.json(), async (req, res) => {
  * service account instead of an access_token.
  */
 router.get('/readers/:readerId/entitlementsplans', express.json(), async (req, res) => {
-  const {readerId} = req.params;
+  try {
+    const {readerId} = req.params;
 
-  const endpoint = `readers/${readerId}/entitlementsplans`;
-  const name = `${base}/${endpoint}`;
-  const response = await client.publications.readers.entitlementsplans.get({name});
+    const endpoint = `readers/${readerId}/entitlementsplans`;
+    const name = `${base}/${endpoint}`;
+    const response = await client.publications.readers.entitlementsplans.get({name});
 
-  return res.json(response.data);
+    return res.json(response.data);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({errors: e.errors});
+  }
 })
 
 /**
@@ -61,13 +71,18 @@ router.get('/readers/:readerId/entitlementsplans', express.json(), async (req, r
  * service account instead of an access_token.
  */
 router.get('/readers/:readerId/orders/:orderId', express.json(), async (req, res) => {
-  const {readerId, orderId} = req.params;
+  try {
+    const {readerId, orderId} = req.params;
 
-  const endpoint = `readers/${readerId}/orders/${orderId}`;
-  const name = `${base}/${endpoint}`;
-  const response = await client.publications.readers.orders.get({name});
+    const endpoint = `readers/${readerId}/orders/${orderId}`;
+    const name = `${base}/${endpoint}`;
+    const response = await client.publications.readers.orders.get({name});
 
-  return res.json(response.data);
+    return res.json(response.data);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({errors: e.errors});
+  }
 })
 
 export default router;
