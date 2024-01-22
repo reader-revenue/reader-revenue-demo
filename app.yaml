@@ -16,6 +16,9 @@ runtime: nodejs18
 service_account: ""
 service: default
 env_variables:
+  ENV_NAME: "Prod"
+  GOOGLE_SITE_VERIFICATION: ""
+  GOOGLE_CLOUD_REGION: ""
   OAUTH_CLIENT_ID: ""
   OAUTH_CLIENT_SECRET: ""
   PUBLICATION_ID: ""
