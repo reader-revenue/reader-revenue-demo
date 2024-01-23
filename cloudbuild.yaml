@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# To use this file, substitutions need to be set up within a Cloud Build
+# trigger within GCP. For more information, please see the following:
+# - https://cloud.google.com/build/docs/configuring-builds/substitute-variable-values
+
 steps:
   - name: 'gcr.io/cloud-builders/npm:latest'
     args:
@@ -35,3 +39,4 @@ steps:
 timeout: 1600s
 options:
   automapSubstitutions: true
+  substitutionOption: 'ALLOW_LOOSE' #Allows for builds with unset substitutions
