@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function () {
   createQueryForm();
   createUpdateForm();
   (self.SWG = self.SWG || []).push(subscriptions => {
-    subscriptions.init('prod.reader-revenue-demo.ue.r.appspot.com');
+    subscriptions.init('process.env.PUBLICATION_ID');
     analyticsEventLogger(subscriptions);
   });
 });
