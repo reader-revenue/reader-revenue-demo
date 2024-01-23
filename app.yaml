@@ -13,8 +13,8 @@
 # limitations under the License.
 
 runtime: nodejs18
-service_account: "##SERVICE_ACCOUNT##"
-service: "##SERVICE_NAME##"
+service_account: ##SERVICE_ACCOUNT##
+service: ##SERVICE_NAME##
 env_variables:
   ENV_NAME: "##ENV_NAME##"
   ENV_OVERRIDES: "##ENV_OVERRIDES##"
