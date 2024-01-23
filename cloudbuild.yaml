@@ -1,0 +1,42 @@
+# Copyright 2024 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# To use this file, substitutions need to be set up within a Cloud Build
+# trigger within GCP. For more information, please see the following:
+# - https://cloud.google.com/build/docs/configuring-builds/substitute-variable-values
+
+steps:
+  - name: 'gcr.io/cloud-builders/npm:latest'
+    args:
+    - install
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: 'bash'
+    args:
+    - '-c'
+    - |
+        sed -i "s/##SERVICE_ACCOUNT##/${_SERVICE_ACCOUNT}/g" app.yaml
+        sed -i "s/##SERVICE_NAME##/${_SERVICE_NAME}/g" app.yaml
+        sed -i "s/##ENV_NAME##/${_ENV_NAME}/g" app.yaml
+        sed -i "s/##ENV_OVERRIDES##/${_ENV_OVERRIDES}/g" app.yaml
+        sed -i "s/##GOOGLE_SITE_VERIFICATION##/${_GOOGLE_SITE_VERIFICATION}/g" app.yaml
+        sed -i "s/##GOOGLE_CLOUD_REGION##/${_GOOGLE_CLOUD_REGION}/g" app.yaml
+        sed -i "s/##OAUTH_CLIENT_ID##/${_OAUTH_CLIENT_ID}/g" app.yaml
+        sed -i "s/##OAUTH_CLIENT_SECRET##/${_OAUTH_CLIENT_SECRET}/g" app.yaml
+        sed -i "s/##PUBLICATION_ID##/${_PUBLICATION_ID}/g" app.yaml
+        gcloud config set app/cloud_build_timeout 1600
+        gcloud app deploy
+timeout: 1600s
+options:
+  automapSubstitutions: true
+  substitutionOption: 'ALLOW_LOOSE' #Allows for builds with unset substitutions
