@@ -57,8 +57,8 @@ function renderReaderIdForm(selector) {
 }
 
 /**
- * renderReaderIdForm
- * Creates a button to fetch entitlements manually
+ * renderPublicationIdForm
+ * Creates a button to set a PublicationId
  * @param {string} selector
  */
 function renderPublicationIdForm(selector) {
