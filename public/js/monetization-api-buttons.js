@@ -23,6 +23,7 @@ import {insertHighlightedJson, Loader} from './utils.js';
 
 // Global reader_id used by helper functions
 let readerId = undefined;
+let publicationId = 'process.env.PUBLICATION_ID';
 
 /**
  * renderReaderIdForm
@@ -56,6 +57,38 @@ function renderReaderIdForm(selector) {
 }
 
 /**
+ * renderReaderIdForm
+ * Creates a button to fetch entitlements manually
+ * @param {string} selector
+ */
+function renderPublicationIdForm(selector) {
+  const input = document.createElement('input');
+  input.setAttribute('placeholder', 'Paste publicationId here');
+  input.setAttribute('id', 'publicationId');
+  input.setAttribute('value', 'process.env.PUBLICATION_ID');
+
+  const form = document.createElement('form');
+  form.appendChild(input);
+
+  // Use the form input to update readerId
+  input.onchange = (event)=>{
+    publicationId = event.target.value;
+
+    // Set the availability of buttons based on readerId
+    document.querySelectorAll('.btn').forEach((button)=>{
+      if(publicationId === '' || publicationId === undefined) {
+        button.setAttribute('disabled','true');
+      } else {
+        button.removeAttribute('disabled');
+      }
+    })
+    console.log(`publicationId updated to ${publicationId}`);
+  };
+
+  document.querySelector(selector).appendChild(form);
+}
+
+/**
  * renderFetchEntitlementsPlansButton
  * Creates a button to fetch entitlements manually
  * @param {string} selector
@@ -70,7 +103,7 @@ function renderFetchEntitlementsPlansButton(selector) {
     const loader = new Loader(loaderOutput);
     loader.start();
     const entitlementsplans =
-        await queryLocalEntitlementsPlans(readerId);
+        await queryLocalEntitlementsPlans(publicationId, readerId);
     loader.stop();
     insertHighlightedJson(
         '#APIOutput', entitlementsplans, 'Manually queried entitlementsplans for the given <code>readerId</code>');
@@ -93,7 +126,7 @@ function renderFetchMemberButton(selector) {
     document.querySelector('#APIOutput').append(loaderOutput);
     const loader = new Loader(loaderOutput);
     loader.start();
-    const readerData = await queryMemberData(readerId);
+    const readerData = await queryMemberData(publicationId, readerId);
     loader.stop();
     insertHighlightedJson(
         '#APIOutput', readerData, 'Member data for given <code>readerId</code>');
@@ -116,13 +149,13 @@ function renderFetchOrderButton(selector) {
     document.querySelector('#APIOutput').append(loaderOutput);
     const loader = new Loader(loaderOutput);
     loader.start();
-    const entitlementsplans = await queryLocalEntitlementsPlans(readerId);
+    const entitlementsplans = await queryLocalEntitlementsPlans(publicationId, readerId);
     const filteredPlans = entitlementsplans.userEntitlementsPlans.filter((plan)=>{
       return plan.recurringPlanDetails.recurringPlanState != 'CANCELED'
     })
     const orderId = filteredPlans[0].purchaseInfo.latestOrderId;
 
-    const readerData = await queryOrderData(readerId, orderId);
+    const readerData = await queryOrderData(publicationId, readerId, orderId);
     loader.stop();
     insertHighlightedJson(
         '#APIOutput', readerData, 'Order data for the given <code>readerId</code>\'s most recent order that is not canceled.');
@@ -135,5 +168,6 @@ export {
   renderReaderIdForm,
   renderFetchEntitlementsPlansButton,
   renderFetchMemberButton,
-  renderFetchOrderButton
+  renderFetchOrderButton,
+  renderPublicationIdForm
 };
