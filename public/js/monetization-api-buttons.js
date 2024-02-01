@@ -70,7 +70,7 @@ function renderPublicationIdForm(selector) {
   const form = document.createElement('form');
   form.appendChild(input);
 
-  // Use the form input to update readerId
+  // Use the form input to update publicationId
   input.onchange = (event)=>{
     publicationId = event.target.value;
 
