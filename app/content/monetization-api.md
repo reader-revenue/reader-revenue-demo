@@ -17,6 +17,8 @@ you can use the [Add Subscribe with Google button](/swg/add-button) example to p
 entitlement, and the  [Publication API](/reference/publication-api) example to get your `readerId`.
 
 <div id="readerIdForm"><code>readerId</code> input:</div>
+<div id="publicationIdForm"><code>publicationId</code> input:</div>
+
 
 After setting a `readerId`, the buttons will become available.
 

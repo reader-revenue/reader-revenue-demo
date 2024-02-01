@@ -17,11 +17,12 @@
 /**
  * queryLocalEntitlementsPlans
  * Queries the Monetization API, but via a local endpoint
+ * @params {string} publicationId
  * @params {string} readerId
  * @returns {{object}}
  */
-async function queryLocalEntitlementsPlans(readerId) {
-  const url = `${location.origin}/api/monetization/readers/${readerId}/entitlementsplans`;
+async function queryLocalEntitlementsPlans(publicationId, readerId) {
+  const url = `${location.origin}/api/monetization/publications/${publicationId}/readers/${readerId}/entitlementsplans`;
   const requestOptions = {
     headers: {'Content-Type': 'application/json'}
   };
@@ -31,11 +32,12 @@ async function queryLocalEntitlementsPlans(readerId) {
 /**
  * queryMemberData
  * Queries the Monetization API, but via a local endpoint
+ * @params {string} publicationId
  * @params {string} readerId
  * @returns {{object}}
  */
-async function queryMemberData(readerId) {
-  const url = `${location.origin}/api/monetization/readers/${readerId}`;
+async function queryMemberData(publicationId, readerId) {
+  const url = `${location.origin}/api/monetization/publications/${publicationId}/readers/${readerId}`;
   const requestOptions = {
     headers: {'Content-Type': 'application/json'}
   };
@@ -45,12 +47,13 @@ async function queryMemberData(readerId) {
 /**
  * queryOrderData
  * Queries the Monetization API, but via a local endpoint
+ * @params {string} publicationId
  * @params {string} readerId
  * @params {string} orderId
  * @returns {{object}}
  */
-async function queryOrderData(readerId, orderId) {
-  const url = `${location.origin}/api/monetization/readers/${readerId}/orders/${orderId}`;
+async function queryOrderData(publicationId, readerId, orderId) {
+  const url = `${location.origin}/api/monetization/publications/${publicationId}/readers/${readerId}/orders/${orderId}`;
   const requestOptions = {
     headers: {'Content-Type': 'application/json'}
   };

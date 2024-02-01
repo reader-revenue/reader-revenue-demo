@@ -16,6 +16,7 @@
 
 import {
   renderReaderIdForm,
+  renderPublicationIdForm,
   renderFetchEntitlementsPlansButton,
   renderFetchMemberButton,
   renderFetchOrderButton
@@ -24,6 +25,7 @@ import {
 document.addEventListener('DOMContentLoaded', async function() {
 
   renderReaderIdForm('#readerIdForm');
+  renderPublicationIdForm('#publicationIdForm');
   renderFetchEntitlementsPlansButton('#entitlementsPlans .button');
   renderFetchMemberButton('#member .button');
   renderFetchOrderButton('#order .button'); 
