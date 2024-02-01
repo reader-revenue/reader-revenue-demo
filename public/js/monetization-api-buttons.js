@@ -74,7 +74,7 @@ function renderPublicationIdForm(selector) {
   input.onchange = (event)=>{
     publicationId = event.target.value;
 
-    // Set the availability of buttons based on readerId
+    // Set the availability of buttons based on publicationId
     document.querySelectorAll('.btn').forEach((button)=>{
       if(publicationId === '' || publicationId === undefined) {
         button.setAttribute('disabled','true');
