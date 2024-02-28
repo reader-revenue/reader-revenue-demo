@@ -56,7 +56,10 @@ class AnalyticsEventHandler {
             this.latestEvent?.eventType === 1086 && //closed
             this.latestCallback?.success === true 
         ) {
-            return {determination: 'dialog has closed after successful linking'}
+            return {
+                determination: 'success',
+                message: 'dialog has closed after successful linking'
+            }
         } else if (
             //latest event was 'close' and linking failed
             //and previous event was 'failed'
@@ -65,7 +68,10 @@ class AnalyticsEventHandler {
             this.penultimateEvent?.eventType === 2005 && //failed
             this.latestCallback?.success === false
         ) {
-            return {determination: 'dialog has been closed after linking has failed'}
+            return {
+                determination: 'failure',
+                message: 'dialog has been closed after linking has failed'
+            }
         } else if (
             //latest event was 'close'
             //and the previous event was 'open'
@@ -74,10 +80,14 @@ class AnalyticsEventHandler {
             this.penultimateEvent?.eventType === 40 && //opened
             this.latestCallback?.success === (false || undefined)
         ) {
-            return {determination: 'dialog has been explicitly closed without linking'}
+            return {
+                determination: 'declined',
+                message: 'dialog has been explicitly closed without linking'
+            }
         } else {
             return {
                 determination: undefined,
+                message: 'Indeterminate state',
                 latestEvent: this.latestEvent,
                 latestCallback: this.latestCallback
             }

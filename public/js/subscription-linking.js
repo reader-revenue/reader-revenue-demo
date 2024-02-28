@@ -204,18 +204,19 @@ async function updateEntitlementsForPpid(ppid) {
 /**
  * analyticsEventLogger(subs)
  * @param {object} subs The subscription object from instantiating swg.js
- * Creates an eventManager that listens to events fired by swg.js
+ * Creates an eventManager that listens to events fired by swg.js.
  */
 function analyticsEventLogger(subs, eventHandler) {
   subs.getEventManager().then(manager => {
       manager.registerEventListener((event) => {
         eventHandler.logEvent(event);
 
+        //intent.determination can be one of the following:
+        //['success','failure','declined'] or undefined
         const intent = eventHandler.determineIntent();
         if(intent.determination !== undefined) {
-          console.debug(intent.determination);
+          console.debug(intent.message);
         }
-
       })
   });
 }
