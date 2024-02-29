@@ -17,19 +17,20 @@
 import hljs from 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/es/highlight.min.js';
 
 import {Loader} from './utils.js';
+import { AnalyticsEventHandler } from './subscription-linking-event-handler.js';
 
 /**
  * linkSubscription
  * Initiates a linked subscription
  * @param {number} ppid
  */
-function linkSubscription(ppid) {
+function linkSubscription(ppid, eventHandler) {
   self.SWG.push(async (subscriptions) => {
       try {
         const result = await subscriptions.linkSubscription({
           publisherProvidedId: ppid.trim(),
         });
-        console.log(result);
+        eventHandler.logCallback(result);
       } catch(e) {
         console.log(e);
       }
@@ -50,14 +51,14 @@ function randomPpid() {
  * createForm()
  * Creates a form, and appends it to the DOM after #initiateLink
  */
-function createForm() {
+function createForm(eventHandler) {
   let ppid = randomPpid();
 
   const button = document.createElement('button');
   button.innerText = "Initiate Link";
   button.addEventListener('click', (event)=>{
     event.preventDefault();
-    linkSubscription(ppid);
+    linkSubscription(ppid, eventHandler);
   });
 
   const input = document.createElement('input');
@@ -200,20 +201,34 @@ async function updateEntitlementsForPpid(ppid) {
   }
 }
 
-function analyticsEventLogger(subs) {
+/**
+ * analyticsEventLogger(subs)
+ * @param {object} subs The subscription object from instantiating swg.js
+ * Creates an eventManager that listens to events fired by swg.js.
+ */
+function analyticsEventLogger(subs, eventHandler) {
   subs.getEventManager().then(manager => {
       manager.registerEventListener((event) => {
-        console.log("New analytics event: ", event);
+        eventHandler.logEvent(event);
+
+        //intent.determination can be one of the following:
+        //['success','failure','declined'] or undefined
+        const intent = eventHandler.determineIntent();
+        if(intent.determination !== undefined) {
+          console.debug(intent.message);
+        }
       })
   });
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  createForm();
+  const eventHandler = new AnalyticsEventHandler();
+
+  createForm(eventHandler);
   createQueryForm();
   createUpdateForm();
   (self.SWG = self.SWG || []).push(subscriptions => {
     subscriptions.init('process.env.PUBLICATION_ID');
-    analyticsEventLogger(subscriptions);
+    analyticsEventLogger(subscriptions, eventHandler);
   });
 });

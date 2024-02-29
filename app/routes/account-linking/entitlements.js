@@ -30,14 +30,23 @@ class Entitlements {
         productId,
         publicationId: this.publicationId,
         timestamp: Date.now()
-      }), "utf8").toString("base64")
+      }), "utf8").toString("base64");
+
+      // In production, this unique ppid would be associated with a reader,
+      // and later used to update entitlements with Subscription Linking.
+      const generatePpid = Buffer.from(JSON.stringify({
+        accessToken: this.accessToken,
+        productId,
+        publicationId: this.publicationId
+      }), "utf8").toString("base64");
 
       console.log(`Returned ${this.publicationId}:${productId} for accessToken: ${this.accessToken}`)
       return {
         "source": this.publicationId,
         "products": [`${this.publicationId}:${productId}`],
         "subscriptionToken": subscriptionToken,
-        "detail" : `A ${productId} entitlement for the ${this.publicationId} publication, for accessToken ${this.accessToken}`
+        "detail" : `A ${productId} entitlement for the ${this.publicationId} publication, for accessToken ${this.accessToken}`,
+        "ppid": generatePpid
       };
 
     } catch (e) {
