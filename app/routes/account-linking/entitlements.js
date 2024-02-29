@@ -32,6 +32,8 @@ class Entitlements {
         timestamp: Date.now()
       }), "utf8").toString("base64");
 
+      // In production, this unique ppid would be associated with a reader,
+      // and later used to update entitlements with Subscription Linking.
       const generatePpid = Buffer.from(JSON.stringify({
         accessToken: this.accessToken,
         productId,
