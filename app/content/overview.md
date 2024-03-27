@@ -159,6 +159,9 @@ required unless specified:
         "url": "/", // Url (relative to root)
         "content": "app/content/test.md" // .md or .html to render,
         "script": "js/script.js" // Optional, relative to the /public folder
+        "options": { //Optional, passed directly to template rendering
+          "suppressStructuredDataMarkup" : true // suppressed the ld+json block rendering
+        }
       }
       // Insert more links for this section
     ]

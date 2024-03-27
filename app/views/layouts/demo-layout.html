@@ -56,7 +56,11 @@
 
   {{/data.script}}
 
+  {{#unless data.options.structuredDataMarkup}}
   {{> "structured-data-markup"}}
+  {{else}}
+  <!-- Structured Data Markup suppressed by route configuration-->>
+  {{/unless}}
 
   <script defer type="module" src="js/demo-layout.js"></script>
 

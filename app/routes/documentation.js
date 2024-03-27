@@ -16,7 +16,7 @@
 
 import express from 'express';
 
-import {nav, script} from '../../lib/nav/documentation.js';
+import {nav, script, options} from '../../lib/nav/documentation.js';
 import {renderHtml, renderMarkdown} from '../../lib/renderers.js';
 
 const router = express.Router();
@@ -57,10 +57,12 @@ for (const section of nav()) {
             ? await renderMarkdown(route.content, section.template, {
                 nav: nav(req),
                 script: script(req),
+                options: options(req)
               })
             : await renderHtml(route.content, section.template, {
                 nav: nav(req),
                 script: script(req),
+                options: options(req)
               });
       } catch (e) {
         console.log(e);
