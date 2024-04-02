@@ -35,9 +35,6 @@ function analyticsEventLogger(subs) {
     subscriptions.init('CAowqfCKCw')
 
     analyticsEventLogger(subscriptions);
-  
-    // subscriptions.start()
-    
 
     // 3. Render the smart button onto the DOM element
     let swgStdButton = document.getElementById('swg-standard-button');
