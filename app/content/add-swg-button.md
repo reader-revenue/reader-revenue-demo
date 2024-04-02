@@ -1,4 +1,5 @@
 <script async
+  subscriptions-control="manual"
   type="application/javascript"
   src="https://news.google.com/swg/js/v1/swg.js">
 </script>
