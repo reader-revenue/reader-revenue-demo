@@ -107,7 +107,7 @@ Read the [documentation](https://developers.google.com/news/subscribe/guides/add
     <script>
       (self.SWG = self.SWG || []).push( subscriptions => {
         // 3. Explicitly specify the Pay backend version to use
-        subscriptions.configure({paySwgVersion: '2'})
+        subscriptions.configure({paySwgVersion: '2'});
 
         // 4. Use a Publication ID (example.com) or a Product ID (example.com:premium)
         subscriptions.init(publicationOrProductId);

@@ -31,8 +31,8 @@ function analyticsEventLogger(subs) {
   }
   
   (self.SWG = self.SWG || []).push(subscriptions => {
-    subscriptions.configure({paySwgVersion: '2'})
-    subscriptions.init('CAowqfCKCw')
+    subscriptions.configure({paySwgVersion: '2'});
+    subscriptions.init('CAowqfCKCw');
 
     analyticsEventLogger(subscriptions);
 
