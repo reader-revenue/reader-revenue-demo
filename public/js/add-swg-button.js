@@ -31,10 +31,11 @@ function analyticsEventLogger(subs) {
   }
   
   (self.SWG = self.SWG || []).push(subscriptions => {
+    subscriptions.configure({paySwgVersion: '2'});
+    subscriptions.init('CAowqfCKCw');
+
     analyticsEventLogger(subscriptions);
-  
-    // subscriptions.start();
-  
+
     // 3. Render the smart button onto the DOM element
     let swgStdButton = document.getElementById('swg-standard-button');
     subscriptions.attachButton(

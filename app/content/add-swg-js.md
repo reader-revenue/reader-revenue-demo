@@ -97,15 +97,20 @@ Read the [documentation](https://developers.google.com/news/subscribe/guides/add
 ```html 
 <html>
   <head>
-    <!-- 1. Include the swg client -->
-    <script async type="application/javascript"
-            src="https://news.google.com/swg/js/v1/swg.js"></script>
+    <!-- 1. Include the swg client with the subscriptions-control attribute set to "manual" -->
+    <script async 
+      subscriptions-control="manual"
+      type="application/javascript"
+      src="https://news.google.com/swg/js/v1/swg.js"></script>
 
     <!-- 2. Add a client ready callback -->
     <script>
       (self.SWG = self.SWG || []).push( subscriptions => {
-         // 3. Use a Publication ID (example.com) or a Product ID (example.com:premium)
-         subscriptions.init(publicationOrProductId);
+        // 3. Explicitly specify the Pay backend version to use
+        subscriptions.configure({paySwgVersion: '2'});
+
+        // 4. Use a Publication ID (example.com) or a Product ID (example.com:premium)
+        subscriptions.init(publicationOrProductId);
       });
     </script>
   </head>
