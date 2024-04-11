@@ -28,7 +28,7 @@
  * This example stores state only
  * in the browser's localStorage, which is temporary.
  */
-class newsletterPersistence {
+class NewsletterPersistence {
     constructor() {
       this._signups = [];
     }
@@ -61,4 +61,4 @@ class newsletterPersistence {
     }
   }
   
-  export {newsletterPersistence};
+  export {NewsletterPersistence};
