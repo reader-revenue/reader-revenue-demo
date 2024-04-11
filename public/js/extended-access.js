@@ -217,7 +217,7 @@ function InitGaaMetering() {
   // https://developers.google.com/news/subscribe/extended-access/integration-steps/web-implementation#initialize-the-extended-access-library
 
   GaaMetering.init({
-    googleApiClientId: '695298810691-sue9beofr6jstu5e227oh4jpatljlt1p.apps.googleusercontent.com',
+    googleApiClientId: 'process.env.OAUTH_CLIENT_ID',
     allowedReferrers: allowedReferrers,
     userState: getUserState(),
     unlockArticle: unlockArticle,
