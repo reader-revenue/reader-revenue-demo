@@ -63,7 +63,7 @@ const prompt = availableInterventions.find(({id}) => {
 });
 ```
 
-### Show the prompt, and handle the response
+### Show the prompt
 
 To display a prompt, use the returned value from `subscriptions.getAvailableInterventions()` and use the `show` method:
 
@@ -80,10 +80,37 @@ prompt?.show({
 });
 ```
 
+### Handle the response
+
+The `onResult` callback will include information on the configuration used
+to create the prompt, as well as the newsletter subscriber's information. The `configurationId` matches the `promptId provided to the publisher from Google, in response to the per-newsletter configuration authored by the publisher in the initial step.
+
+```javascript
+{
+  'configurationId': '123-456-789',
+  'data': {
+    'userEmail': 'example@example.com',
+    'userName': 'John Johnson',
+  }
+}
+```
+
 #### Complete Example
 
+This complete example accomplishes the following:
+
+1. Initializes `swg.js` library in manual mode.
+2. When the library is ready, use the `newsletter-1234` configurationId to request a prompt to display.  
+3. When the button is clicked, display the prompt.
+4. Store the results of a successful prompt with the sample `NewsletterPersistence()` library.
+
+!!! note `NewsletterPersistence()` is an example implementation.
+In a production environment, a publisher would use the prompt response to send data to their own
+account or customer management system. 
+!!!
+
 ```html
-<!-- manual swg.js initialization -->
+<!-- 1. manual swg.js initialization -->
 <script async
     subscriptions-control="manual"
     type="application/javascript"
@@ -99,29 +126,35 @@ prompt?.show({
         subscriptions.configure({paySwgVersion: '2'});
         subscriptions.init('CAowqfCKCw');
 
-        const promptId = `newsletterId`;
+        //2. Use newsletter-1234 as the configurationId
+        const configurationId = `newsletter-1234`;
         const button = document.querySelector('#prompt');
 
         button.onclick = async () => {
-            let promptInstanceId = await getPrompt(promptId);
+            let promptInstanceId = await getPrompt(configurationId);
+
+            //3. Display the requested prompt
             await launchPrompt(promptInstanceId);
         }
     });
 
-    async function getPrompt(newsletterId) {
+    //Accepts a configurationId, and returns a new prompt instance with matching Id
+    async function getPrompt(configurationId) {
         const availableInterventions = await subscriptions.getAvailableInterventions();
 
         return availableInterventions.find(({id}) => {
-            return id === newsletterId;
+            return id === configurationId;
         });
     }
 
+    //Displays the prompt, and handles the user data from the response
     async function launchPrompt(promptId) {
         const prompt = await getPrompt(promptId);
         prompt?.show({
             isClosable: true,
             onResult: (result) => {
-                newsletter.email = result;
+                //4. Handle the user data response
+                newsletter.email = result.data.userEmail;
                 return true;
             }
         });
