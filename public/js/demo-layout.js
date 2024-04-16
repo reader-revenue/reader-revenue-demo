@@ -54,10 +54,11 @@ function addHeadingLinks() {
       margin-left: -1rem;
   `;
   for (const heading of headings) {
-    if (heading.getAttribute('id') == '') {
-      continue;
+    if (['',null].includes(heading.getAttribute('id'))) {
+      heading.setAttribute('id', toCamlCaseId(heading.textContent))
     }
 
+    console.log(heading.getAttribute('id'))
     heading.setAttribute('style', headingStyle);
     const anchor = `${window.location.pathname}#${heading.getAttribute('id')}`;
     const link = document.createElement('a');
@@ -73,6 +74,17 @@ function addHeadingLinks() {
       link.setAttribute('style', hiddenStyle);
     });
   }
+}
+
+/**
+ * toCamlCaseId
+ * @param {string} str 
+ * @returns string
+ */
+function toCamlCaseId(str) {
+  return str.substring(0, 1).toLowerCase() + str.substring(1).replace(/\W+(.)/g, function(match, chr) {
+    return chr.toUpperCase();
+  });
 }
 
 document.addEventListener('DOMContentLoaded', function () {
