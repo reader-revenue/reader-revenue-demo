@@ -133,12 +133,12 @@ Google in response to submitting a prompt configuration. Publishers use the
 `configurationId` to fetch a valid prompt instance using the `subscriptions.getAvailableInterventions()` method from the initialized `swg.js` library.
 
 ```javascript
-const newsletterId = '<id returend after submitting a newsletter config>';
+const configurationId = '<id returend after submitting a newsletter config>';
 
 const availableInterventions = await subscriptions.getAvailableInterventions();
 
-const prompt = availableInterventions.find(({id}) => {
-    return id === newsletterId;
+const prompt = availableInterventions.find(({intervention}) => {
+    return intervention.configurationId === configurationId;
 });
 ```
 
@@ -210,7 +210,7 @@ account or customer management system.
         const button = document.querySelector('#prompt');
 
         button.onclick = async () => {
-            let promptInstanceId = await getPrompt(configurationId);
+            let promptInstanceId = await getPrompt(configurationId, subscriptions);
 
             //3. Display the requested prompt
             await launchPrompt(promptInstanceId);
@@ -218,7 +218,7 @@ account or customer management system.
     });
 
     //Accepts a configurationId, and returns a new prompt instance with matching configurationId
-    async function getPrompt(configurationId) {
+    async function getPrompt(configurationId, subscriptions) {
         const availableInterventions = await subscriptions.getAvailableInterventions();
 
         return availableInterventions.find(({id}) => {
@@ -233,7 +233,8 @@ account or customer management system.
             isClosable: true,
             onResult: (result) => {
                 //4. Handle the user data response
-                newsletter.email = result.data.userEmail;
+                const {userEmail} = result.data;
+                newsletter.signup({configurationId, userEmail});
                 return true;
             }
         });

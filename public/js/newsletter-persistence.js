@@ -33,12 +33,13 @@ class NewsletterPersistence {
       this._signups = [];
     }
   
-    set email(email) {
-      this._signups.push(email);
+    //signupConfig example: {configurationId, userEmail}
+    signup(signupConfig) {
+      this._signups.push(emailConfig);
       this.save();
     }
   
-    get emails() {
+    get signups() {
       return this._signups;
     }
   
@@ -52,7 +53,7 @@ class NewsletterPersistence {
     }
   
     save() {
-      const {signups} = this;
+      const signups = this._signups;
       localStorage.setItem("newsletterPersistence", JSON.stringify({signups}));
     }
   
