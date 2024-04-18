@@ -58,7 +58,6 @@ function addHeadingLinks() {
       heading.setAttribute('id', toCamlCaseId(heading.textContent))
     }
 
-    console.log(heading.getAttribute('id'))
     heading.setAttribute('style', headingStyle);
     const anchor = `${window.location.pathname}#${heading.getAttribute('id')}`;
     const link = document.createElement('a');

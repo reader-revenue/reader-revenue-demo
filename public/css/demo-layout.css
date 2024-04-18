@@ -380,3 +380,26 @@ pre code.hljs {
 .displayed { 
   display: block;
 }
+
+
+/* a flexible table-like list */
+.flexible-list {
+  list-style-type: none;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.flexible-list .flexible-list-item {
+  width: 280px;
+}
+
+.flexible-list .flexible-list-item img {
+  width: 100%;
+}
+
+.flexible-list .flexible-list-item code {
+  padding: 0 5px;
+}

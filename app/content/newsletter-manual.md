@@ -7,7 +7,9 @@
 # Newsletter prompts
 ## Test the manual newsletter invocation
 
-<button id="prompt">Prompt the newsletter sign-up</button>
+!!! note Prompt testing is currently disabled
+!!!
+<button id="prompt" disabled>Prompt the newsletter sign-up</button>
 
 ## Newsletter Prompt Overview
 
@@ -28,16 +30,93 @@ As the newsletter feature is currently in alpha, the following API exposed by
 
 ## Configure Prompts
 
+During the manual configuration beta of the Newsletter feature of RRM:E, publishers must
+provide a manual configuration for each newsletter that they would like configured. The
+configuration for each newsletter will determine which features are displayed in the
+prompt, and what data is passed to the publisher for each subscriber.
+
+### Prompt Configuration Examples
+
+<ul class="flexible-list">
+  <li class="flexible-list-item">
+    <img src="/img/newsletter-configurations_0000s_0004_standard.png">
+    <pre>
+    <code class="hljs language-json">
+{
+  "publicationId": "asdf-1234",
+  "name": "Daily Bugle"
+}
+    </code>
+    </pre>    
+  </li>
+  <li class="flexible-list-item">
+    <img src="/img/newsletter-configurations_0000s_0003_with-title.png">
+    <pre>
+    <code class="hljs language-json">
+{
+  "publicationId": "asdf-1234",
+  "name": "Daily Bugle",
+  "title": "Your favorite news, delivered directly to your inbox."
+}
+    </code>
+    </pre> 
+  </li>
+    <li class="flexible-list-item">
+    <img src="/img/newsletter-configurations_0000s_0002_with-title-and-body.png">
+    <pre>
+    <code class="hljs language-json">
+{
+  "publicationId": "asdf-1234",
+  "name": "Daily Bugle",
+  "title": "Your favorite news, delivered directly to your inbox.",
+  "body": "Sign up to receive the morning newsletter from the Daily Bugle, with editorially-selected articles, sports updates and more."
+}
+    </code>
+    </pre> 
+  </li>
+    <li class="flexible-list-item">
+    <img src="/img/newsletter-configurations_0000s_0001_with-title-and-body-and-consent.png">
+    <pre>
+    <code class="hljs language-json">
+{
+  "publicationId": "asdf-1234",
+  "name": "Daily Bugle",
+  "title": "Your favorite news, delivered directly to your inbox.",
+  "body": "Sign up to receive the morning newsletter from the Daily Bugle, with editorially-selected articles, sports updates and more.",
+  "permission": true,
+  "permissionDescription": "Allow the Daily Bugle to send you deals, subscription offers and other marketing info."
+}
+    </code>
+    </pre> 
+  </li>
+    <li class="flexible-list-item">
+    <img src="/img/newsletter-configurations_0000s_0000_alternate.png">
+    <pre>
+    <code class="hljs language-json">
+{
+  "publicationId": "asdf-1234",
+  "name": "Superhero Shots by the Daily Bugle",
+  "title": "Daily photo updates from around the town",
+  "body": "Sign up to receive breaking updates from around the web by intrepid photojournalists on the street."
+}
+    </code>
+    </pre> 
+  </li>
+</ul>
+
 ### Provide Prompt Configuration to Google
 
-During the manual configuration beta of the Newsletter feature of RRM:E, publishers must
-provide a manual configuration for each newsletter that they would like configured.
+Configurations for newsletters may include the following fields.
 
 - **Publication Id** (as found in the Publisher Center configuration for the RRM:E publication)
 - **Newsletter name** _(text)_ - The name of the newsletter
-- **Newsletter description** _(text)_ - A description of the newsletter
+- **Newsletter title** _(text)_ - The title of the newsletter, which appears below the name
+- **Newsletter body** _(text)_ - A description of the newsletter
 - **Show a permission checkbox?** _(true/false)_ - A checkbox to determine if additional acceptance should be required of the newsletter subscriber
-- **Permission** _(text)_ _optional_- A label for the permission checkbox. Required if showing a permission checkbox is required.
+- **Permission description** _(text)_ _optional_- A label for the permission checkbox. Required if showing a permission checkbox is required.
+
+!!! caution **NOTE:** `publicationId` and `name` are **required**, but all other fields are optional.
+!!!
 
 In response, Google will provide a `promptId` for each newsletter. 
 
