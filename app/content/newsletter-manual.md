@@ -17,8 +17,8 @@ A publisher can configure one or more newsletters for manual invocation by using
 initialized `swg.js` instance. In order to use this feature:
 
 1.  A publisher will provide Google with a prompt configuration per newsletter, and 
-    will receive a `promptId` in response to call this newsletter configuration.
-1.  A publisher will fetch a valid prompt using the `promptId`, and then display it.
+    will receive a `configurationId` in response to call this newsletter configuration.
+1.  A publisher will fetch a valid prompt using the `configurationId`, and then display it.
 1.  When configuring the prompt display code, a publisher will provide a callback
     that will be used to store the responses from the newsletter signup, and 
     acknowledge to Google that the email address has been saved.
@@ -118,7 +118,7 @@ Configurations for newsletters may include the following fields.
 !!! caution **NOTE:** `publicationId` and `name` are **required**, but all other fields are optional.
 !!!
 
-In response, Google will provide a `promptId` for each newsletter. 
+In response, Google will provide a `configurationId` for each newsletter. 
 
 ### Invoke Newsletter Prompts
 
@@ -128,9 +128,9 @@ APIs are also available in automatic mode.
 
 ### Get the prompt instance to display
 
-To invoke a newsletter prompt, a publisher must use the `promptId` provided by
+To invoke a newsletter prompt, a publisher must use the `configurationId` provided by
 Google in response to submitting a prompt configuration. Publishers use the
-`promptId` to fetch a valid prompt instance using the `subscriptions.getAvailableInterventions()` method from the initialized `swg.js` library.
+`configurationId` to fetch a valid prompt instance using the `subscriptions.getAvailableInterventions()` method from the initialized `swg.js` library.
 
 ```javascript
 const newsletterId = '<id returend after submitting a newsletter config>';
@@ -162,7 +162,7 @@ prompt?.show({
 ### Handle the response
 
 The `onResult` callback will include information on the configuration used
-to create the prompt, as well as the newsletter subscriber's information. The `configurationId` matches the `promptId provided to the publisher from Google, in response to the per-newsletter configuration authored by the publisher in the initial step.
+to create the prompt, as well as the newsletter subscriber's information. The `configurationId` matches the `configurationId provided to the publisher from Google, in response to the per-newsletter configuration authored by the publisher in the initial step.
 
 ```javascript
 {
@@ -217,7 +217,7 @@ account or customer management system.
         }
     });
 
-    //Accepts a configurationId, and returns a new prompt instance with matching Id
+    //Accepts a configurationId, and returns a new prompt instance with matching configurationId
     async function getPrompt(configurationId) {
         const availableInterventions = await subscriptions.getAvailableInterventions();
 
@@ -227,8 +227,8 @@ account or customer management system.
     }
 
     //Displays the prompt, and handles the user data from the response
-    async function launchPrompt(promptId) {
-        const prompt = await getPrompt(promptId);
+    async function launchPrompt(configurationId) {
+        const prompt = await getPrompt(configurationId);
         prompt?.show({
             isClosable: true,
             onResult: (result) => {
