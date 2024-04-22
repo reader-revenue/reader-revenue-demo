@@ -38,7 +38,7 @@ prompt, and what data is passed to the publisher for each subscriber.
 ### Prompt Configuration Examples
 
 <ul class="flexible-list">
-  <li class="flexible-list-item">
+  <!-- <li class="flexible-list-item">
     <img src="/img/newsletter-configurations_0000s_0004_standard.png">
     <pre>
     <code class="hljs language-json">
@@ -48,14 +48,13 @@ prompt, and what data is passed to the publisher for each subscriber.
 }
     </code>
     </pre>    
-  </li>
+  </li> -->
   <li class="flexible-list-item">
     <img src="/img/newsletter-configurations_0000s_0003_with-title.png">
     <pre>
     <code class="hljs language-json">
 {
   "publicationId": "asdf-1234",
-  "name": "Daily Bugle",
   "title": "Your favorite news, delivered directly to your inbox."
 }
     </code>
@@ -67,7 +66,6 @@ prompt, and what data is passed to the publisher for each subscriber.
     <code class="hljs language-json">
 {
   "publicationId": "asdf-1234",
-  "name": "Daily Bugle",
   "title": "Your favorite news, delivered directly to your inbox.",
   "body": "Sign up to receive the morning newsletter from the Daily Bugle, with editorially-selected articles, sports updates and more."
 }
@@ -80,7 +78,6 @@ prompt, and what data is passed to the publisher for each subscriber.
     <code class="hljs language-json">
 {
   "publicationId": "asdf-1234",
-  "name": "Daily Bugle",
   "title": "Your favorite news, delivered directly to your inbox.",
   "body": "Sign up to receive the morning newsletter from the Daily Bugle, with editorially-selected articles, sports updates and more.",
   "permission": true,
@@ -89,7 +86,7 @@ prompt, and what data is passed to the publisher for each subscriber.
     </code>
     </pre> 
   </li>
-    <li class="flexible-list-item">
+  <!-- <li class="flexible-list-item">
     <img src="/img/newsletter-configurations_0000s_0000_alternate.png">
     <pre>
     <code class="hljs language-json">
@@ -101,7 +98,7 @@ prompt, and what data is passed to the publisher for each subscriber.
 }
     </code>
     </pre> 
-  </li>
+  </li> -->
 </ul>
 
 ### Provide Prompt Configuration to Google
@@ -109,7 +106,6 @@ prompt, and what data is passed to the publisher for each subscriber.
 Configurations for newsletters may include the following fields.
 
 - **Publication Id** (as found in the Publisher Center configuration for the RRM:E publication)
-- **Newsletter name** _(text)_ - The name of the newsletter
 - **Newsletter title** _(text)_ - The title of the newsletter, which appears below the name
 - **Newsletter body** _(text)_ - A description of the newsletter
 - **Show a permission checkbox?** _(true/false)_ - A checkbox to determine if additional acceptance should be required of the newsletter subscriber
@@ -169,7 +165,9 @@ to create the prompt, as well as the newsletter subscriber's information. The `c
   'configurationId': '123-456-789',
   'data': {
     'userEmail': 'example@example.com',
-    'userName': 'John Johnson',
+    'displayName': 'John Johnson',
+    'givenName': 'John',
+    'familyName': 'Johnson'
   }
 }
 ```
