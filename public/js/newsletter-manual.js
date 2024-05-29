@@ -18,36 +18,63 @@
  * @fileoverview This client-side js file to handle newsletter prompts
  */
 
-import { NewsletterPersistence } from './newsletter-persistence.js';
+import {NewsletterPersistence} from './newsletter-persistence.js';
 const newsletter = new NewsletterPersistence();
 
-(self.SWG = self.SWG || []).push( subscriptions => {
-    subscriptions.configure({paySwgVersion: '2'});
-    subscriptions.init('CAowqfCKCw');
+const urlParams = new URLSearchParams(window.location.search);
+const specifiedConfigurationId =
+  urlParams.get('configurationId') ?? '49c12712-9750-4571-8c67-96722561c13a';
 
-    const promptId = `<pre-defined id>`;
-    const button = document.querySelector('#prompt');
+(self.SWG = self.SWG || []).push(async (subscriptions) => {
+  subscriptions.configure({paySwgVersion: '2'});
+  subscriptions.init('CAow3fzXCw');
 
-    button.onclick = async () => {
-        launchPrompt(promptId)
-    }
+  const eventManager = await subscriptions.getEventManager();
+  eventManager.registerEventListener(console.log);
+
+  //   const entitlements = await subscriptions.getEntitlements();
+  const availableInterventions =
+    await subscriptions.getAvailableInterventions();
+
+  console.log({allInterventions: availableInterventions});
+
+  const specificPrompt = await getPrompt(
+    availableInterventions,
+    specifiedConfigurationId
+  );
+
+  console.log({specificPrompt});
+
+  launchSpecificPrompt(specificPrompt);
+
+  // const promptId = `<pre-defined id>`;
+  // const button = document.querySelector('#prompt');
+
+  // button.onclick = async () => {
+  //     launchPrompt(promptId)
+  // }
 });
 
-async function getPrompt(promptId) {
-    const availableInterventions = await subscriptions.getAvailableInterventions();
-
-    return availableInterventions.find(({id}) => {
-        return id === `<pre-defined string>`;
-    });
+async function getPrompt(availableInterventions, specifiedConfigurationId) {
+  return availableInterventions.find(({configurationId}) => {
+    return configurationId === specifiedConfigurationId;
+  });
 }
 
 async function launchPrompt(promptId) {
-    const prompt = await getPrompt(promptId);
-    prompt?.show({
-        isClosable: true,
-        onResult: (result) => {
-            newsletter.email = result;
-            return true;
-        }
-    });
+  const prompt = await getPrompt(promptId);
+  prompt?.show({
+    isClosable: true,
+    onResult: (result) => {
+      newsletter.email = result;
+      return true;
+    },
+  });
+}
+
+async function launchSpecificPrompt(specificPrompt) {
+  specificPrompt?.show({
+    isClosable: true,
+    onResult: console.log,
+  });
 }
