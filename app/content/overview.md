@@ -164,7 +164,8 @@ required unless specified:
         "script": "js/script.js" // Optional, relative to the /public folder
         "options": { //Optional, passed directly to template rendering
           "suppressStructuredDataMarkup" : true, // suppressed the ld+json block rendering
-          "suppressInNav": true //Hide this route from this section, but preserve access
+          "suppressInNav": true, //Hide this route from this section, but preserve access
+          "lang": "en" //Specify a specific <html lang=""> value for a route
         }
       }
       // Insert more links for this section
