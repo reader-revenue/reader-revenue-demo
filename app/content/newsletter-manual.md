@@ -4,21 +4,6 @@
   src="https://news.google.com/swg/js/v1/swg.js">
 </script>
 
-
-<script type="application/ld+json">
-{
-  "@context": "http://schema.org",
-  "@type": "NewsArticle",
-  "isAccessibleForFree": false,
-  "isPartOf": {
-    "@type": ["CreativeWork", "Product"],
-    "name" : "rrme-prod",
-    "productID": "CAow3fzXCw:openaccess"
-  }
-}
-</script>
-
-
 # Newsletter prompts
 ## Test the manual newsletter invocation
 

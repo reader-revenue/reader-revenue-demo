@@ -29,10 +29,13 @@ const specifiedConfigurationId =
   subscriptions.configure({paySwgVersion: '2'});
   subscriptions.init('CAow3fzXCw');
 
+  //TODO: Remove this next line after the following PR is merged:
+  //https://github.com/subscriptions-project/swg-js/pull/3526
+  //   subscriptions.getEntitlements();
+
   const eventManager = await subscriptions.getEventManager();
   eventManager.registerEventListener(console.log);
 
-  //   const entitlements = await subscriptions.getEntitlements();
   const availableInterventions =
     await subscriptions.getAvailableInterventions();
 
