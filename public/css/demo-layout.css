@@ -403,3 +403,28 @@ pre code.hljs {
 .flexible-list .flexible-list-item code {
   padding: 0 5px;
 }
+
+#newsletterPrompts>button {
+  display: block;
+  margin-bottom: 10px;
+}
+
+#newsletterPrompts>button:last-child {
+  margin-bottom: 0;
+}
+
+/* table of contents */
+.toc-container {
+  width: 250px;
+  /* position: absolute; */
+  /* top: 0; */
+  /* right: 0; */
+  background-color: white;
+  padding: 5px;
+  /* margin: 5px; */
+  border: 1px solid gainsboro;
+}
+
+.toc-container .tocHeader {
+  margin-top: 5px;
+}

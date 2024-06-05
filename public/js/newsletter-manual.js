@@ -18,66 +18,49 @@
  * @fileoverview This client-side js file to handle newsletter prompts
  */
 
-import {NewsletterPersistence} from './newsletter-persistence.js';
-const newsletter = new NewsletterPersistence();
+import {
+  createButtonForPrompt,
+  registerEventManager,
+} from './newsletter-methods.js';
 
-const urlParams = new URLSearchParams(window.location.search);
-const specifiedConfigurationId =
-  urlParams.get('configurationId') ?? '49c12712-9750-4571-8c67-96722561c13a';
+const newsletterConfigurations = [
+  {
+    name: 'Subscriber Newsletter',
+    configurationId: '49c12712-9750-4571-8c67-96722561c13a',
+  },
+  {
+    name: 'Breaking News',
+    configurationId: 'e98a2efb-d009-43c9-99ef-dda11c8c5a7f',
+  },
+];
+
+const buttonContainer = document.querySelector('#newsletterPrompts');
 
 (self.SWG = self.SWG || []).push(async (subscriptions) => {
   subscriptions.configure({paySwgVersion: '2'});
   subscriptions.init('CAow3fzXCw');
 
-  //TODO: Remove this next line after the following PR is merged:
-  //https://github.com/subscriptions-project/swg-js/pull/3526
-  //   subscriptions.getEntitlements();
-
-  const eventManager = await subscriptions.getEventManager();
-  eventManager.registerEventListener(console.log);
+  await registerEventManager(subscriptions);
 
   const availableInterventions =
     await subscriptions.getAvailableInterventions();
 
-  console.log({allInterventions: availableInterventions});
+  // console.log({availableInterventions});
 
-  const specificPrompt = await getPrompt(
-    availableInterventions,
-    specifiedConfigurationId
+  const availableInterventionConfigurationIds = availableInterventions.map(
+    (intervention) => intervention.configurationId
   );
 
-  console.log({specificPrompt});
+  for (const newsletterConfiguration of newsletterConfigurations) {
+    const buttonEnabledState = availableInterventionConfigurationIds.includes(
+      newsletterConfiguration.configurationId
+    );
 
-  launchSpecificPrompt(specificPrompt);
-
-  // const promptId = `<pre-defined id>`;
-  // const button = document.querySelector('#prompt');
-
-  // button.onclick = async () => {
-  //     launchPrompt(promptId)
-  // }
+    createButtonForPrompt(
+      availableInterventions,
+      newsletterConfiguration,
+      buttonEnabledState,
+      buttonContainer
+    );
+  }
 });
-
-async function getPrompt(availableInterventions, specifiedConfigurationId) {
-  return availableInterventions.find(({configurationId}) => {
-    return configurationId === specifiedConfigurationId;
-  });
-}
-
-async function launchPrompt(promptId) {
-  const prompt = await getPrompt(promptId);
-  prompt?.show({
-    isClosable: true,
-    onResult: (result) => {
-      newsletter.email = result;
-      return true;
-    },
-  });
-}
-
-async function launchSpecificPrompt(specificPrompt) {
-  specificPrompt?.show({
-    isClosable: true,
-    onResult: console.log,
-  });
-}

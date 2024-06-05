@@ -4,12 +4,15 @@
   src="https://news.google.com/swg/js/v1/swg.js">
 </script>
 
+
 # Newsletter prompts
+
+This page both demonstrates how RRM:E newsletter sign-up works, as well as documents
+how to implement the prompts.
+
 ## Test the manual newsletter invocation
 
-!!! note Prompt testing is currently disabled
-!!!
-<button id="prompt" disabled>Prompt the newsletter sign-up</button>
+<div id="newsletterPrompts"></div>
 
 ## Newsletter Prompt Overview
 
@@ -22,11 +25,6 @@ initialized `swg.js` instance. In order to use this feature:
 1.  When configuring the prompt display code, a publisher will provide a callback
     that will be used to store the responses from the newsletter signup, and 
     acknowledge to Google that the email address has been saved.
-
-!!! caution JavaScript API is **in progress**
-As the newsletter feature is currently in alpha, the following API exposed by
-`swg.js` should be considered as being in draft, and not the final implementation. 
-!!!
 
 ## Configure Prompts
 
@@ -116,6 +114,49 @@ Configurations for newsletters may include the following fields.
 
 In response, Google will provide a `configurationId` for each newsletter. 
 
+
+#### Configuration for the sample prompts
+
+This page includes two newsletter configurations. They were created with the following configuration:
+
+```json
+[
+  {
+    publicationId: 'CAow3fzXCw',
+    title: 'Subscriber Newsletter',
+    body: 'As a premium benefit, enjoy curated subscriber news'
+  },
+  {
+    publicationId: 'CAow3fzXCw',
+    name: 'Breaking News',
+    body: 'Breaking news delivered to you right away',
+    permission: true,
+    permissionDescription: 'Consent to marketing materials'
+  }
+]
+```
+
+!!! note Newsletter configurations can be provided in any format
+The newsletter configuration above is represented as a `json` object, but any format can be used. 
+During the alpha phase, this is a manual configuration.
+!!!
+
+After submitting a configuration, Google will provide a `configurationId` in response for each
+newsletter configuration. These ids will then be used in subsequent javascript api calls.
+
+```json
+[
+  {
+    name: 'Subscriber Newsletter',
+    configurationId: '49c12712-9750-4571-8c67-96722561c13a',
+  },
+  {
+    name: 'Breaking News',
+    configurationId: 'e98a2efb-d009-43c9-99ef-dda11c8c5a7f',
+  },
+]
+```
+
 ### Invoke Newsletter Prompts
 
 To configure newsletter prompts, `swg.js` must first be configured on the page.
@@ -187,7 +228,7 @@ account or customer management system.
 !!!
 
 ```html
-<!-- 1. manual swg.js initialization -->
+<!-- manual swg.js initialization -->
 <script async
     subscriptions-control="manual"
     type="application/javascript"
@@ -196,46 +237,103 @@ account or customer management system.
 
 <!-- configuring swg.js to invoke and handle newsletter prompts -->
 <script type="module">
-    import { NewsletterPersistence } from 'js/newsletter-persistence.js';
-    const newsletterPersistence = new NewsletterPersistence();
 
-    (self.SWG = self.SWG || []).push( subscriptions => {
-        subscriptions.configure({paySwgVersion: '2'});
-        subscriptions.init('CAowqfCKCw');
+// Example library for storing email signups
+import {NewsletterPersistence} from './newsletter-persistence.js';
+const newsletterCache = new NewsletterPersistence();
 
-        //2. Use newsletter-1234 as the configurationId
-        const configurationId = `newsletter-1234`;
-        const button = document.querySelector('#prompt');
+const newsletterConfigurations = [
+  {
+    name: 'Subscriber Newsletter',
+    configurationId: '49c12712-9750-4571-8c67-96722561c13a',
+  },
+  {
+    name: 'Breaking News',
+    configurationId: 'e98a2efb-d009-43c9-99ef-dda11c8c5a7f',
+  },
+];
 
-        button.onclick = async () => {
-            let promptInstanceId = await getPrompt(configurationId, subscriptions);
+const buttonContainer = document.querySelector('#newsletterPrompts');
 
-            //3. Display the requested prompt
-            await launchPrompt(promptInstanceId);
-        }
-    });
+(self.SWG = self.SWG || []).push(async (subscriptions) => {
+  subscriptions.configure({paySwgVersion: '2'});
+  subscriptions.init('CAow3fzXCw');
 
-    //Accepts a configurationId, and returns a new prompt instance with matching configurationId
-    async function getPrompt(configurationId, subscriptions) {
-        const availableInterventions = await subscriptions.getAvailableInterventions();
+  // Configure the event manager to log all events to the console
+  const eventManager = await subscriptions.getEventManager();
+  eventManager.registerEventListener(console.log);
 
-        return availableInterventions.find(({id}) => {
-            return id === configurationId;
-        });
-    }
+  const availableInterventions =
+    await subscriptions.getAvailableInterventions();
 
-    //Displays the prompt, and handles the user data from the response
-    async function launchPrompt(configurationId) {
-        const prompt = await getPrompt(configurationId);
-        prompt?.show({
-            isClosable: true,
-            onResult: (result) => {
-                //4. Handle the user data response
-                const {userEmail} = result.data;
-                newsletter.signup({configurationId, userEmail});
-                return true;
-            }
-        });
-    }
+  // For debugging, view all available interventions in the browser console
+  console.log({availableInterventions});
+
+  const availableInterventionConfigurationIds = availableInterventions.map(
+    (intervention) => intervention.configurationId
+  );
+
+  for (const newsletterConfiguration of newsletterConfigurations) {
+    const buttonEnabledState = availableInterventionConfigurationIds.includes(
+      newsletterConfiguration.configurationId
+    );
+
+    createButtonForPrompt(
+      availableInterventions,
+      newsletterConfiguration,
+      buttonEnabledState,
+      buttonContainer
+    );
+  }
+});
+
+
+<!--  The following helper functions are not required, 
+      but help to provide a clear syntax in the above example. -->
+
+
+// Helper function for returning a specific prompt (if available) from all interventions
+async function getPrompt(availableInterventions, specifiedConfigurationId) {
+  return availableInterventions.find(({configurationId}) => {
+    return configurationId === specifiedConfigurationId;
+  });
+}
+
+// Launch a given prompt
+async function launchSpecificPrompt(prompt) {
+  prompt?.show({
+    isClosable: true,
+    onResult: (result) => {
+      console.log(result);
+      newsletterCache.signup(result);
+    },
+  });
+}
+
+// Helper function for creating a button to launch a prompt
+async function createButtonForPrompt(
+  availableInterventions,
+  newsletterConfiguration,
+  buttonEnabledState,
+  container
+) {
+  const button = document.createElement('button');
+  const prompt = await getPrompt(
+    availableInterventions,
+    newsletterConfiguration.configurationId
+  );
+
+  if (buttonEnabledState == true) {
+    button.onclick = () => {
+      launchSpecificPrompt(prompt);
+    };
+  } else {
+    button.setAttribute('disabled', 'true');
+  }
+
+  button.textContent = `${buttonEnabledState == false ? '✅' : ''} ${newsletterConfiguration.name}`;
+  container.appendChild(button);
+}
+
 </script>
 ```

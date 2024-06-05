@@ -54,8 +54,8 @@ function addHeadingLinks() {
       margin-left: -1rem;
   `;
   for (const heading of headings) {
-    if (['',null].includes(heading.getAttribute('id'))) {
-      heading.setAttribute('id', toCamlCaseId(heading.textContent))
+    if (['', null].includes(heading.getAttribute('id'))) {
+      heading.setAttribute('id', toCamlCaseId(heading.textContent));
     }
 
     heading.setAttribute('style', headingStyle);
@@ -77,16 +77,56 @@ function addHeadingLinks() {
 
 /**
  * toCamlCaseId
- * @param {string} str 
+ * @param {string} str
  * @returns string
  */
 function toCamlCaseId(str) {
-  return str.substring(0, 1).toLowerCase() + str.substring(1).replace(/\W+(.)/g, function(match, chr) {
-    return chr.toUpperCase();
-  });
+  return (
+    str.substring(0, 1).toLowerCase() +
+    str.substring(1).replace(/\W+(.)/g, function (match, chr) {
+      return chr.toUpperCase();
+    })
+  );
+}
+
+function handleToc() {
+  const headingSelector =
+    '.devsite-content-details h2, .devsite-content-details h3, .devsite-content-details h4';
+  const tocContainer = document.querySelector('h1');
+
+  const tocLinks = document.createElement('div');
+  tocLinks.classList.add('toc-container');
+
+  const tocHeader = document.createElement('h3');
+  tocHeader.classList.add('tocHeader');
+  tocHeader.textContent = 'Table of Contents';
+  tocLinks.appendChild(tocHeader);
+
+  const anchorContainer = document.createElement('div');
+  const anchorList = document.createElement('ul');
+
+  const headings = document.querySelectorAll(headingSelector);
+
+  for (const heading of headings) {
+    const title = heading.textContent.substring(1);
+    const anchor = `${location.href.split('#').shift()}#${toCamlCaseId(title)}`;
+    console.log({title, anchor});
+    const listItem = document.createElement('li');
+    const link = document.createElement('a');
+    link.setAttribute('href', anchor);
+    link.textContent = title;
+
+    listItem.appendChild(link);
+    anchorList.appendChild(listItem);
+  }
+
+  anchorContainer.appendChild(anchorList);
+  tocLinks.appendChild(anchorContainer);
+  tocContainer.after(tocLinks);
 }
 
 document.addEventListener('DOMContentLoaded', function () {
   toggleNav();
   addHeadingLinks();
+  handleToc();
 });
