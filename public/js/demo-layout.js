@@ -107,14 +107,23 @@ function handleToc() {
 
   const headings = document.querySelectorAll(headingSelector);
 
+  if (headings.length === 0) {
+    return;
+  }
+
   for (const heading of headings) {
+    const element = heading.localName;
     const title = heading.textContent.substring(1);
     const anchor = `${location.href.split('#').shift()}#${toCamlCaseId(title)}`;
-    console.log({title, anchor});
+    console.log({element, title, anchor});
     const listItem = document.createElement('li');
     const link = document.createElement('a');
     link.setAttribute('href', anchor);
     link.textContent = title;
+
+    if (element !== 'h2') {
+      listItem.classList.add('sub-item');
+    }
 
     listItem.appendChild(link);
     anchorList.appendChild(listItem);

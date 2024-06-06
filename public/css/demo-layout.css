@@ -428,3 +428,12 @@ pre code.hljs {
 .toc-container .tocHeader {
   margin-top: 5px;
 }
+
+.sub-item {
+  list-style-type: none;
+}
+
+.sub-item a {
+  /* font-size: 0.7em; */
+  /* margin-left:50px; */
+}
