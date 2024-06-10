@@ -153,6 +153,9 @@ required unless specified:
   {
     "section": "Section label", // Label that appears for the section
     "template": "app/views/layouts/demo-layout.html" // (optional) Handlebars template, defaults to demo-layout.html
+    "options": { //Optional section-level options
+      "suppressInNav": true //Hide this section from the nav, but preserve access directly
+    },
     "links": [
       {
         "label": "Test", // Visible label
@@ -160,7 +163,9 @@ required unless specified:
         "content": "app/content/test.md" // .md or .html to render,
         "script": "js/script.js" // Optional, relative to the /public folder
         "options": { //Optional, passed directly to template rendering
-          "suppressStructuredDataMarkup" : true // suppressed the ld+json block rendering
+          "suppressStructuredDataMarkup" : true, // suppressed the ld+json block rendering
+          "suppressInNav": true, //Hide this route from this section, but preserve access
+          "lang": "en" //Specify a specific <html lang=""> value for a route
         }
       }
       // Insert more links for this section

@@ -15,7 +15,7 @@
  limitations under the License.
 -->
 
-<html lang="en">
+<html lang="{{#unless data.options.lang}}en{{else}}{{data.options.lang}}{{/unless}}">
 <head>
   <base href="/" />
   <title>Reader Revenue Manager: Demo</title>
@@ -111,17 +111,21 @@
       <div class="developer-site-nav">
 
         {{#each data.nav}}
-        <hr />
+          {{#unless this.options.suppressInNav}}
+          <hr />
           <h3 class="developer-site-nav-header developer-site-nav-title" >{{this.section}}</h3>
           <ul class="developer-site-nav-list">
             {{#each this.links}}
+              {{#unless this.options.suppressInNav}}
               <li id="{{this.id}}" class="{{this.current}}">
                 <a href="{{this.url}}">
                   {{this.label}}
                 </a>
               </li>
+              {{/unless}}
             {{/each}}
           </ul>
+          {{/unless}}
         {{/each}}
       </div>
 

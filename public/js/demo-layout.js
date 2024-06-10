@@ -54,8 +54,8 @@ function addHeadingLinks() {
       margin-left: -1rem;
   `;
   for (const heading of headings) {
-    if (heading.getAttribute('id') == '') {
-      continue;
+    if (['', null].includes(heading.getAttribute('id'))) {
+      heading.setAttribute('id', toCamlCaseId(heading.textContent));
     }
 
     heading.setAttribute('style', headingStyle);
@@ -75,7 +75,67 @@ function addHeadingLinks() {
   }
 }
 
+/**
+ * toCamlCaseId
+ * @param {string} str
+ * @returns string
+ */
+function toCamlCaseId(str) {
+  return (
+    str.substring(0, 1).toLowerCase() +
+    str.substring(1).replace(/\W+(.)/g, function (match, chr) {
+      return chr.toUpperCase();
+    })
+  );
+}
+
+function handleToc() {
+  const headingSelector =
+    '.devsite-content-details h2, .devsite-content-details h3, .devsite-content-details h4';
+  const tocContainer = document.querySelector('h1');
+
+  const tocLinks = document.createElement('div');
+  tocLinks.classList.add('toc-container');
+
+  const tocHeader = document.createElement('h3');
+  tocHeader.classList.add('tocHeader');
+  tocHeader.textContent = 'Table of Contents';
+  tocLinks.appendChild(tocHeader);
+
+  const anchorContainer = document.createElement('div');
+  const anchorList = document.createElement('ul');
+
+  const headings = document.querySelectorAll(headingSelector);
+
+  if (headings.length === 0) {
+    return;
+  }
+
+  for (const heading of headings) {
+    const element = heading.localName;
+    const title = heading.textContent.substring(1);
+    const anchor = `${location.href.split('#').shift()}#${toCamlCaseId(title)}`;
+    console.log({element, title, anchor});
+    const listItem = document.createElement('li');
+    const link = document.createElement('a');
+    link.setAttribute('href', anchor);
+    link.textContent = title;
+
+    if (element !== 'h2') {
+      listItem.classList.add('sub-item');
+    }
+
+    listItem.appendChild(link);
+    anchorList.appendChild(listItem);
+  }
+
+  anchorContainer.appendChild(anchorList);
+  tocLinks.appendChild(anchorContainer);
+  tocContainer.after(tocLinks);
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   toggleNav();
   addHeadingLinks();
+  handleToc();
 });
