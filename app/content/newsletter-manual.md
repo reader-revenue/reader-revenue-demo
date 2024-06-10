@@ -170,12 +170,15 @@ Google in response to submitting a prompt configuration. Publishers use the
 `configurationId` to fetch a valid prompt instance using the `subscriptions.getAvailableInterventions()` method from the initialized `swg.js` library.
 
 ```javascript
-const configurationId = '<id returend after submitting a newsletter config>';
+const publisherConfiguration = {
+  name: 'Subscriber Newsletter',
+  configurationId: '49c12712-9750-4571-8c67-96722561c13a',
+};
 
 const availableInterventions = await subscriptions.getAvailableInterventions();
 
-const prompt = availableInterventions.find(({intervention}) => {
-    return intervention.configurationId === configurationId;
+const prompt = availableInterventions.find(({configurationId}) => {
+    return configurationId === publisherConfiguration.configurationId;
 });
 ```
 
@@ -270,7 +273,7 @@ const buttonContainer = document.querySelector('#newsletterPrompts');
   console.log({availableInterventions});
 
   const availableInterventionConfigurationIds = availableInterventions.map(
-    (intervention) => intervention.configurationId
+    (availableIntervention) => availableIntervention.configurationId
   );
 
   for (const newsletterConfiguration of newsletterConfigurations) {
