@@ -20,21 +20,22 @@ import readerRevenue from './app/routes/documentation.js';
 import readme from './app/routes/readme.js';
 
 //APIs for content sections
-import subscriptionLinkingApi from './app/routes/subscription-linking/api.js';
-import publicationApi from './app/routes/publication-api.js';
-import pubSub from './app/routes/pub-sub.js';
 import accountLinkingApi from './app/routes/account-linking/api.js';
 import extendedAccess from './app/routes/extended-access.js';
 import monetizationApi from './app/routes/monetization/api.js';
+import pubSub from './app/routes/pub-sub.js';
+import publicationApi from './app/routes/publication-api.js';
+import subscriptionLinkingApi from './app/routes/subscription-linking/api.js';
+import validationApi from './app/routes/validation/validate-purchases.js';
 
 // Proxy handles https and reverse proxy settings for running locally
+import cookies from './middleware/cookies.js';
+import overrides from './middleware/overrides.js';
 import proxy from './middleware/proxy.js';
 import ssl from './middleware/ssl.js';
-import overrides from './middleware/overrides.js';
-import cookies from './middleware/cookies.js';
 
 // Static routers with some custom behavior
-import { css, js, img } from './app/routes/static-handlers.js';
+import {css, img, js} from './app/routes/static-handlers.js';
 
 // Configure app globals
 const app = express();
@@ -55,6 +56,7 @@ app.use('/api/pub-sub', pubSub);
 app.use('/api/account-linking', accountLinkingApi);
 app.use('/api/extended-access', extendedAccess);
 app.use('/api/monetization', monetizationApi);
+app.use('/api/validate-purchases', validationApi);
 
 // Mount custom static file handlers
 app.use('/img', img);
