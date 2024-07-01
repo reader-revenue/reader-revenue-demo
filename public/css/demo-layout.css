@@ -437,3 +437,8 @@ pre code.hljs {
   /* font-size: 0.7em; */
   /* margin-left:50px; */
 }
+
+#paymentResponse>textarea, #paymentResponse>button {
+  display:block;
+  margin-bottom:5px;
+}
