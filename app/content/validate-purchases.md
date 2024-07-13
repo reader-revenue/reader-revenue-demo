@@ -105,15 +105,15 @@ function parseJwtHeader(token) {
 
 ```javascript
 {
-    "raw": "{\"signedEntitlements\":\"eyJhbGciOiJSUzI1NiIsImtpZCI6Ijg3MGUzMzVmZmQxOTkwNzA4YTc4ZTVhMzQyODQzODBmOGQyNWUyMzgiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJodHRwczovL3JlYWRlci1yZXZlbnVlLWRlbW8udWUuci5hcHBzcG90LmNvbSIsImV4cCI6MTcxOTQzNDAwNCwiaWF0IjoxNzE5NDMyMjA0LCJpc3MiOiJzdWJzY3JpYmV3aXRoZ29vZ2xlQHN5c3RlbS5nc2VydmljZWFjY291bnQuY29tIiwiZW50aXRsZW1lbnRzIjpbeyJzb3VyY2UiOiJnb29nbGU6c3Vic2NyaWJlciIsInByb2R1Y3RzIjpbIkNBb3dxZkNLQ3c6YmFzaWMiLCJDQW93cWZDS0N3Om9wZW5hY2Nlc3MiXSwic3Vic2NyaXB0aW9uVG9rZW4iOiJ7XCJhdXRvUmVuZXdpbmdcIjpmYWxzZSxcIm9yZGVySWRcIjpcIlNXRy45OTczLTE2NTQtNzY4OC0zMDExNlwiLFwicHJvZHVjdElkXCI6XCJTV0dQRC43OTc1LTYwODQtMDU3Ny0xMjE3OFwiLFwicHVyY2hhc2VUaW1lXCI6MTcxODczMDU3ODA0OSxcIndhaXRpbmdUb0NhbmNlbFwiOnRydWUsXCJmaXhSZXF1aXJlZFwiOmZhbHNlfSIsInJlYWRlcklkIjoiNGRmMGZhZjI2NjMwYTU2MzI5YTEzN2NjYmZjNWQ0NjQifSx7InNvdXJjZSI6Imdvb2dsZTpzdWJzY3JpYmVyIiwicHJvZHVjdHMiOlsiQ0Fvd3FmQ0tDdzpiYXNpYyIsIkNBb3dxZkNLQ3c6b3BlbmFjY2VzcyJdLCJzdWJzY3JpcHRpb25Ub2tlbiI6IntcImF1dG9SZW5ld2luZ1wiOnRydWUsXCJvcmRlcklkXCI6XCJTV0cuNjM5OC0wODQ1LTg0MzMtNjk3MTFcIixcInByb2R1Y3RJZFwiOlwiU1dHUEQuMTM2NC0zOTY5LTQ4MDMtNTE3MTlcIixcInB1cmNoYXNlVGltZVwiOjE3MTk0MzIyMDMzNDYsXCJ3YWl0aW5nVG9DYW5jZWxcIjpmYWxzZSxcImZpeFJlcXVpcmVkXCI6ZmFsc2V9IiwicmVhZGVySWQiOiI0ZGYwZmFmMjY2MzBhNTYzMjlhMTM3Y2NiZmM1ZDQ2NCJ9XX0.RPXV86EEQf9DMDkHHwoK6O9_DyN-tbGPJq4H6XB39zFADjZZNhFDKAZJGL-SxmmxpT_TjGwVQbqog9fomEZJm7NP7Z5HOdBo-jrufl_g9aP9p9PIIV5T1JcsNJdDvKzgOix8gcwWb22js2OICeWRrJtA_vWlcB0jCGwigy9HjaG0NctNPb1J1jTFAv3Tqw06IRsDCFvEaef2g9hqsOh44jA34DBAt_bKHYDpR2I9SpY3s64idvKxrxuyPylkc6FY-KRvBLaNdi4GFd6AcznilkgsxoDP_PFbgPWv3of1eQ8t-SY8KQwTI-mxfMAZK-y2zMwlaOElOBkkovVdQXEAeg\",\"swgUserToken\":\"AamD4uSfHFB2EIc4m+hsQT1t1imgM45PiEYqp81GIZ9iYXDNb3e1likH8NYfKs7q6NkBP9N1zE5pYk+mwRlMbxELFicudfeDgOymDY+3bXenTw==\",\"purchaseData\":\"{\\\"autoRenewing\\\":true,\\\"orderId\\\":\\\"SWG.6398-0845-8433-69711\\\",\\\"productId\\\":\\\"SWGPD.1364-3969-4803-51719\\\",\\\"purchaseTime\\\":1719432203346,\\\"waitingToCancel\\\":false,\\\"fixRequired\\\":false}\"}",
+    "raw": "{\"signedEntitlements\":\"eyJhbGciOiJSUzI1NiIsImtpZCI6IjMwYzNiODg3ZjY4OGFjYzUxOTc1M2UzMzU5YmJjZTYxZDhmOWMwYTkiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJodHRwczovL3JlYWRlci1yZXZlbnVlLWRlbW8udWUuci5hcHBzcG90LmNvbSIsImV4cCI6MTcyMDc2ODk5NywiaWF0IjoxNzIwNzY3MTk3LCJpc3MiOiJzdWJzY3JpYmV3aXRoZ29vZ2xlQHN5c3RlbS5nc2VydmljZWFjY291bnQuY29tIiwiZW50aXRsZW1lbnRzIjpbeyJzb3VyY2UiOiJnb29nbGU6c3Vic2NyaWJlciIsInByb2R1Y3RzIjpbIkNBb3dxZkNLQ3c6YmFzaWMiLCJDQW93cWZDS0N3Om9wZW5hY2Nlc3MiXSwic3Vic2NyaXB0aW9uVG9rZW4iOiJ7XCJhdXRvUmVuZXdpbmdcIjp0cnVlLFwib3JkZXJJZFwiOlwiU1dHLjE4OTMtMjkwNS0xMzI1LTk2NDE1XCIsXCJwcm9kdWN0SWRcIjpcIlNXR1BELjEzNjQtMzk2OS00ODAzLTUxNzE5XCIsXCJwdXJjaGFzZVRpbWVcIjoxNzIwNzY3MTk2OTIzLFwid2FpdGluZ1RvQ2FuY2VsXCI6ZmFsc2UsXCJmaXhSZXF1aXJlZFwiOmZhbHNlfSIsInJlYWRlcklkIjoiM2YwMDZhYTE5YWM3MzdkNDIxMDljMmFjZGQ0NmQzNmUifV19.AG3GCdn58x3QPbYlUknmJbE2r7AY0ZiKO4cxiGwR4GWlvGuLKkko7IVepKaq7aK2CkOGCXxKg7EcOcHzddbqupNLTabkDCp3pausC8I_1b0To5M8ARit2cwjl3DFe4O4ILAs-2DVQAebZdZLLwUTLn7umFVG4WKRMq0ZdmOSEET4K0w-Kqj8JDQoSCMUWaGZaAwFCSvE-lLsVaYQn07DcelEjl_9_HxKfjt86d1r_c5T3fXpKJQxkFBv0i4DRf_yCJpuB6ioaTBb5aImOI8WjIkykARfmBVvkqtkCKgHD7Mpdi327DUdHgv7A48HewwcH8RgvJz67s4ai8dFqVMxGA\",\"swgUserToken\":\"AdAFvZ1eSdlex3u9KkIX32eOHa6qUwkYVUXkAXyampk41jViJ0wGZd5arCp9RUpO0znC5lNI6naHMU9y4H1PZBpxRSCgv0uNBtTu3IrONDqZ/Q==\",\"purchaseData\":\"{\\\"autoRenewing\\\":true,\\\"orderId\\\":\\\"SWG.1893-2905-1325-96415\\\",\\\"productId\\\":\\\"SWGPD.1364-3969-4803-51719\\\",\\\"purchaseTime\\\":1720767196923,\\\"waitingToCancel\\\":false,\\\"fixRequired\\\":false}\"}",
     "purchaseData": {
-        "raw": "{\"autoRenewing\":true,\"orderId\":\"SWG.6398-0845-8433-69711\",\"productId\":\"SWGPD.1364-3969-4803-51719\",\"purchaseTime\":1719432203346,\"waitingToCancel\":false,\"fixRequired\":false}",
-        "data": "{\"autoRenewing\":true,\"orderId\":\"SWG.6398-0845-8433-69711\",\"productId\":\"SWGPD.1364-3969-4803-51719\",\"purchaseTime\":1719432203346,\"waitingToCancel\":false,\"fixRequired\":false}"
+        "raw": "{\"autoRenewing\":true,\"orderId\":\"SWG.1893-2905-1325-96415\",\"productId\":\"SWGPD.1364-3969-4803-51719\",\"purchaseTime\":1720767196923,\"waitingToCancel\":false,\"fixRequired\":false}",
+        "data": "{\"autoRenewing\":true,\"orderId\":\"SWG.1893-2905-1325-96415\",\"productId\":\"SWGPD.1364-3969-4803-51719\",\"purchaseTime\":1720767196923,\"waitingToCancel\":false,\"fixRequired\":false}"
     },
     "userData": null,
     "entitlements": {
         "service": "subscribe.google.com",
-        "raw": "eyJhbGciOiJSUzI1NiIsImtpZCI6Ijg3MGUzMzVmZmQxOTkwNzA4YTc4ZTVhMzQyODQzODBmOGQyNWUyMzgiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJodHRwczovL3JlYWRlci1yZXZlbnVlLWRlbW8udWUuci5hcHBzcG90LmNvbSIsImV4cCI6MTcxOTQzNDAwNCwiaWF0IjoxNzE5NDMyMjA0LCJpc3MiOiJzdWJzY3JpYmV3aXRoZ29vZ2xlQHN5c3RlbS5nc2VydmljZWFjY291bnQuY29tIiwiZW50aXRsZW1lbnRzIjpbeyJzb3VyY2UiOiJnb29nbGU6c3Vic2NyaWJlciIsInByb2R1Y3RzIjpbIkNBb3dxZkNLQ3c6YmFzaWMiLCJDQW93cWZDS0N3Om9wZW5hY2Nlc3MiXSwic3Vic2NyaXB0aW9uVG9rZW4iOiJ7XCJhdXRvUmVuZXdpbmdcIjpmYWxzZSxcIm9yZGVySWRcIjpcIlNXRy45OTczLTE2NTQtNzY4OC0zMDExNlwiLFwicHJvZHVjdElkXCI6XCJTV0dQRC43OTc1LTYwODQtMDU3Ny0xMjE3OFwiLFwicHVyY2hhc2VUaW1lXCI6MTcxODczMDU3ODA0OSxcIndhaXRpbmdUb0NhbmNlbFwiOnRydWUsXCJmaXhSZXF1aXJlZFwiOmZhbHNlfSIsInJlYWRlcklkIjoiNGRmMGZhZjI2NjMwYTU2MzI5YTEzN2NjYmZjNWQ0NjQifSx7InNvdXJjZSI6Imdvb2dsZTpzdWJzY3JpYmVyIiwicHJvZHVjdHMiOlsiQ0Fvd3FmQ0tDdzpiYXNpYyIsIkNBb3dxZkNLQ3c6b3BlbmFjY2VzcyJdLCJzdWJzY3JpcHRpb25Ub2tlbiI6IntcImF1dG9SZW5ld2luZ1wiOnRydWUsXCJvcmRlcklkXCI6XCJTV0cuNjM5OC0wODQ1LTg0MzMtNjk3MTFcIixcInByb2R1Y3RJZFwiOlwiU1dHUEQuMTM2NC0zOTY5LTQ4MDMtNTE3MTlcIixcInB1cmNoYXNlVGltZVwiOjE3MTk0MzIyMDMzNDYsXCJ3YWl0aW5nVG9DYW5jZWxcIjpmYWxzZSxcImZpeFJlcXVpcmVkXCI6ZmFsc2V9IiwicmVhZGVySWQiOiI0ZGYwZmFmMjY2MzBhNTYzMjlhMTM3Y2NiZmM1ZDQ2NCJ9XX0.RPXV86EEQf9DMDkHHwoK6O9_DyN-tbGPJq4H6XB39zFADjZZNhFDKAZJGL-SxmmxpT_TjGwVQbqog9fomEZJm7NP7Z5HOdBo-jrufl_g9aP9p9PIIV5T1JcsNJdDvKzgOix8gcwWb22js2OICeWRrJtA_vWlcB0jCGwigy9HjaG0NctNPb1J1jTFAv3Tqw06IRsDCFvEaef2g9hqsOh44jA34DBAt_bKHYDpR2I9SpY3s64idvKxrxuyPylkc6FY-KRvBLaNdi4GFd6AcznilkgsxoDP_PFbgPWv3of1eQ8t-SY8KQwTI-mxfMAZK-y2zMwlaOElOBkkovVdQXEAeg",
+        "raw": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjMwYzNiODg3ZjY4OGFjYzUxOTc1M2UzMzU5YmJjZTYxZDhmOWMwYTkiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJodHRwczovL3JlYWRlci1yZXZlbnVlLWRlbW8udWUuci5hcHBzcG90LmNvbSIsImV4cCI6MTcyMDc2ODk5NywiaWF0IjoxNzIwNzY3MTk3LCJpc3MiOiJzdWJzY3JpYmV3aXRoZ29vZ2xlQHN5c3RlbS5nc2VydmljZWFjY291bnQuY29tIiwiZW50aXRsZW1lbnRzIjpbeyJzb3VyY2UiOiJnb29nbGU6c3Vic2NyaWJlciIsInByb2R1Y3RzIjpbIkNBb3dxZkNLQ3c6YmFzaWMiLCJDQW93cWZDS0N3Om9wZW5hY2Nlc3MiXSwic3Vic2NyaXB0aW9uVG9rZW4iOiJ7XCJhdXRvUmVuZXdpbmdcIjp0cnVlLFwib3JkZXJJZFwiOlwiU1dHLjE4OTMtMjkwNS0xMzI1LTk2NDE1XCIsXCJwcm9kdWN0SWRcIjpcIlNXR1BELjEzNjQtMzk2OS00ODAzLTUxNzE5XCIsXCJwdXJjaGFzZVRpbWVcIjoxNzIwNzY3MTk2OTIzLFwid2FpdGluZ1RvQ2FuY2VsXCI6ZmFsc2UsXCJmaXhSZXF1aXJlZFwiOmZhbHNlfSIsInJlYWRlcklkIjoiM2YwMDZhYTE5YWM3MzdkNDIxMDljMmFjZGQ0NmQzNmUifV19.AG3GCdn58x3QPbYlUknmJbE2r7AY0ZiKO4cxiGwR4GWlvGuLKkko7IVepKaq7aK2CkOGCXxKg7EcOcHzddbqupNLTabkDCp3pausC8I_1b0To5M8ARit2cwjl3DFe4O4ILAs-2DVQAebZdZLLwUTLn7umFVG4WKRMq0ZdmOSEET4K0w-Kqj8JDQoSCMUWaGZaAwFCSvE-lLsVaYQn07DcelEjl_9_HxKfjt86d1r_c5T3fXpKJQxkFBv0i4DRf_yCJpuB6ioaTBb5aImOI8WjIkykARfmBVvkqtkCKgHD7Mpdi327DUdHgv7A48HewwcH8RgvJz67s4ai8dFqVMxGA",
         "entitlements": [
             {
                 "source": "google:subscriber",
@@ -121,21 +121,10 @@ function parseJwtHeader(token) {
                     "CAowqfCKCw:basic",
                     "CAowqfCKCw:openaccess"
                 ],
-                "subscriptionToken": "{\"autoRenewing\":false,\"orderId\":\"SWG.9973-1654-7688-30116\",\"productId\":\"SWGPD.7975-6084-0577-12178\",\"purchaseTime\":1718730578049,\"waitingToCancel\":true,\"fixRequired\":false}",
+                "subscriptionToken": "{\"autoRenewing\":true,\"orderId\":\"SWG.1893-2905-1325-96415\",\"productId\":\"SWGPD.1364-3969-4803-51719\",\"purchaseTime\":1720767196923,\"waitingToCancel\":false,\"fixRequired\":false}",
                 "subscriptionTokenContents": null,
                 "subscriptionTimestamp": null,
-                "readerId": "4df0faf26630a56329a137ccbfc5d464"
-            },
-            {
-                "source": "google:subscriber",
-                "products": [
-                    "CAowqfCKCw:basic",
-                    "CAowqfCKCw:openaccess"
-                ],
-                "subscriptionToken": "{\"autoRenewing\":true,\"orderId\":\"SWG.6398-0845-8433-69711\",\"productId\":\"SWGPD.1364-3969-4803-51719\",\"purchaseTime\":1719432203346,\"waitingToCancel\":false,\"fixRequired\":false}",
-                "subscriptionTokenContents": null,
-                "subscriptionTimestamp": null,
-                "readerId": "4df0faf26630a56329a137ccbfc5d464"
+                "readerId": "3f006aa19ac737d42109c2acdd46d36e"
             }
         ],
         "En": null,
@@ -144,7 +133,7 @@ function parseJwtHeader(token) {
     },
     "productType": "SUBSCRIPTION",
     "oldSku": null,
-    "swgUserToken": "AamD4uSfHFB2EIc4m+hsQT1t1imgM45PiEYqp81GIZ9iYXDNb3e1likH8NYfKs7q6NkBP9N1zE5pYk+mwRlMbxELFicudfeDgOymDY+3bXenTw==",
+    "swgUserToken": "AdAFvZ1eSdlex3u9KkIX32eOHa6qUwkYVUXkAXyampk41jViJ0wGZd5arCp9RUpO0znC5lNI6naHMU9y4H1PZBpxRSCgv0uNBtTu3IrONDqZ/Q==",
     "paymentRecurrence": null,
     "requestMetadata": null
 }
