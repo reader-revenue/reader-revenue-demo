@@ -12,4 +12,4 @@ how to implement the prompts.
 
 ## Test the manual survey invocation
 
-<div id="newsletterPrompts"></div>
+<div id="prompts"></div>

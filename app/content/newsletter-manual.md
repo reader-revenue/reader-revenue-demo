@@ -1,9 +1,10 @@
 <script async
   subscriptions-control="manual"
   type="application/javascript"
-  src="https://news.google.com/swg/js/v1/swg.js">
+  src="https://news.google.com/swg/js/v1/swg{{#env.SWG_OVERRIDE}}-{{.}}{{/env.SWG_OVERRIDE}}.js">
 </script>
 
+Env var: {{env.PUBLICATION_ID}}
 
 # Newsletter prompts
 
@@ -12,7 +13,7 @@ how to implement the prompts.
 
 ## Test the manual newsletter invocation
 
-<div id="newsletterPrompts"></div>
+<div id="prompts"></div>
 
 ## Newsletter Prompt Overview
 
