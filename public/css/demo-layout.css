@@ -404,12 +404,12 @@ pre code.hljs {
   padding: 0 5px;
 }
 
-#newsletterPrompts>button {
+#prompts>button {
   display: block;
   margin-bottom: 10px;
 }
 
-#newsletterPrompts>button:last-child {
+#prompts>button:last-child {
   margin-bottom: 0;
 }
 

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import {NewsletterPersistence} from './newsletter-persistence.js';
-const newsletterCache = new NewsletterPersistence();
+import {PromptPersistence} from './prompt-persistence.js';
+const promptCache = new PromptPersistence();
 
 async function registerEventManager(subscriptions) {
   const eventManager = await subscriptions.getEventManager();
@@ -28,21 +28,44 @@ async function getPrompt(availableInterventions, specifiedConfigurationId) {
   });
 }
 
-async function launchSpecificPrompt(prompt) {
+async function getPromptByType(availableInterventions, promptType) {
+  return availableInterventions.find(({type}) => {
+    return type === promptType;
+  });
+}
+
+async function launchSpecificPrompt(prompt, promptType) {
+
   prompt?.show({
     isClosable: true,
-    onResult: (result) => {
-      console.log(result);
-      newsletterCache.signup(result);
+    onResult: (response) => {
+      console.log(response);
+      promptCache.record(response, promptType)
+
+      if (isGTAGEnabled()) {
+        gtag('event', `${promptType}-response`, {
+          'response': JSON.stringify(response)
+        })
+      }
+
+      return true;
     },
   });
+}
+
+// A boolean function to handle the potential of surfacing
+// .env vars to enable Google Analytics
+function isGTAGEnabled() {
+  let GTAG_PROPERTY_ID = 'process.env.GTAG_PROPERTY_ID'
+  return GTAG_PROPERTY_ID != ''
 }
 
 async function createButtonForPrompt(
   availableInterventions,
   newsletterConfiguration,
   buttonEnabledState,
-  container
+  container,
+  promptType
 ) {
   const button = document.createElement('button');
   const prompt = await getPrompt(
@@ -52,7 +75,7 @@ async function createButtonForPrompt(
 
   if (buttonEnabledState == true) {
     button.onclick = () => {
-      launchSpecificPrompt(prompt);
+      launchSpecificPrompt(prompt, promptType);
     };
   } else {
     button.setAttribute('disabled', 'true');
@@ -62,10 +85,37 @@ async function createButtonForPrompt(
   container.appendChild(button);
 }
 
+async function createButtonsForPrompts(
+  buttonContainer,
+  promptConfigurationType,
+  promptConfigurations,
+  availableInterventions
+) {
+
+  const availableInterventionConfigurationIds = availableInterventions.map(
+    (intervention) => intervention.configurationId
+  );
+
+  for (const promptConfiguration of promptConfigurations) {
+    const buttonEnabledState = availableInterventionConfigurationIds.includes(
+      promptConfiguration.configurationId
+    );
+
+    createButtonForPrompt(
+      availableInterventions,
+      promptConfiguration,
+      buttonEnabledState,
+      buttonContainer,
+      promptConfigurationType
+    );
+  }
+}
+
 export {
   registerEventManager,
   getPrompt,
   launchSpecificPrompt,
   createButtonForPrompt,
-  newsletterCache,
+  createButtonsForPrompts,
+  promptCache,
 };

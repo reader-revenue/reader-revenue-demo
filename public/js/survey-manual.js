@@ -19,11 +19,13 @@
  */
 
 import {
-  createButtonForPrompt,
+  createButtonsForPrompts,
   registerEventManager,
-} from './newsletter-methods.js';
+} from './prompt-methods.js';
 
-const newsletterConfigurations = [
+
+const promptConfigurationType = 'TYPE_REWARDED_SURVEY';
+const promptConfigurations = [
   {
     name: 'Very detailed survey',
     configurationId: '14965053-83a6-4efa-98e4-223450cd5801',
@@ -34,33 +36,21 @@ const newsletterConfigurations = [
   }
 ];
 
-const buttonContainer = document.querySelector('#newsletterPrompts');
+const buttonContainer = document.querySelector('#prompts');
 
 (self.SWG = self.SWG || []).push(async (subscriptions) => {
   subscriptions.configure({paySwgVersion: '2'});
   subscriptions.init('process.env.PUBLICATION_ID');
 
   await registerEventManager(subscriptions);
-
-  const availableInterventions =
-    await subscriptions.getAvailableInterventions();
+  const availableInterventions = await subscriptions.getAvailableInterventions();
 
   console.log({availableInterventions});
 
-  const availableInterventionConfigurationIds = availableInterventions.map(
-    (intervention) => intervention.configurationId
-  );
-
-  for (const newsletterConfiguration of newsletterConfigurations) {
-    const buttonEnabledState = availableInterventionConfigurationIds.includes(
-      newsletterConfiguration.configurationId
-    );
-
-    createButtonForPrompt(
-      availableInterventions,
-      newsletterConfiguration,
-      buttonEnabledState,
-      buttonContainer
-    );
-  }
+  await createButtonsForPrompts(
+    buttonContainer, 
+    promptConfigurationType, 
+    promptConfigurations,
+    availableInterventions)
+  
 });

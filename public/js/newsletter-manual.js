@@ -19,48 +19,37 @@
  */
 
 import {
-  createButtonForPrompt,
+  createButtonsForPrompts,
   registerEventManager,
-} from './newsletter-methods.js';
+} from './prompt-methods.js';
 
-const newsletterConfigurations = [
+const promptConfigurationType = 'TYPE_NEWSLETTER_SIGNUP'
+const promptConfigurations = [
   {
-    name: 'Subscriber Newsletter',
-    configurationId: '49c12712-9750-4571-8c67-96722561c13a',
+    name: 'Nightly news',
+    configurationId: 'cc1a94ee-614f-4946-a61e-0fea41683f4c',
   },
   {
-    name: 'Breaking News',
-    configurationId: 'e98a2efb-d009-43c9-99ef-dda11c8c5a7f',
+    name: 'Confirmed nightly news',
+    configurationId: '6f095914-fe2a-4721-8df5-e99fea544288',
   },
 ];
 
-const buttonContainer = document.querySelector('#newsletterPrompts');
+const buttonContainer = document.querySelector('#prompts');
 
 (self.SWG = self.SWG || []).push(async (subscriptions) => {
   subscriptions.configure({paySwgVersion: '2'});
-  subscriptions.init('CAow3fzXCw');
+  subscriptions.init('process.env.PUBLICATION_ID');
 
   await registerEventManager(subscriptions);
+  const availableInterventions = await subscriptions.getAvailableInterventions();
 
-  const availableInterventions =
-    await subscriptions.getAvailableInterventions();
+  console.log({availableInterventions});
 
-  // console.log({availableInterventions});
-
-  const availableInterventionConfigurationIds = availableInterventions.map(
-    (intervention) => intervention.configurationId
-  );
-
-  for (const newsletterConfiguration of newsletterConfigurations) {
-    const buttonEnabledState = availableInterventionConfigurationIds.includes(
-      newsletterConfiguration.configurationId
-    );
-
-    createButtonForPrompt(
-      availableInterventions,
-      newsletterConfiguration,
-      buttonEnabledState,
-      buttonContainer
-    );
-  }
+  await createButtonsForPrompts(
+    buttonContainer, 
+    promptConfigurationType, 
+    promptConfigurations,
+    availableInterventions)
+  
 });
