@@ -17,6 +17,21 @@
 
 <html lang="{{#unless data.options.lang}}en{{else}}{{data.options.lang}}{{/unless}}">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{data.env.GTAG_PROPERTY_ID}}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    {{#unless data.env.GTAG_DEBUG_MODE}}
+    gtag('config', '{{data.env.GTAG_PROPERTY_ID}}');
+    {{else}}
+    gtag('config', '{{data.env.GTAG_PROPERTY_ID}}', {'debug_mode': true});
+    {{/unless}}
+
+
+  </script>
   <base href="/" />
   <title>Reader Revenue Manager: Demo</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -63,7 +78,6 @@
   {{/unless}}
 
   <script defer type="module" src="js/demo-layout.js"></script>
-
 </head>
 
 <body class="docs subscribe-with-google">
