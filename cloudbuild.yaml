@@ -31,6 +31,8 @@ steps:
         sed -i "s/##ENV_OVERRIDES##/${_ENV_OVERRIDES}/g" app.yaml
         sed -i "s/##GOOGLE_SITE_VERIFICATION##/${_GOOGLE_SITE_VERIFICATION}/g" app.yaml
         sed -i "s/##GOOGLE_CLOUD_REGION##/${_GOOGLE_CLOUD_REGION}/g" app.yaml
+        sed -i "s/##GTAG_PROPERTY_ID##/${_GTAG_PROPERTY_ID}/g" app.yaml
+        sed -i "s/##GTAG_DEBUG_MODE##/${_GTAG_DEBUG_MODE}/g" app.yaml
         sed -i "s/##OAUTH_CLIENT_ID##/${_OAUTH_CLIENT_ID}/g" app.yaml
         sed -i "s/##OAUTH_CLIENT_SECRET##/${_OAUTH_CLIENT_SECRET}/g" app.yaml
         sed -i "s/##PUBLICATION_ID##/${_PUBLICATION_ID}/g" app.yaml
