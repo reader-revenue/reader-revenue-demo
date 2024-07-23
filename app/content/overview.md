@@ -47,7 +47,7 @@ templated methods.
 
 ```shell
 # General node.js env vars
-PORT=8080 #port to run on
+PORT=8080 # port to run on
 NODE_ENV=development
 ENV_NAME=local #Give your instance a distinct name that surfaces in the header
 
@@ -70,8 +70,8 @@ OAUTH_CLIENT_SECRET=secret-abc-1234
 GOOGLE_SITE_VERIFICATION=public-abc-1234
 
 # Google Analytics
-GTAG_PROPERTY_ID: G-1234567890  #Configure gTag Id
-GTAG_DEBUG_MODE: true           #Enable 'debug' mode in GA for streaming all events
+GTAG_PROPERTY_ID=G-1234567890 #Configure gTag Id
+GTAG_DEBUG_MODE: true #Enable 'debug' mode in GA for streaming all events
 
 # SwG Environments
 # Setting this change the 'swg.js' script tag to be 'swg-another-value.js'

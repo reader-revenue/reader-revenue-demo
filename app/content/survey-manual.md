@@ -90,9 +90,10 @@ APIs are also available in automatic mode.
 
 ### Get the prompt instance to display
 
-To invoke a survey prompt, a publisher must use the `configurationId` provided by
-Google in response to submitting a prompt configuration. Publishers use the
-`configurationId` to fetch a valid prompt instance using the `subscriptions.getAvailableInterventions()` method from the initialized `swg.js` library.
+To invoke a survey prompt, a publisher must use the `configurationId` from the Publisher
+Center survey configuration page. Publishers use the `configurationId` to fetch a valid 
+prompt instance using the `subscriptions.getAvailableInterventions()` method from 
+the initialized `swg.js` library.
 
 ```javascript
 const publisherConfiguration = {
@@ -129,7 +130,7 @@ prompt?.show({
 The `onResult` callback will include information on the configuration used
 to create the prompt, as well as the newsletter subscriber's information. The `configurationId` matches the `configurationId provided to the publisher from Google, in response to the configuration authored by the publisher in the initial step.
 
-!!! note `onResult()` callback format is variable.
+!!! note `onResult()` callback conforms to the documented type in [github](https://github.com/subscriptions-project/swg-js/blob/main/src/api/available-intervention.ts#L41).
 The contents of a prompt determines the shape of the `onResult` callback data.
 For example, a single-page survey response will differ in shape from a multi-page survey.
 For best results, store the entire result.
