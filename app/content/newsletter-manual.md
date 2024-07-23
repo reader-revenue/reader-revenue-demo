@@ -4,8 +4,6 @@
   src="https://news.google.com/swg/js/v1/swg{{#env.SWG_OVERRIDE}}-{{.}}{{/env.SWG_OVERRIDE}}.js">
 </script>
 
-Env var: {{env.PUBLICATION_ID}}
-
 # Newsletter prompts
 
 This page both demonstrates how RRM:E newsletter sign-up works, as well as documents
@@ -123,12 +121,12 @@ This page includes two newsletter configurations. They were created with the fol
 ```json
 [
   {
-    publicationId: 'CAow3fzXCw',
+    publicationId: '{{env.PUBLICATION_ID}}',
     title: 'Subscriber Newsletter',
     body: 'As a premium benefit, enjoy curated subscriber news'
   },
   {
-    publicationId: 'CAow3fzXCw',
+    publicationId: '{{env.PUBLICATION_ID}}',
     name: 'Breaking News',
     body: 'Breaking news delivered to you right away',
     permission: true,
@@ -226,7 +224,7 @@ This complete example accomplishes the following:
 3. When the button is clicked, display the prompt.
 4. Store the results of a successful prompt with the sample `NewsletterPersistence()` library.
 
-!!! note `NewsletterPersistence()` is an example implementation.
+!!! note `PromptPersistence()` is an example implementation.
 In a production environment, a publisher would use the prompt response to send data to their own
 account or customer management system. 
 !!!
@@ -243,10 +241,10 @@ account or customer management system.
 <script type="module">
 
 // Example library for storing email signups
-import {NewsletterPersistence} from './newsletter-persistence.js';
-const newsletterCache = new NewsletterPersistence();
+import {PromptPersistence} from './prompt-persistence.js';
+const promptCache = new PromptPersistence();
 
-const newsletterConfigurations = [
+const promptConfigurations = [
   {
     name: 'Subscriber Newsletter',
     configurationId: '49c12712-9750-4571-8c67-96722561c13a',
@@ -257,11 +255,11 @@ const newsletterConfigurations = [
   },
 ];
 
-const buttonContainer = document.querySelector('#newsletterPrompts');
+const buttonContainer = document.querySelector('#prompts');
 
 (self.SWG = self.SWG || []).push(async (subscriptions) => {
   subscriptions.configure({paySwgVersion: '2'});
-  subscriptions.init('CAow3fzXCw');
+  subscriptions.init('{{env.PUBLICATION_ID}}');
 
   // Configure the event manager to log all events to the console
   const eventManager = await subscriptions.getEventManager();
@@ -277,14 +275,14 @@ const buttonContainer = document.querySelector('#newsletterPrompts');
     (availableIntervention) => availableIntervention.configurationId
   );
 
-  for (const newsletterConfiguration of newsletterConfigurations) {
+  for (const promptConfiguration of promptConfigurations) {
     const buttonEnabledState = availableInterventionConfigurationIds.includes(
-      newsletterConfiguration.configurationId
+      promptConfiguration.configurationId
     );
 
     createButtonForPrompt(
       availableInterventions,
-      newsletterConfiguration,
+      promptConfiguration,
       buttonEnabledState,
       buttonContainer
     );
@@ -317,14 +315,14 @@ async function launchSpecificPrompt(prompt) {
 // Helper function for creating a button to launch a prompt
 async function createButtonForPrompt(
   availableInterventions,
-  newsletterConfiguration,
+  promptConfiguration,
   buttonEnabledState,
   container
 ) {
   const button = document.createElement('button');
   const prompt = await getPrompt(
     availableInterventions,
-    newsletterConfiguration.configurationId
+    promptConfiguration.configurationId
   );
 
   if (buttonEnabledState == true) {
