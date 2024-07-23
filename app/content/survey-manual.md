@@ -4,33 +4,29 @@
   src="https://news.google.com/swg/js/v1/swg{{#env.SWG_OVERRIDE}}-{{.}}{{/env.SWG_OVERRIDE}}.js">
 </script>
 
-# Newsletter prompts
 
-This page both demonstrates how RRM:E newsletter sign-up works, as well as documents
+# Survey prompts
+
+This page both demonstrates how RRM:E survey sign-up works, as well as documents
 how to implement the prompts.
 
-## Test the manual newsletter invocation
+## Test the manual survey invocation
 
 <div id="prompts"></div>
 
-## Newsletter Prompt Overview
+## Survey Prompt Overview
 
-A publisher can configure one or more newsletters for manual invocation by using an
+A publisher can configure one or more surveys for manual invocation by using an
 initialized `swg.js` instance. In order to use this feature:
 
-1.  A publisher will provide Google with a prompt configuration per newsletter, and 
-    will receive a `configurationId` in response to call this newsletter configuration.
-1.  A publisher will fetch a valid prompt using the `configurationId`, and then display it.
+1.  The publisher will create a survey in the Publisher Center content access section 
+    for their publication.
+1.  The publisher will fetch a valid prompt using the `configurationId`, and then 
+    display it.
 1.  When configuring the prompt display code, a publisher will provide a callback
     that will be used to store the responses from the newsletter signup, and 
     acknowledge to Google that the email address has been saved.
 
-## Configure Prompts
-
-During the manual configuration beta of the Newsletter feature of RRM:E, publishers must
-provide a manual configuration for each newsletter that they would like configured. The
-configuration for each newsletter will determine which features are displayed in the
-prompt, and what data is passed to the publisher for each subscriber.
 
 ### Prompt Configuration Examples
 
@@ -47,130 +43,61 @@ prompt, and what data is passed to the publisher for each subscriber.
     </pre>    
   </li> -->
   <li class="flexible-list-item">
-    <img src="/img/newsletter-configurations_0000s_0003_with-title.png">
+    <img src="/img/survey.png">
     <pre>
     <code class="hljs language-json">
 {
-  "publicationId": "asdf-1234",
-  "title": "Your favorite news, delivered directly to your inbox."
+  "name": "Basic survey",
+  "configurationId": "49c12712-9750-4571-8c67-96722561c13a"
 }
     </code>
     </pre> 
   </li>
     <li class="flexible-list-item">
-    <img src="/img/newsletter-configurations_0000s_0002_with-title-and-body.png">
+    <img src="/img/survey-multi-page.png">
     <pre>
     <code class="hljs language-json">
 {
-  "publicationId": "asdf-1234",
-  "title": "Your favorite news, delivered directly to your inbox.",
-  "body": "Sign up to receive the morning newsletter from the Daily Bugle, with editorially-selected articles, sports updates and more."
+  "name": "Multi-page survey",
+  "configurationId": "e98a2efb-d009-43c9-99ef-dda11c8c5a7f"
 }
     </code>
     </pre> 
   </li>
-    <li class="flexible-list-item">
-    <img src="/img/newsletter-configurations_0000s_0001_with-title-and-body-and-consent.png">
-    <pre>
-    <code class="hljs language-json">
-{
-  "publicationId": "asdf-1234",
-  "title": "Your favorite news, delivered directly to your inbox.",
-  "body": "Sign up to receive the morning newsletter from the Daily Bugle, with editorially-selected articles, sports updates and more.",
-  "permission": true,
-  "permissionDescription": "Allow the Daily Bugle to send you deals, subscription offers and other marketing info."
-}
-    </code>
-    </pre> 
-  </li>
-  <!-- <li class="flexible-list-item">
-    <img src="/img/newsletter-configurations_0000s_0000_alternate.png">
-    <pre>
-    <code class="hljs language-json">
-{
-  "publicationId": "asdf-1234",
-  "name": "Superhero Shots by the Daily Bugle",
-  "title": "Daily photo updates from around the town",
-  "body": "Sign up to receive breaking updates from around the web by intrepid photojournalists on the street."
-}
-    </code>
-    </pre> 
-  </li> -->
 </ul>
 
-### Provide Prompt Configuration to Google
-
-Configurations for newsletters may include the following fields.
-
-- **Publication Id** (as found in the Publisher Center configuration for the RRM:E publication)
-- **Newsletter title** _(text)_ - The title of the newsletter, which appears below the name
-- **Newsletter body** _(text)_ - A description of the newsletter
-- **Show a permission checkbox?** _(true/false)_ - A checkbox to determine if additional acceptance should be required of the newsletter subscriber
-- **Permission description** _(text)_ _optional_- A label for the permission checkbox. Required if showing a permission checkbox is required.
-
-!!! caution **NOTE:** `publicationId` and `name` are **required**, but all other fields are optional.
-!!!
-
-In response, Google will provide a `configurationId` for each newsletter. 
-
-
-#### Configuration for the sample prompts
-
-This page includes two newsletter configurations. They were created with the following configuration:
-
-```json
-[
-  {
-    publicationId: '{{env.PUBLICATION_ID}}',
-    title: 'Subscriber Newsletter',
-    body: 'As a premium benefit, enjoy curated subscriber news'
-  },
-  {
-    publicationId: '{{env.PUBLICATION_ID}}',
-    name: 'Breaking News',
-    body: 'Breaking news delivered to you right away',
-    permission: true,
-    permissionDescription: 'Consent to marketing materials'
-  }
-]
-```
-
-!!! note Newsletter configurations can be provided in any format
-The newsletter configuration above is represented as a `json` object, but any format can be used. 
-During the alpha phase, this is a manual configuration.
-!!!
-
-After submitting a configuration, Google will provide a `configurationId` in response for each
+After creating a configuration, the Publisher Center page will provide a `configurationId` in response for each
 newsletter configuration. These ids will then be used in subsequent javascript api calls.
 
 ```json
 [
   {
-    name: 'Subscriber Newsletter',
+    name: 'Basic survey',
     configurationId: '49c12712-9750-4571-8c67-96722561c13a',
   },
   {
-    name: 'Breaking News',
+    name: 'Multi-page survey',
     configurationId: 'e98a2efb-d009-43c9-99ef-dda11c8c5a7f',
   },
 ]
 ```
 
-### Invoke Newsletter Prompts
+### Invoke Survey Prompts
 
-To configure newsletter prompts, `swg.js` must first be configured on the page.
+To configure survey prompts, `swg.js` must first be configured on the page.
 These examples show using the initialization of the library in `manual` mode, but the
 APIs are also available in automatic mode. 
 
 ### Get the prompt instance to display
 
-To invoke a newsletter prompt, a publisher must use the `configurationId` provided by
-Google in response to submitting a prompt configuration. Publishers use the
-`configurationId` to fetch a valid prompt instance using the `subscriptions.getAvailableInterventions()` method from the initialized `swg.js` library.
+To invoke a survey prompt, a publisher must use the `configurationId` from the Publisher
+Center survey configuration page. Publishers use the `configurationId` to fetch a valid 
+prompt instance using the `subscriptions.getAvailableInterventions()` method from 
+the initialized `swg.js` library.
 
 ```javascript
 const publisherConfiguration = {
-  name: 'Subscriber Newsletter',
+  name: 'Basic survey',
   configurationId: '49c12712-9750-4571-8c67-96722561c13a',
 };
 
@@ -201,32 +128,25 @@ prompt?.show({
 ### Handle the response
 
 The `onResult` callback will include information on the configuration used
-to create the prompt, as well as the newsletter subscriber's information. The `configurationId` matches the `configurationId provided to the publisher from Google, in response to the per-newsletter configuration authored by the publisher in the initial step.
+to create the prompt, as well as the newsletter subscriber's information. The `configurationId` matches the `configurationId provided to the publisher from Google, in response to the configuration authored by the publisher in the initial step.
 
-```javascript
-{
-  'configurationId': '123-456-789',
-  'data': {
-    'userEmail': 'example@example.com',
-    'displayName': 'John Johnson',
-    'givenName': 'John',
-    'familyName': 'Johnson'
-  }
-}
-```
+!!! note `onResult()` callback conforms to the documented type in [github](https://github.com/subscriptions-project/swg-js/blob/main/src/api/available-intervention.ts#L41).
+The contents of a prompt determines the shape of the `onResult` callback data.
+For example, a single-page survey response will differ in shape from a multi-page survey.
+For best results, store the entire result.
+!!!
 
 #### Complete Example
 
 This complete example accomplishes the following:
 
 1. Initializes `swg.js` library in manual mode.
-2. When the library is ready, use the `newsletter-1234` configurationId to request a prompt to display.  
+2. When the library is ready, use the `49c12712-9750-4571-8c67-96722561c13a` configurationId to request a prompt to display.  
 3. When the button is clicked, display the prompt.
-4. Store the results of a successful prompt with the sample `NewsletterPersistence()` library.
+4. Store the results of a successful prompt with the sample `PromptPersistence()` library.
 
 !!! note `PromptPersistence()` is an example implementation.
-In a production environment, a publisher would use the prompt response to send data to their own
-account or customer management system. 
+In a production environment, a publisher would use the prompt response to send data to the publisher's customer management system or equivalent. 
 !!!
 
 ```html
@@ -246,11 +166,11 @@ const promptCache = new PromptPersistence();
 
 const promptConfigurations = [
   {
-    name: 'Subscriber Newsletter',
+    name: 'Basic survey',
     configurationId: '49c12712-9750-4571-8c67-96722561c13a',
   },
   {
-    name: 'Breaking News',
+    name: 'Multi-page survey',
     configurationId: 'e98a2efb-d009-43c9-99ef-dda11c8c5a7f',
   },
 ];
@@ -307,7 +227,7 @@ async function launchSpecificPrompt(prompt) {
     isClosable: true,
     onResult: (result) => {
       console.log(result);
-      newsletterCache.signup(result);
+      promptcacheCache.record(result);
     },
   });
 }

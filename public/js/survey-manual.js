@@ -23,16 +23,17 @@ import {
   registerEventManager,
 } from './prompt-methods.js';
 
-const promptConfigurationType = 'TYPE_NEWSLETTER_SIGNUP'
+
+const promptConfigurationType = 'TYPE_REWARDED_SURVEY';
 const promptConfigurations = [
   {
-    name: 'Nightly news',
-    configurationId: 'cc1a94ee-614f-4946-a61e-0fea41683f4c',
+    name: 'Very detailed survey',
+    configurationId: '14965053-83a6-4efa-98e4-223450cd5801',
   },
   {
-    name: 'Confirmed nightly news',
-    configurationId: '6f095914-fe2a-4721-8df5-e99fea544288',
-  },
+    name: 'Benefits survey',
+    configurationId: 'bd36617e-595e-488f-85e5-7cbde1ce1978',
+  }
 ];
 
 const buttonContainer = document.querySelector('#prompts');
