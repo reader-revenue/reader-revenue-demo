@@ -146,8 +146,7 @@ This complete example accomplishes the following:
 4. Store the results of a successful prompt with the sample `PromptPersistence()` library.
 
 !!! note `PromptPersistence()` is an example implementation.
-In a production environment, a publisher would use the prompt response to send data to their own
-account or customer management system. 
+In a production environment, a publisher would use the prompt response to send data to the publisher's customer management system or equivalent. 
 !!!
 
 ```html
