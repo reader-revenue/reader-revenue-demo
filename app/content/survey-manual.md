@@ -1,7 +1,7 @@
 <script async
   subscriptions-control="manual"
   type="application/javascript"
-  src="https://news.google.com/swg/js/v1/swg-qual.js">
+  src="https://news.google.com/swg/js/v1/swg{{#env.SWG_OVERRIDE}}-{{.}}{{/env.SWG_OVERRIDE}}.js">
 </script>
 
 
