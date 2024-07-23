@@ -43,55 +43,27 @@ initialized `swg.js` instance. In order to use this feature:
     </pre>    
   </li> -->
   <li class="flexible-list-item">
-    <img src="/img/newsletter-configurations_0000s_0003_with-title.png">
+    <img src="/img/survey.png">
     <pre>
     <code class="hljs language-json">
 {
-  "publicationId": "asdf-1234",
-  "title": "Your favorite news, delivered directly to your inbox."
+  "name": "Basic survey",
+  "configurationId": "49c12712-9750-4571-8c67-96722561c13a"
 }
     </code>
     </pre> 
   </li>
     <li class="flexible-list-item">
-    <img src="/img/newsletter-configurations_0000s_0002_with-title-and-body.png">
+    <img src="/img/survey-multi-page.png">
     <pre>
     <code class="hljs language-json">
 {
-  "publicationId": "asdf-1234",
-  "title": "Your favorite news, delivered directly to your inbox.",
-  "body": "Sign up to receive the morning newsletter from the Daily Bugle, with editorially-selected articles, sports updates and more."
+  "name": "Multi-page survey",
+  "configurationId": "e98a2efb-d009-43c9-99ef-dda11c8c5a7f"
 }
     </code>
     </pre> 
   </li>
-    <li class="flexible-list-item">
-    <img src="/img/newsletter-configurations_0000s_0001_with-title-and-body-and-consent.png">
-    <pre>
-    <code class="hljs language-json">
-{
-  "publicationId": "asdf-1234",
-  "title": "Your favorite news, delivered directly to your inbox.",
-  "body": "Sign up to receive the morning newsletter from the Daily Bugle, with editorially-selected articles, sports updates and more.",
-  "permission": true,
-  "permissionDescription": "Allow the Daily Bugle to send you deals, subscription offers and other marketing info."
-}
-    </code>
-    </pre> 
-  </li>
-  <!-- <li class="flexible-list-item">
-    <img src="/img/newsletter-configurations_0000s_0000_alternate.png">
-    <pre>
-    <code class="hljs language-json">
-{
-  "publicationId": "asdf-1234",
-  "name": "Superhero Shots by the Daily Bugle",
-  "title": "Daily photo updates from around the town",
-  "body": "Sign up to receive breaking updates from around the web by intrepid photojournalists on the street."
-}
-    </code>
-    </pre> 
-  </li> -->
 </ul>
 
 After creating a configuration, the Publisher Center page will provide a `configurationId` in response for each
@@ -124,7 +96,7 @@ Google in response to submitting a prompt configuration. Publishers use the
 
 ```javascript
 const publisherConfiguration = {
-  name: 'Basic Survey',
+  name: 'Basic survey',
   configurationId: '49c12712-9750-4571-8c67-96722561c13a',
 };
 
