@@ -47,7 +47,7 @@ templated methods.
 
 ```shell
 # General node.js env vars
-PORT=8080 # port to run on
+PORT=8080 #port to run on
 NODE_ENV=development
 ENV_NAME=local #Give your instance a distinct name that surfaces in the header
 
