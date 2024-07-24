@@ -76,6 +76,17 @@ GTAG_DEBUG_MODE=true #Enable 'debug' mode in GA for streaming all events
 # SwG Environments
 # Setting this change the 'swg.js' script tag to be 'swg-another-value.js'
 SWG_OVERRIDE=another-value 
+
+# Prompt Configurations
+# This value is a stringified JSON configuration of the following schema:
+# { "TYPE_<prompt type>": [
+#   {"name": "Configuration_Name","configurationId":"1234"},
+#   ... 
+# ]}
+# Note: Underscores in snake_case "name" values are automatically replaced with spaces 
+PROMPT_CONFIGURATIONS='{"TYPE_NEWSLETTER_SIGNUP":[{"name":"Newsletter_Signup","configurationId":"8bebde75-07e4-4cbc-8117-785435a30848"},{"name":"Breakin_News","configurationId":"d7c52c18-dcca-4ca3-b4df-022c557b06b8"}],"TYPE_REWARDED_SURVEY":[{"name":"Multiple_Questions","configurationId":"ef6def43-2565-4e5b-ad06-80ebecaa715e"}]}'
+
+
 ```
 
 ### Overview

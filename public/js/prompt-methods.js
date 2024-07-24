@@ -111,11 +111,28 @@ async function createButtonsForPrompts(
   }
 }
 
+function parsePromptConfigurations(promptConfigurationType) {
+  try {
+    const configurations = process.env.PROMPT_CONFIGURATION
+    if (configurations != '') {
+      return JSON.parse(configurations)[promptConfigurationType]
+        .map((configuration)=>{
+          configuration.name = configuration.name.replaceAll("_", " ");
+          return configuration
+        });
+    }
+    throw new Error("No PROMPT_CONFIGURATION set")
+  } catch (e) {
+    return []
+  }
+}
+
 export {
   registerEventManager,
   getPrompt,
   launchSpecificPrompt,
   createButtonForPrompt,
   createButtonsForPrompts,
+  parsePromptConfigurations,
   promptCache,
 };
