@@ -113,7 +113,7 @@ async function createButtonsForPrompts(
 
 function parsePromptConfigurations(promptConfigurationType) {
   try {
-    const configurations = process.env.PROMPT_CONFIGURATION
+    const configurations = process.env.PROMPT_CONFIGURATIONS
     if (configurations != '') {
       return JSON.parse(configurations)[promptConfigurationType]
         .map((configuration)=>{
@@ -123,6 +123,9 @@ function parsePromptConfigurations(promptConfigurationType) {
     }
     throw new Error("No PROMPT_CONFIGURATION set")
   } catch (e) {
+    console.log(`No configuration set for: ${promptConfigurationType}`)
+    console.log(`Env configuration: ${process.env.PROMPT_CONFIGURATIONS}`)
+    console.log(`Parsed output:`, JSON.parse(process.env.PROMPT_CONFIGURATIONS))
     return []
   }
 }
