@@ -21,20 +21,12 @@
 import {
   createButtonsForPrompts,
   registerEventManager,
+  parsePromptConfigurations,
 } from './prompt-methods.js';
 
 
 const promptConfigurationType = 'TYPE_REWARDED_SURVEY';
-const promptConfigurations = [
-  {
-    name: 'Very detailed survey',
-    configurationId: '14965053-83a6-4efa-98e4-223450cd5801',
-  },
-  {
-    name: 'Benefits survey',
-    configurationId: 'bd36617e-595e-488f-85e5-7cbde1ce1978',
-  }
-];
+const promptConfigurations = parsePromptConfigurations(promptConfigurationType);
 
 const buttonContainer = document.querySelector('#prompts');
 

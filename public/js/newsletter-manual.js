@@ -21,19 +21,11 @@
 import {
   createButtonsForPrompts,
   registerEventManager,
+  parsePromptConfigurations,
 } from './prompt-methods.js';
 
 const promptConfigurationType = 'TYPE_NEWSLETTER_SIGNUP'
-const promptConfigurations = [
-  {
-    name: 'Nightly news',
-    configurationId: 'cc1a94ee-614f-4946-a61e-0fea41683f4c',
-  },
-  {
-    name: 'Confirmed nightly news',
-    configurationId: '6f095914-fe2a-4721-8df5-e99fea544288',
-  },
-];
+const promptConfigurations = parsePromptConfigurations(promptConfigurationType);
 
 const buttonContainer = document.querySelector('#prompts');
 
