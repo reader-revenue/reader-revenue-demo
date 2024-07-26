@@ -111,21 +111,65 @@ async function createButtonsForPrompts(
   }
 }
 
+/**
+ * Parses prompt configurations from environment variables.
+ *
+ * This function attempts to retrieve and parse prompt configurations from the environment variables 
+ * `PROMPT_CONFIG` or `PROMPT_CONFIG_BASE64`. The configurations are expected to be in JSON format.
+ * If `PROMPT_CONFIG` is set, it's used directly. If not, `PROMPT_CONFIG_BASE64` is assumed to 
+ * contain a base64-encoded JSON string, which is decoded before parsing.
+ * 
+ * Some systems cannot store stringified representations of a JSON object, so this function
+ * allows for either a string or base64-encoded version to be used. For each, the schema expected is:
+ * 
+ * {
+ *   "TYPE_<PROMPT_TYPE>": [
+ *     {
+ *       "name": <PROMPT_NAME>,
+ *       "configurationId": <PROMPT_VALUE>
+ *     }
+ *   ]
+ * }
+ * 
+ * Prompt configurations can have one or more top-level types, and one or more configurations
+ * for each type.
+ * 
+ * @param {string} promptConfigurationType - The type of prompt configuration to retrieve from the parsed configurations.
+ * @returns {Object|Array} The parsed prompt configurations for the specified type, or an empty array if no configurations are found or an error occurs.
+ * @throws {Error} If there's an issue decoding the base64 string, parsing the JSON, or if no configurations are found for the specified type.
+ */
 function parsePromptConfigurations(promptConfigurationType) {
+
   try {
-    const configurations = process.env.PROMPT_CONFIGURATIONS
+
+    let configurationString, configurations
+
+    if('process.env.PROMPT_CONFIG' !== '') {
+      console.log('loading from PROMPT_CONFIG')
+      configurationString = 'process.env.PROMPT_CONFIG'
+    } else {
+      console.log('loading from PROMPT_CONFIG_BASE64')
+
+      try {
+        configurationString = atob('process.env.PROMPT_CONFIG_BASE64');
+      } catch (e) {
+        throw new Error(`Unable to base64 decode env var: ${e.message}`);
+      }
+    }
+    try {
+      configurations = JSON.parse(configurationString)[promptConfigurationType];
+    } catch (e) {
+      throw new Error(`Unable to JSON.parse configuration: ${e.message}`);
+    }
+
     if (configurations != '') {
-      return JSON.parse(configurations)[promptConfigurationType]
-        .map((configuration)=>{
-          configuration.name = configuration.name.replaceAll("_", " ");
-          return configuration
-        });
+      return configurations
     }
     throw new Error("No PROMPT_CONFIGURATION set")
   } catch (e) {
+    console.log(e.message)
     console.log(`No configuration set for: ${promptConfigurationType}`)
-    console.log(`Env configuration: ${process.env.PROMPT_CONFIGURATIONS}`)
-    console.log(`Parsed output:`, JSON.parse(process.env.PROMPT_CONFIGURATIONS))
+    console.log(`Env configuration: process.env.PROMPT_CONFIG_BASE64`)
     return []
   }
 }
