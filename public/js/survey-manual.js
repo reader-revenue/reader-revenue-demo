@@ -28,9 +28,6 @@ import {
 const promptConfigurationType = 'TYPE_REWARDED_SURVEY';
 const promptConfigurations = parsePromptConfigurations(promptConfigurationType);
 
-//process.env.PROMPT_CONFIGURATIONS
-console.log({promptConfigurations})
-
 const buttonContainer = document.querySelector('#prompts');
 
 (self.SWG = self.SWG || []).push(async (subscriptions) => {
