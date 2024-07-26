@@ -143,8 +143,15 @@ function parsePromptConfigurations(promptConfigurationType) {
   try {
 
     let configurationString, configurations
-
-    if('process.env.PROMPT_CONFIG' !== '') {
+    
+    /* 
+    Because strings that begin with 'process' and 'env' are replaced in the 
+    lib/renderers.js renderStaticFile() function, the second comparison
+    has the string base64-encoded, so as to not be replaced at render time.
+    This allows for the edge case wherein the process env string is not 
+    replaced while rendering, and just exists as the string itself.
+    */
+    if('process.env.PROMPT_CONFIG' !== '' && 'process.env.PROMPT_CONFIG' !== atob('cHJvY2Vzcy5lbnYuUFJPTVBUX0NPTkZJRw')) {
       console.log('loading from PROMPT_CONFIG')
       configurationString = 'process.env.PROMPT_CONFIG'
     } else {
