@@ -198,6 +198,26 @@ prompt?.show({
 });
 ```
 
+By default a toast like the one shown below will appear after the user has completed the signup flow. 
+
+<img src="/img/newsletter-toast.png">
+
+
+If you prefer not to show this toast, you can set  `suppressToast` option to `false`.
+
+```javascript
+prompt?.show({
+    isClosable: true,
+    suppressToast: false,
+    onResult: (result) => {
+        //Store the result, which is the email of the newsletter signup.
+
+        //Return true to let Google know that you have received and processed
+        //the returned email.
+        return true;
+    }
+});
+
 ### Handle the response
 
 The `onResult` callback will include information on the configuration used
