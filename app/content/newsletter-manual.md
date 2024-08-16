@@ -217,6 +217,7 @@ prompt?.show({
         return true;
     }
 });
+```
 
 ### Handle the response
 
