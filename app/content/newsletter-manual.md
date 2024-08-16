@@ -203,12 +203,12 @@ By default a toast like the one shown below will appear after the user has compl
 <img src="/img/newsletter-toast.png">
 
 
-If you prefer not to show this toast, you can set  `suppressToast` option to `false`.
+If you prefer not to show this toast, you can set  `suppressToast` option to `true`.
 
 ```javascript
 prompt?.show({
     isClosable: true,
-    suppressToast: false,
+    suppressToast: true,
     onResult: (result) => {
         //Store the result, which is the email of the newsletter signup.
 
