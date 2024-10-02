@@ -32,6 +32,8 @@ async function queryLocalEntitlementsPlans(publicationId, readerId) {
 /**
  * queryMemberData
  * Queries the Monetization API, but via a local endpoint
+ * @async
+ * @function queryMemberData
  * @params {string} publicationId
  * @params {string} readerId
  * @returns {{object}}
