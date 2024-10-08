@@ -70,6 +70,8 @@ async function handleClientInitialization(response) {
   let parsedJwt = parseJwt(response.credential);
   let authorizationCode = getAuthzCred('authorizationCode');
 
+  console.log("handleClientInitialization Jwt returned", {parsedJwt});
+
   if (authorizationCode != null) {  // query directly the publication api
     console.log('AuthorizationCode found for this user in our systems.');
     // ensure it is still valid; refresh it otherwise
