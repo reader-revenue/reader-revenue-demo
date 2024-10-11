@@ -18,7 +18,7 @@
  * @fileoverview Client-side javascript file that adds interactive SwG buttons to a page.
  */
 
-import { queryMemberData } from './monetization-api-methods.js'
+import { queryMemberData, queryLocalEntitlementsPlans } from './monetization-api-methods.js'
 
 /**
  * analyticsEventLogger
@@ -61,18 +61,34 @@ function analyticsEventLogger(subs) {
     try {
       const readerId = response.entitlements.entitlements[0].readerId;
 
-      setInterval(async ()=>{
+      let memberInterval = setInterval(async ()=>{
         let data = await queryMemberData('process.env.PUBLICATION_ID', readerId)
         try {
           const { emailAddress } = data;
           if (emailAddress != undefined && emailAddress != "") {
             let endTime = performance.now()
             console.log({emailAddress, startTime, endTime})
+            clearInterval(memberInterval);
           }
         } catch (e) {
           console.log(`emailAddress parse error at ${performance.now()}`, e)
         }
-      }, 100);
+      }, 50);
+
+      let entitlementsInterval = setInterval(async ()=>{
+        let data = await queryLocalEntitlementsPlans('process.env.PUBLICATION_ID', readerId)
+        try {
+          const planId = data.userEntitlementsPlans[0].planId ?? undefined;
+          const latestOrderId = data.userEntitlementsPlans[0].purchaseInfo.latestOrderId ?? undefined;
+          if (planId && latestOrderId) {
+            let endTime = performance.now()
+            console.log({readerId, planId, latestOrderId, startTime, endTime})
+            clearInterval(entitlementsInterval);
+          }
+        } catch (e) {
+          console.log(`planId and latestOrderId parse error at ${performance.now()}`, e)
+        }
+      }, 50);
 
     } catch (e) {
       console.log(e);
