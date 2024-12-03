@@ -77,6 +77,11 @@ GTAG_DEBUG_MODE=true #Enable 'debug' mode in GA for streaming all events
 # Setting this change the 'swg.js' script tag to be 'swg-another-value.js'
 SWG_OVERRIDE=another-value 
 
+# By default, swg.js is initialized with subscriptions.configure({paySwgVersion:'2'})
+# For SwG Classic publications, set this optional variable to a different version
+PAY_SWG_VERSION='1' # For SwG Classic
+# PAY_SWG_VERSION='2' # For RRM:E, default value of this variable is ommitted
+
 # Prompt Configurations
 # This value is a stringified JSON configuration of the following schema:
 # { "TYPE_<prompt type>": [
