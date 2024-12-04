@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {PromptPersistence} from './prompt-persistence.js';
+import { PromptPersistence } from './prompt-persistence.js';
 const promptCache = new PromptPersistence();
 
 async function registerEventManager(subscriptions) {
@@ -23,13 +23,13 @@ async function registerEventManager(subscriptions) {
 }
 
 async function getPrompt(availableInterventions, specifiedConfigurationId) {
-  return availableInterventions.find(({configurationId}) => {
+  return availableInterventions.find(({ configurationId }) => {
     return configurationId === specifiedConfigurationId;
   });
 }
 
 async function getPromptByType(availableInterventions, promptType) {
-  return availableInterventions.find(({type}) => {
+  return availableInterventions.find(({ type }) => {
     return type === promptType;
   });
 }
@@ -85,6 +85,63 @@ async function createButtonForPrompt(
   container.appendChild(button);
 }
 
+/**
+ * Generates the button text for a given intervention.
+ *
+ * @param {Object} intervention - The intervention object.
+ * @param {number} index - The index of the intervention in the list.
+ * @returns {string} The button text.
+ */
+function getButtonText(intervention, index) {
+  // Transform intervention.type to a readable format
+  const readableType = intervention.type
+    .replace('TYPE_', '')
+    .replace(/_/g, ' ')
+    .toLowerCase()
+    .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize each word
+
+  // Return intervention.name if it exists; otherwise, use readableType + index
+  return intervention.name
+    ? intervention.name
+    : `${readableType} ${index + 1}`;
+}
+
+/**
+ * Creates a single button for a dynamically fetched prompt.
+ *
+ * This method is used to create an individual button for a prompt based on
+ * an intervention fetched from the API. It generates a button with a human-readable
+ * label, attaches a click handler to launch the prompt, and appends it to the specified container.
+ * 
+ * It is designed for dynamically fetched prompts and complements the 
+ * `createButtonsForAvailablePrompts` method, which handles multiple buttons.
+ *
+ * @param {Array<Object>} availableInterventions - Array of available interventions returned by the API.
+ * @param {Object} intervention - The specific intervention object for which the button is being created.
+ * @param {HTMLElement} container - The DOM element to which the button will be appended.
+ * @param {number} index - The index of the intervention in the list, used for numbering the button text.
+ * @returns {Promise<void>} Resolves when the button is created and appended to the container.
+ */
+async function createButtonForAvailablePrompt(
+  availableInterventions,
+  intervention,
+  container,
+  index
+) {
+  const button = document.createElement('button');
+  const prompt = await getPrompt(
+    availableInterventions,
+    intervention.configurationId
+  );
+
+  button.onclick = () => {
+    launchSpecificPrompt(prompt);
+  };
+
+  button.textContent = getButtonText(intervention, index);
+  container.appendChild(button);
+}
+
 async function createButtonsForPrompts(
   buttonContainer,
   promptConfigurationType,
@@ -109,6 +166,32 @@ async function createButtonsForPrompts(
       promptConfigurationType
     );
   }
+}
+
+/**
+ * Creates buttons for prompts dynamically based on available API interventions.
+ *
+ * This method generates buttons for a given type of prompt by filtering the 
+ * API response (`availableInterventions`) and creating buttons with human-readable 
+ * labels for each intervention. It is intended for prompts that are dynamically 
+ * fetched from the server, as opposed to hardcoded or static configurations.
+ *
+ * @param {HTMLElement} buttonContainer - The container element where buttons will be appended.
+ * @param {Array<Object>} availableInterventions - Array of available interventions returned by the API.
+ * @param {string} promptConfigurationType - The type of prompt (e.g., "TYPE_REWARDED_AD", "TYPE_NEWSLETTER").
+ * @returns {Promise<void>} Resolves when buttons are created and added to the DOM.
+ */
+async function createButtonsForAvailablePrompts(
+  buttonContainer, filteredInterventions
+) {
+  filteredInterventions.forEach((intervention, index) => {
+    createButtonForAvailablePrompt(
+      filteredInterventions,
+      intervention,
+      buttonContainer,
+      index
+    );
+  });
 }
 
 /**
@@ -139,11 +222,11 @@ async function createButtonsForPrompts(
  * @throws {Error} If there's an issue decoding the base64 string, parsing the JSON, or if no configurations are found for the specified type.
  */
 function parsePromptConfigurations(promptConfigurationType) {
-
+  console.log(promptConfigurationType);
   try {
 
     let configurationString, configurations
-    
+
     /* 
     Because strings that begin with 'process' and 'env' are replaced in the 
     lib/renderers.js renderStaticFile() function, the second comparison
@@ -151,7 +234,7 @@ function parsePromptConfigurations(promptConfigurationType) {
     This allows for the edge case wherein the process env string is not 
     replaced while rendering, and just exists as the string itself.
     */
-    if('process.env.PROMPT_CONFIG' !== '' && 'process.env.PROMPT_CONFIG' !== atob('cHJvY2Vzcy5lbnYuUFJPTVBUX0NPTkZJRw')) {
+    if ('process.env.PROMPT_CONFIG' !== '' && 'process.env.PROMPT_CONFIG' !== atob('cHJvY2Vzcy5lbnYuUFJPTVBUX0NPTkZJRw')) {
       console.log('loading from PROMPT_CONFIG')
       configurationString = 'process.env.PROMPT_CONFIG'
     } else {
@@ -186,7 +269,9 @@ export {
   getPrompt,
   launchSpecificPrompt,
   createButtonForPrompt,
+  createButtonForAvailablePrompt,
   createButtonsForPrompts,
+  createButtonsForAvailablePrompts,
   parsePromptConfigurations,
   promptCache,
 };
