@@ -31,7 +31,30 @@ function analyticsEventLogger(subs) {
   }
   
   (self.SWG = self.SWG || []).push(subscriptions => {
-    subscriptions.configure({paySwgVersion: '2'});
+
+ 
+    /*
+      Note: the process env variable is replaced when rendered for
+      client-side usage. If the env var PAY_SWG_VERSION is set to '1', the
+      following line would read something like:
+
+      const paySwgVersion = '1' == '1' ? '1' : '2'
+
+      This is because the renderStaticFile() method pre-processes .js files
+      on the server before sending them to the browser.
+
+      Because most uses of reader-revenue-demo are for RRM:E, if the 
+      env var PAY_SWG_VERSION is omitted, we set '2' to the default value.
+      If it is set explicitly to '1', the subscriptions.configure() function
+      does not execute.
+
+    */ 
+    const paySwgVersion = 'process.env.PAY_SWG_VERSION' == '1' ? '1' : '2'
+
+    //Only if the above evaluates to '2' do we use subscriptions.configure()
+    if (paySwgVersion == '2') {
+      subscriptions.configure({paySwgVersion: '2'});
+    }
     subscriptions.init('process.env.PUBLICATION_ID');
 
     analyticsEventLogger(subscriptions);
