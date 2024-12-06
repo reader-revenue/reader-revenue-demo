@@ -15,7 +15,7 @@
  */
 
 /**
- * @fileoverview This client-side js file to handle newsletter prompts
+ * @fileoverview This client-side js file to handle survey prompts
  */
 
 import {
@@ -38,6 +38,7 @@ const buttonContainer = document.querySelector('#prompts');
   const availableInterventions = await subscriptions.getAvailableInterventions();
 
   console.log({availableInterventions});
+  console.log(promptConfigurations);
 
   await createButtonsForPrompts(
     buttonContainer, 
