@@ -178,20 +178,21 @@ async function createButtonsForPrompts(
  *
  * @param {HTMLElement} buttonContainer - The container element where buttons will be appended.
  * @param {Array<Object>} availableInterventions - Array of available interventions returned by the API.
- * @param {string} promptConfigurationType - The type of prompt (e.g., "TYPE_REWARDED_AD", "TYPE_NEWSLETTER").
  * @returns {Promise<void>} Resolves when buttons are created and added to the DOM.
  */
 async function createButtonsForAvailablePrompts(
   buttonContainer, filteredInterventions
 ) {
-  filteredInterventions.forEach((intervention, index) => {
-    createButtonForAvailablePrompt(
+  for (let index = 0; index < filteredInterventions.length; index++) {
+    const intervention = filteredInterventions[index];
+
+    await createButtonForAvailablePrompt(
       filteredInterventions,
       intervention,
       buttonContainer,
       index
     );
-  });
+  }
 }
 
 /**

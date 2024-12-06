@@ -50,6 +50,10 @@ After creating a configuration, the Publisher Center provides a `configurationId
 ]
 ```
 
+!!! note **Note:** Array Not Required
+This array of configuration objects is for example purposes only. Publishers must use the `configurationId` to invoke a specific rewarded ad, but are not required to use an array as in these examples.
+!!!
+
 ### Invoke Rewarded Ads Prompts
 
 To configure rewarded ads, `swg.js` must first be initialized. These examples demonstrate using the library in `manual` mode, but the APIs are also available in automatic mode.
