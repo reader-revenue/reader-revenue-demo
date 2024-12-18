@@ -79,7 +79,7 @@ function analyticsEventLogger(subs) {
         // .. and onclick functions in the callback i.e.
         // showOffersor subscribe(SKU)
         function() {
-          subscriptions.subscribe('process.env.SWG_SKU_ID');  // Show offers carousel
+          subscriptions.subscribe('process.env.SWG_SKU');  // Show offers carousel
         });
   
   
