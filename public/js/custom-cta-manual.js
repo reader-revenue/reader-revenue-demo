@@ -17,7 +17,6 @@
 /**
  * @fileoverview This client-side js file to handle Custom CTAs
  */
-
 import {
     createButtonsForAvailablePrompts,
     registerEventManager,
