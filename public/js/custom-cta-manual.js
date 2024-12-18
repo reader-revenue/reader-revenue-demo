@@ -15,7 +15,7 @@
  */
 
 /**
- * @fileoverview This client-side js file to handle rewarded ads prompts
+ * @fileoverview This client-side js file to handle Custom CTAs
  */
 
 import {
