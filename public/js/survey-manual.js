@@ -15,20 +15,20 @@
  */
 
 /**
- * @fileoverview This client-side js file to handle newsletter prompts
+ * @fileoverview This client-side js file to handle newsletter CTAs
  */
 
 import {
-  createButtonsForPrompts,
+  createButtonsForCats,
   registerEventManager,
-  parsePromptConfigurations,
-} from './prompt-methods.js';
+  parseCtaConfigurations,
+} from './cta-methods.js';
 
 
-const promptConfigurationType = 'TYPE_REWARDED_SURVEY';
-const promptConfigurations = parsePromptConfigurations(promptConfigurationType);
+const ctaConfigurationType = 'TYPE_REWARDED_SURVEY';
+const ctaConfigurations = parseCtaConfigurations(ctaConfigurationType);
 
-const buttonContainer = document.querySelector('#prompts');
+const buttonContainer = document.querySelector('#ctas');
 
 (self.SWG = self.SWG || []).push(async (subscriptions) => {
   subscriptions.configure({paySwgVersion: '2'});
@@ -39,10 +39,10 @@ const buttonContainer = document.querySelector('#prompts');
 
   console.log({availableInterventions});
 
-  await createButtonsForPrompts(
+  await createButtonsForCtas(
     buttonContainer, 
-    promptConfigurationType, 
-    promptConfigurations,
+    ctaConfigurationType, 
+    ctaConfigurations,
     availableInterventions)
   
 });

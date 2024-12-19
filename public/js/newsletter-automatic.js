@@ -28,15 +28,15 @@ const configurationId = '49c12712-9750-4571-8c67-96722561c13a';
 
   console.log({availableInterventions});
 
-  // Return the prompt, if available, for the current configurationId
-  const prompt = availableInterventions.find(({intervention}) => {
+  // Return the CTA, if available, for the current configurationId
+  const cta = availableInterventions.find(({intervention}) => {
     return intervention.configurationId === configurationId;
   });
 
-  console.log({prompt});
+  console.log({cta});
 
-  // Show the prompt, if available
-  prompt?.show({
+  // Show the CTA, if available
+  CTA?.show({
     isClosable: true,
     onResult: (result) => {
       console.log(result);

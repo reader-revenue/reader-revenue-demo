@@ -14,36 +14,36 @@
  * limitations under the License.
  */
 
-import {PromptPersistence} from './prompt-persistence.js';
-const promptCache = new PromptPersistence();
+import {CtaPersistence} from './cta-persistence.js';
+const ctaCache = new ctaPersistence();
 
 async function registerEventManager(subscriptions) {
   const eventManager = await subscriptions.getEventManager();
   eventManager.registerEventListener(console.log);
 }
 
-async function getPrompt(availableInterventions, specifiedConfigurationId) {
+async function getcta(availableInterventions, specifiedConfigurationId) {
   return availableInterventions.find(({configurationId}) => {
     return configurationId === specifiedConfigurationId;
   });
 }
 
-async function getPromptByType(availableInterventions, promptType) {
+async function getctaByType(availableInterventions, ctaType) {
   return availableInterventions.find(({type}) => {
-    return type === promptType;
+    return type === ctaType;
   });
 }
 
-async function launchSpecificPrompt(prompt, promptType) {
+async function launchSpecificcta(cta, ctaType) {
 
-  prompt?.show({
+  cta?.show({
     isClosable: true,
     onResult: (response) => {
       console.log(response);
-      promptCache.record(response, promptType)
+      ctaCache.record(response, ctaType)
 
       if (isGTAGEnabled()) {
-        gtag('event', `${promptType}-response`, {
+        gtag('event', `${ctaType}-response`, {
           'response': JSON.stringify(response)
         })
       }
@@ -60,22 +60,22 @@ function isGTAGEnabled() {
   return GTAG_PROPERTY_ID != ''
 }
 
-async function createButtonForPrompt(
+async function createButtonForcta(
   availableInterventions,
   newsletterConfiguration,
   buttonEnabledState,
   container,
-  promptType
+  ctaType
 ) {
   const button = document.createElement('button');
-  const prompt = await getPrompt(
+  const cta = await getcta(
     availableInterventions,
     newsletterConfiguration.configurationId
   );
 
   if (buttonEnabledState == true) {
     button.onclick = () => {
-      launchSpecificPrompt(prompt, promptType);
+      launchSpecificcta(cta, ctaType);
     };
   } else {
     button.setAttribute('disabled', 'true');
@@ -85,10 +85,10 @@ async function createButtonForPrompt(
   container.appendChild(button);
 }
 
-async function createButtonsForPrompts(
+async function createButtonsForctas(
   buttonContainer,
-  promptConfigurationType,
-  promptConfigurations,
+  ctaConfigurationType,
+  ctaConfigurations,
   availableInterventions
 ) {
 
@@ -96,49 +96,49 @@ async function createButtonsForPrompts(
     (intervention) => intervention.configurationId
   );
 
-  for (const promptConfiguration of promptConfigurations) {
+  for (const ctaConfiguration of ctaConfigurations) {
     const buttonEnabledState = availableInterventionConfigurationIds.includes(
-      promptConfiguration.configurationId
+      ctaConfiguration.configurationId
     );
 
-    createButtonForPrompt(
+    createButtonForcta(
       availableInterventions,
-      promptConfiguration,
+      ctaConfiguration,
       buttonEnabledState,
       buttonContainer,
-      promptConfigurationType
+      ctaConfigurationType
     );
   }
 }
 
 /**
- * Parses prompt configurations from environment variables.
+ * Parses cta configurations from environment variables.
  *
- * This function attempts to retrieve and parse prompt configurations from the environment variables 
- * `PROMPT_CONFIG` or `PROMPT_CONFIG_BASE64`. The configurations are expected to be in JSON format.
- * If `PROMPT_CONFIG` is set, it's used directly. If not, `PROMPT_CONFIG_BASE64` is assumed to 
+ * This function attempts to retrieve and parse cta configurations from the environment variables 
+ * `cta_CONFIG` or `cta_CONFIG_BASE64`. The configurations are expected to be in JSON format.
+ * If `cta_CONFIG` is set, it's used directly. If not, `cta_CONFIG_BASE64` is assumed to 
  * contain a base64-encoded JSON string, which is decoded before parsing.
  * 
  * Some systems cannot store stringified representations of a JSON object, so this function
  * allows for either a string or base64-encoded version to be used. For each, the schema expected is:
  * 
  * {
- *   "TYPE_<PROMPT_TYPE>": [
+ *   "TYPE_<cta_TYPE>": [
  *     {
- *       "name": <PROMPT_NAME>,
- *       "configurationId": <PROMPT_VALUE>
+ *       "name": <cta_NAME>,
+ *       "configurationId": <cta_VALUE>
  *     }
  *   ]
  * }
  * 
- * Prompt configurations can have one or more top-level types, and one or more configurations
+ * cta configurations can have one or more top-level types, and one or more configurations
  * for each type.
  * 
- * @param {string} promptConfigurationType - The type of prompt configuration to retrieve from the parsed configurations.
- * @returns {Object|Array} The parsed prompt configurations for the specified type, or an empty array if no configurations are found or an error occurs.
+ * @param {string} ctaConfigurationType - The type of cta configuration to retrieve from the parsed configurations.
+ * @returns {Object|Array} The parsed cta configurations for the specified type, or an empty array if no configurations are found or an error occurs.
  * @throws {Error} If there's an issue decoding the base64 string, parsing the JSON, or if no configurations are found for the specified type.
  */
-function parsePromptConfigurations(promptConfigurationType) {
+function parsectaConfigurations(ctaConfigurationType) {
 
   try {
 
@@ -151,20 +151,20 @@ function parsePromptConfigurations(promptConfigurationType) {
     This allows for the edge case wherein the process env string is not 
     replaced while rendering, and just exists as the string itself.
     */
-    if('process.env.PROMPT_CONFIG' !== '' && 'process.env.PROMPT_CONFIG' !== atob('cHJvY2Vzcy5lbnYuUFJPTVBUX0NPTkZJRw')) {
-      console.log('loading from PROMPT_CONFIG')
-      configurationString = 'process.env.PROMPT_CONFIG'
+    if('process.env.cta_CONFIG' !== '' && 'process.env.cta_CONFIG' !== atob('cHJvY2Vzcy5lbnYuUFJPTVBUX0NPTkZJRw')) {
+      console.log('loading from cta_CONFIG')
+      configurationString = 'process.env.cta_CONFIG'
     } else {
-      console.log('loading from PROMPT_CONFIG_BASE64')
+      console.log('loading from cta_CONFIG_BASE64')
 
       try {
-        configurationString = atob('process.env.PROMPT_CONFIG_BASE64');
+        configurationString = atob('process.env.cta_CONFIG_BASE64');
       } catch (e) {
         throw new Error(`Unable to base64 decode env var: ${e.message}`);
       }
     }
     try {
-      configurations = JSON.parse(configurationString)[promptConfigurationType];
+      configurations = JSON.parse(configurationString)[ctaConfigurationType];
     } catch (e) {
       throw new Error(`Unable to JSON.parse configuration: ${e.message}`);
     }
@@ -172,21 +172,21 @@ function parsePromptConfigurations(promptConfigurationType) {
     if (configurations != '') {
       return configurations
     }
-    throw new Error("No PROMPT_CONFIGURATION set")
+    throw new Error("No cta_CONFIGURATION set")
   } catch (e) {
     console.log(e.message)
-    console.log(`No configuration set for: ${promptConfigurationType}`)
-    console.log(`Env configuration: process.env.PROMPT_CONFIG_BASE64`)
+    console.log(`No configuration set for: ${ctaConfigurationType}`)
+    console.log(`Env configuration: process.env.cta_CONFIG_BASE64`)
     return []
   }
 }
 
 export {
   registerEventManager,
-  getPrompt,
-  launchSpecificPrompt,
-  createButtonForPrompt,
-  createButtonsForPrompts,
-  parsePromptConfigurations,
-  promptCache,
+  getcta,
+  launchSpecificcta,
+  createButtonForcta,
+  createButtonsForctas,
+  parsectaConfigurations,
+  ctaCache,
 };
