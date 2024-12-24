@@ -19,6 +19,7 @@
  */
 
 import { queryMemberData, queryLocalEntitlementsPlans } from './monetization-api-methods.js'
+import {insertHighlightedJson} from './utils.js';
 
 /**
  * analyticsEventLogger
@@ -66,8 +67,13 @@ function analyticsEventLogger(subs) {
         try {
           const { emailAddress } = data;
           if (emailAddress != undefined && emailAddress != "") {
-            let endTime = performance.now()
-            console.log({emailAddress, startTime, endTime})
+            const endTime = performance.now()
+            const elapsedTime = endTime - startTime
+            console.log({emailAddress, startTime, endTime, elapsedTime})
+            insertHighlightedJson(
+              '#output', 
+              {emailAddress, startTime, endTime, elapsedTime},
+              'Response time for the <code>readers</code> endpoint')
             clearInterval(memberInterval);
           }
         } catch (e) {
@@ -81,8 +87,13 @@ function analyticsEventLogger(subs) {
           const planId = data.userEntitlementsPlans[0].planId ?? undefined;
           const latestOrderId = data.userEntitlementsPlans[0].purchaseInfo.latestOrderId ?? undefined;
           if (planId && latestOrderId) {
-            let endTime = performance.now()
-            console.log({readerId, planId, latestOrderId, startTime, endTime})
+            const endTime = performance.now()
+            const elapsedTime = endTime - startTime
+            console.log({planId, latestOrderId, startTime, endTime, elapsedTime})
+            insertHighlightedJson(
+              '#output', 
+              {planId, latestOrderId, startTime, endTime, elapsedTime},
+              'Response time for the <code>entitlementsplans</code> endpoint')
             clearInterval(entitlementsInterval);
           }
         } catch (e) {
