@@ -59,6 +59,9 @@ function analyticsEventLogger(subs) {
 
     console.log({response});
 
+    let hasOutputReaderIdPerformance = false;
+    let hasOutputEntitlementsPlansPerformance = false
+
     try {
       const readerId = response.entitlements.entitlements[0].readerId;
 
@@ -70,11 +73,15 @@ function analyticsEventLogger(subs) {
             const endTime = performance.now()
             const elapsedTime = endTime - startTime
             console.log({emailAddress, startTime, endTime, elapsedTime})
-            insertHighlightedJson(
-              '#output', 
-              {emailAddress, startTime, endTime, elapsedTime},
-              'Response time for the <code>readers</code> endpoint')
-            clearInterval(memberInterval);
+
+            if (!hasOutputReaderIdPerformance) {
+              hasOutputReaderIdPerformance = true
+              insertHighlightedJson(
+                '#output', 
+                {emailAddress, startTime, endTime, elapsedTime},
+                'Response time for the <code>readers</code> endpoint')
+              clearInterval(memberInterval);
+            }
           }
         } catch (e) {
           console.log(`emailAddress parse error at ${performance.now()}`, e)
@@ -90,11 +97,14 @@ function analyticsEventLogger(subs) {
             const endTime = performance.now()
             const elapsedTime = endTime - startTime
             console.log({planId, latestOrderId, startTime, endTime, elapsedTime})
-            insertHighlightedJson(
-              '#output', 
-              {planId, latestOrderId, startTime, endTime, elapsedTime},
-              'Response time for the <code>entitlementsplans</code> endpoint')
-            clearInterval(entitlementsInterval);
+            if(!hasOutputEntitlementsPlansPerformance) {
+              hasOutputEntitlementsPlansPerformance = true
+              insertHighlightedJson(
+                '#output', 
+                {planId, latestOrderId, startTime, endTime, elapsedTime},
+                'Response time for the <code>entitlementsplans</code> endpoint')
+              clearInterval(entitlementsInterval);
+            }
           }
         } catch (e) {
           console.log(`planId and latestOrderId parse error at ${performance.now()}`, e)
