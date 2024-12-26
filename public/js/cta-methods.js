@@ -14,36 +14,36 @@
  * limitations under the License.
  */
 
-import { PromptPersistence } from './prompt-persistence.js';
-const promptCache = new PromptPersistence();
+import { CtaPersistence } from './cta-persistence.js';
+const ctaCache = new CtaPersistence();
 
 async function registerEventManager(subscriptions) {
   const eventManager = await subscriptions.getEventManager();
   eventManager.registerEventListener(console.log);
 }
 
-async function getPrompt(availableInterventions, specifiedConfigurationId) {
+async function getCta(availableInterventions, specifiedConfigurationId) {
   return availableInterventions.find(({ configurationId }) => {
     return configurationId === specifiedConfigurationId;
   });
 }
 
-async function getPromptByType(availableInterventions, promptType) {
+async function getCtaByType(availableInterventions, ctaType) {
   return availableInterventions.find(({ type }) => {
-    return type === promptType;
+    return type === ctaType;
   });
 }
 
-async function launchSpecificPrompt(prompt, promptType) {
+async function launchSpecificCta(cta, ctaType) {
 
-  prompt?.show({
+  cta?.show({
     isClosable: true,
     onResult: (response) => {
       console.log(response);
-      promptCache.record(response, promptType)
+      ctaCache.record(response, ctaType)
 
       if (isGTAGEnabled()) {
-        gtag('event', `${promptType}-response`, {
+        gtag('event', `${ctaType}-response`, {
           'response': JSON.stringify(response)
         })
       }
@@ -60,22 +60,22 @@ function isGTAGEnabled() {
   return GTAG_PROPERTY_ID != ''
 }
 
-async function createButtonForPrompt(
+async function createButtonForCta(
   availableInterventions,
   newsletterConfiguration,
   buttonEnabledState,
   container,
-  promptType
+  ctaType
 ) {
   const button = document.createElement('button');
-  const prompt = await getPrompt(
+  const cta = await getCta(
     availableInterventions,
     newsletterConfiguration.configurationId
   );
 
   if (buttonEnabledState == true) {
     button.onclick = () => {
-      launchSpecificPrompt(prompt, promptType);
+      launchSpecificCta(cta, ctaType);
     };
   } else {
     button.setAttribute('disabled', 'true');
@@ -107,14 +107,14 @@ function getButtonText(intervention, index) {
 }
 
 /**
- * Creates a single button for a dynamically fetched prompt.
+ * Creates a single button for a dynamically fetched CTA.
  *
- * This method is used to create an individual button for a prompt based on
+ * This method is used to create an individual button for a CTA based on
  * an intervention fetched from the API. It generates a button with a human-readable
- * label, attaches a click handler to launch the prompt, and appends it to the specified container.
+ * label, attaches a click handler to launch the CTA, and appends it to the specified container.
  * 
- * It is designed for dynamically fetched prompts and complements the 
- * `createButtonsForAvailablePrompts` method, which handles multiple buttons.
+ * It is designed for dynamically fetched CTAs and complements the 
+ * `createButtonsForAvailableCtas` method, which handles multiple buttons.
  *
  * @param {Array<Object>} availableInterventions - Array of available interventions returned by the API.
  * @param {Object} intervention - The specific intervention object for which the button is being created.
@@ -122,30 +122,30 @@ function getButtonText(intervention, index) {
  * @param {number} index - The index of the intervention in the list, used for numbering the button text.
  * @returns {Promise<void>} Resolves when the button is created and appended to the container.
  */
-async function createButtonForAvailablePrompt(
+async function createButtonForAvailableCta(
   availableInterventions,
   intervention,
   container,
   index
 ) {
   const button = document.createElement('button');
-  const prompt = await getPrompt(
+  const cta = await getCta(
     availableInterventions,
     intervention.configurationId
   );
 
   button.onclick = () => {
-    launchSpecificPrompt(prompt);
+    launchSpecificCta(cta);
   };
 
   button.textContent = getButtonText(intervention, index);
   container.appendChild(button);
 }
 
-async function createButtonsForPrompts(
+async function createButtonsForCtas(
   buttonContainer,
-  promptConfigurationType,
-  promptConfigurations,
+  ctaConfigurationType,
+  ctaConfigurations,
   availableInterventions
 ) {
 
@@ -153,40 +153,40 @@ async function createButtonsForPrompts(
     (intervention) => intervention.configurationId
   );
 
-  for (const promptConfiguration of promptConfigurations) {
+  for (const ctaConfiguration of ctaConfigurations) {
     const buttonEnabledState = availableInterventionConfigurationIds.includes(
-      promptConfiguration.configurationId
+      ctaConfiguration.configurationId
     );
 
-    createButtonForPrompt(
+    createButtonForCta(
       availableInterventions,
-      promptConfiguration,
+      ctaConfiguration,
       buttonEnabledState,
       buttonContainer,
-      promptConfigurationType
+      ctaConfigurationType
     );
   }
 }
 
 /**
- * Creates buttons for prompts dynamically based on available API interventions.
+ * Creates buttons for CTAs dynamically based on available API interventions.
  *
- * This method generates buttons for a given type of prompt by filtering the 
+ * This method generates buttons for a given type of CTA by filtering the 
  * API response (`availableInterventions`) and creating buttons with human-readable 
- * labels for each intervention. It is intended for prompts that are dynamically 
+ * labels for each intervention. It is intended for CTAs that are dynamically 
  * fetched from the server, as opposed to hardcoded or static configurations.
  *
  * @param {HTMLElement} buttonContainer - The container element where buttons will be appended.
  * @param {Array<Object>} availableInterventions - Array of available interventions returned by the API.
  * @returns {Promise<void>} Resolves when buttons are created and added to the DOM.
  */
-async function createButtonsForAvailablePrompts(
+async function createButtonsForAvailableCtas(
   buttonContainer, filteredInterventions
 ) {
   for (let index = 0; index < filteredInterventions.length; index++) {
     const intervention = filteredInterventions[index];
 
-    await createButtonForAvailablePrompt(
+    await createButtonForAvailableCta(
       filteredInterventions,
       intervention,
       buttonContainer,
@@ -196,34 +196,34 @@ async function createButtonsForAvailablePrompts(
 }
 
 /**
- * Parses prompt configurations from environment variables.
+ * Parses CTA configurations from environment variables.
  *
- * This function attempts to retrieve and parse prompt configurations from the environment variables 
- * `PROMPT_CONFIG` or `PROMPT_CONFIG_BASE64`. The configurations are expected to be in JSON format.
- * If `PROMPT_CONFIG` is set, it's used directly. If not, `PROMPT_CONFIG_BASE64` is assumed to 
+ * This function attempts to retrieve and parse CTA configurations from the environment variables 
+ * `CTA_CONFIG` or `CTA_CONFIG_BASE64`. The configurations are expected to be in JSON format.
+ * If `CTA_CONFIG` is set, it's used directly. If not, `CTA_CONFIG_BASE64` is assumed to 
  * contain a base64-encoded JSON string, which is decoded before parsing.
  * 
  * Some systems cannot store stringified representations of a JSON object, so this function
  * allows for either a string or base64-encoded version to be used. For each, the schema expected is:
  * 
  * {
- *   "TYPE_<PROMPT_TYPE>": [
+ *   "TYPE_<CTA_TYPE>": [
  *     {
- *       "name": <PROMPT_NAME>,
- *       "configurationId": <PROMPT_VALUE>
+ *       "name": <CTA_NAME>,
+ *       "configurationId": <CTA_VALUE>
  *     }
  *   ]
  * }
  * 
- * Prompt configurations can have one or more top-level types, and one or more configurations
+ * CTA configurations can have one or more top-level types, and one or more configurations
  * for each type.
  * 
- * @param {string} promptConfigurationType - The type of prompt configuration to retrieve from the parsed configurations.
- * @returns {Object|Array} The parsed prompt configurations for the specified type, or an empty array if no configurations are found or an error occurs.
+ * @param {string} ctaConfigurationType - The type of CTA configuration to retrieve from the parsed configurations.
+ * @returns {Object|Array} The parsed CTA configurations for the specified type, or an empty array if no configurations are found or an error occurs.
  * @throws {Error} If there's an issue decoding the base64 string, parsing the JSON, or if no configurations are found for the specified type.
  */
-function parsePromptConfigurations(promptConfigurationType) {
-  console.log(promptConfigurationType);
+function parseCtaConfigurations(ctaConfigurationType) {
+  console.log(ctaConfigurationType);
   try {
 
     let configurationString, configurations
@@ -235,20 +235,20 @@ function parsePromptConfigurations(promptConfigurationType) {
     This allows for the edge case wherein the process env string is not 
     replaced while rendering, and just exists as the string itself.
     */
-    if ('process.env.PROMPT_CONFIG' !== '' && 'process.env.PROMPT_CONFIG' !== atob('cHJvY2Vzcy5lbnYuUFJPTVBUX0NPTkZJRw')) {
-      console.log('loading from PROMPT_CONFIG')
-      configurationString = 'process.env.PROMPT_CONFIG'
+    if ('process.env.CTA_CONFIG' !== '' && 'process.env.CTA_CONFIG' !== atob('cHJvY2Vzcy5lbnYuQ1RBX0NPTkZJRw==')) {
+      console.log('loading from CTA_CONFIG')
+      configurationString = 'process.env.CTA_CONFIG'
     } else {
-      console.log('loading from PROMPT_CONFIG_BASE64')
+      console.log('loading from CTA_CONFIG_BASE64')
 
       try {
-        configurationString = atob('process.env.PROMPT_CONFIG_BASE64');
+        configurationString = atob('process.env.CTA_CONFIG_BASE64');
       } catch (e) {
         throw new Error(`Unable to base64 decode env var: ${e.message}`);
       }
     }
     try {
-      configurations = JSON.parse(configurationString)[promptConfigurationType];
+      configurations = JSON.parse(configurationString)[ctaConfigurationType];
     } catch (e) {
       throw new Error(`Unable to JSON.parse configuration: ${e.message}`);
     }
@@ -256,23 +256,23 @@ function parsePromptConfigurations(promptConfigurationType) {
     if (configurations != '') {
       return configurations
     }
-    throw new Error("No PROMPT_CONFIGURATION set")
+    throw new Error("No CTA_CONFIGURATION set")
   } catch (e) {
     console.log(e.message)
-    console.log(`No configuration set for: ${promptConfigurationType}`)
-    console.log(`Env configuration: process.env.PROMPT_CONFIG_BASE64`)
+    console.log(`No configuration set for: ${ctaConfigurationType}`)
+    console.log(`Env configuration: process.env.CTA_CONFIG_BASE64`)
     return []
   }
 }
 
 export {
   registerEventManager,
-  getPrompt,
-  launchSpecificPrompt,
-  createButtonForPrompt,
-  createButtonForAvailablePrompt,
-  createButtonsForPrompts,
-  createButtonsForAvailablePrompts,
-  parsePromptConfigurations,
-  promptCache,
+  getCta,
+  launchSpecificCta,
+  createButtonForCta,
+  createButtonForAvailableCta,
+  createButtonsForCtas,
+  createButtonsForAvailableCtas,
+  parseCtaConfigurations,
+  ctaCache,
 };

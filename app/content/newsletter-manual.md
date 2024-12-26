@@ -4,35 +4,35 @@
   src="https://news.google.com/swg/js/v1/swg{{#env.SWG_OVERRIDE}}-{{.}}{{/env.SWG_OVERRIDE}}.js">
 </script>
 
-# Newsletter prompts
+# Newsletter CTAs
 
 This page both demonstrates how RRM:E newsletter sign-up works, as well as documents
-how to implement the prompts.
+how to implement the CTAs.
 
 ## Test the manual newsletter invocation
 
-<div id="prompts"></div>
+<div id="ctas"></div>
 
-## Newsletter Prompt Overview
+## Newsletter CTA Overview
 
 A publisher can configure one or more newsletters for manual invocation by using an
 initialized `swg.js` instance. In order to use this feature:
 
-1.  A publisher will provide Google with a prompt configuration per newsletter, and 
+1.  A publisher will provide Google with a CTA configuration per newsletter, and 
     will receive a `configurationId` in response to call this newsletter configuration.
-1.  A publisher will fetch a valid prompt using the `configurationId`, and then display it.
-1.  When configuring the prompt display code, a publisher will provide a callback
+1.  A publisher will fetch a valid CTA using the `configurationId`, and then display it.
+1.  When configuring the CTA display code, a publisher will provide a callback
     that will be used to store the responses from the newsletter signup, and 
     acknowledge to Google that the email address has been saved.
 
-## Configure Prompts
+## Configure CTAs
 
 During the manual configuration beta of the Newsletter feature of RRM:E, publishers must
 provide a manual configuration for each newsletter that they would like configured. The
 configuration for each newsletter will determine which features are displayed in the
-prompt, and what data is passed to the publisher for each subscriber.
+CTA, and what data is passed to the publisher for each subscriber.
 
-### Prompt Configuration Examples
+### CTA Configuration Examples
 
 <ul class="flexible-list">
   <!-- <li class="flexible-list-item">
@@ -98,7 +98,7 @@ prompt, and what data is passed to the publisher for each subscriber.
   </li> -->
 </ul>
 
-### Provide Prompt Configuration to Google
+### Provide CTA Configuration to Google
 
 Configurations for newsletters may include the following fields.
 
@@ -114,7 +114,7 @@ Configurations for newsletters may include the following fields.
 In response, Google will provide a `configurationId` for each newsletter. 
 
 
-#### Configuration for the sample prompts
+#### Configuration for the sample CTAs
 
 This page includes two newsletter configurations. They were created with the following configuration:
 
@@ -156,17 +156,17 @@ newsletter configuration. These ids will then be used in subsequent javascript a
 ]
 ```
 
-### Invoke Newsletter Prompts
+### Invoke Newsletter CTAs
 
-To configure newsletter prompts, `swg.js` must first be configured on the page.
+To configure newsletter CTAs, `swg.js` must first be configured on the page.
 These examples show using the initialization of the library in `manual` mode, but the
 APIs are also available in automatic mode. 
 
-### Get the prompt instance to display
+### Get the CTA instance to display
 
-To invoke a newsletter prompt, a publisher must use the `configurationId` provided by
-Google in response to submitting a prompt configuration. Publishers use the
-`configurationId` to fetch a valid prompt instance using the `subscriptions.getAvailableInterventions()` method from the initialized `swg.js` library.
+To invoke a newsletter CTA, a publisher must use the `configurationId` provided by
+Google in response to submitting a CTA configuration. Publishers use the
+`configurationId` to fetch a valid CTA instance using the `subscriptions.getAvailableInterventions()` method from the initialized `swg.js` library.
 
 ```javascript
 const publisherConfiguration = {
@@ -176,17 +176,17 @@ const publisherConfiguration = {
 
 const availableInterventions = await subscriptions.getAvailableInterventions();
 
-const prompt = availableInterventions.find(({configurationId}) => {
+const cta = availableInterventions.find(({configurationId}) => {
     return configurationId === publisherConfiguration.configurationId;
 });
 ```
 
-### Show the prompt
+### Show the CTA
 
-To display a prompt, use the returned value from `subscriptions.getAvailableInterventions()` and use the `show` method:
+To display a cta, use the returned value from `subscriptions.getAvailableInterventions()` and use the `show` method:
 
 ```javascript
-prompt?.show({
+cta?.show({
     isClosable: true,
     onResult: (result) => {
         //Store the result, which is the email of the newsletter signup.
@@ -206,7 +206,7 @@ By default a toast like the one shown below will appear after the user has compl
 If you prefer not to show this toast, you can set  `suppressToast` option to `true`.
 
 ```javascript
-prompt?.show({
+cta?.show({
     isClosable: true,
     suppressToast: true,
     onResult: (result) => {
@@ -222,7 +222,7 @@ prompt?.show({
 ### Handle the response
 
 The `onResult` callback will include information on the configuration used
-to create the prompt, as well as the newsletter subscriber's information. The `configurationId` matches the `configurationId provided to the publisher from Google, in response to the per-newsletter configuration authored by the publisher in the initial step.
+to create the CTA, as well as the newsletter subscriber's information. The `configurationId` matches the `configurationId provided to the publisher from Google, in response to the per-newsletter configuration authored by the publisher in the initial step.
 
 ```javascript
 {
@@ -241,12 +241,12 @@ to create the prompt, as well as the newsletter subscriber's information. The `c
 This complete example accomplishes the following:
 
 1. Initializes `swg.js` library in manual mode.
-2. When the library is ready, use the `newsletter-1234` configurationId to request a prompt to display.  
-3. When the button is clicked, display the prompt.
-4. Store the results of a successful prompt with the sample `NewsletterPersistence()` library.
-
-!!! note `PromptPersistence()` is an example implementation.
-In a production environment, a publisher would use the prompt response to send data to their own
+2. When the library is ready, use the `newsletter-1234` configurationId to request a CTA to display.  
+3. When the button is clicked, display the CTA.
+4. Store the results of a successful CTA with the sample `NewsletterPersistence()` library.
+CTA
+!!! note `CtaPersistence()` is an example implementation.
+In a production environment, a publisher would use the CTA response to send data to their own
 account or customer management system. 
 !!!
 
@@ -258,14 +258,14 @@ account or customer management system.
     src="https://news.google.com/swg/js/v1/swg.js">
 </script>
 
-<!-- configuring swg.js to invoke and handle newsletter prompts -->
+<!-- configuring swg.js to invoke and handle newsletter CTAs -->
 <script type="module">
 
 // Example library for storing email signups
-import {PromptPersistence} from './prompt-persistence.js';
-const promptCache = new PromptPersistence();
+import {CtaPersistence} from './cta-persistence.js';
+const ctaCache = new CtaPersistence();
 
-const promptConfigurations = [
+const ctaConfigurations = [
   {
     name: 'Subscriber Newsletter',
     configurationId: '49c12712-9750-4571-8c67-96722561c13a',
@@ -276,7 +276,7 @@ const promptConfigurations = [
   },
 ];
 
-const buttonContainer = document.querySelector('#prompts');
+const buttonContainer = document.querySelector('#ctas');
 
 (self.SWG = self.SWG || []).push(async (subscriptions) => {
   subscriptions.configure({paySwgVersion: '2'});
@@ -296,14 +296,14 @@ const buttonContainer = document.querySelector('#prompts');
     (availableIntervention) => availableIntervention.configurationId
   );
 
-  for (const promptConfiguration of promptConfigurations) {
+  for (const ctaConfiguration of ctaConfigurations) {
     const buttonEnabledState = availableInterventionConfigurationIds.includes(
-      promptConfiguration.configurationId
+      ctaConfiguration.configurationId
     );
 
-    createButtonForPrompt(
+    createButtonForCta(
       availableInterventions,
-      promptConfiguration,
+      ctaConfiguration,
       buttonEnabledState,
       buttonContainer
     );
@@ -315,16 +315,16 @@ const buttonContainer = document.querySelector('#prompts');
       but help to provide a clear syntax in the above example. -->
 
 
-// Helper function for returning a specific prompt (if available) from all interventions
-async function getPrompt(availableInterventions, specifiedConfigurationId) {
+// Helper function for returning a specific CTA (if available) from all interventions
+async function getCta(availableInterventions, specifiedConfigurationId) {
   return availableInterventions.find(({configurationId}) => {
     return configurationId === specifiedConfigurationId;
   });
 }
 
-// Launch a given prompt
-async function launchSpecificPrompt(prompt) {
-  prompt?.show({
+// Launch a given CTA
+async function launchSpecificCta(cta) {
+  cta?.show({
     isClosable: true,
     onResult: (result) => {
       console.log(result);
@@ -333,22 +333,22 @@ async function launchSpecificPrompt(prompt) {
   });
 }
 
-// Helper function for creating a button to launch a prompt
-async function createButtonForPrompt(
+// Helper function for creating a button to launch a CTA
+async function createButtonForCta(
   availableInterventions,
-  promptConfiguration,
+  ctaConfiguration,
   buttonEnabledState,
   container
 ) {
   const button = document.createElement('button');
-  const prompt = await getPrompt(
+  const cta = await getCta(
     availableInterventions,
-    promptConfiguration.configurationId
+    ctaConfiguration.configurationId
   );
 
   if (buttonEnabledState == true) {
     button.onclick = () => {
-      launchSpecificPrompt(prompt);
+      launchSpecificCta(cta);
     };
   } else {
     button.setAttribute('disabled', 'true');
