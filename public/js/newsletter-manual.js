@@ -43,5 +43,4 @@ const buttonContainer = document.querySelector('#ctas');
     ctaConfigurationType, 
     ctaConfigurations,
     availableInterventions)
-  
 });
