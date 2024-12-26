@@ -244,7 +244,11 @@ This complete example accomplishes the following:
 2. When the library is ready, use the `newsletter-1234` configurationId to request a CTA to display.  
 3. When the button is clicked, display the CTA.
 4. Store the results of a successful CTA with the sample `NewsletterPersistence()` library.
+<<<<<<< HEAD
 
+=======
+CTA
+>>>>>>> 6118cdb (replacing 'prompt' with 'CTA')
 !!! note `CtaPersistence()` is an example implementation.
 In a production environment, a publisher would use the CTA response to send data to their own
 account or customer management system. 
