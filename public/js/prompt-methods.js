@@ -96,9 +96,7 @@ function getButtonText(intervention, index) {
   // Transform intervention.type to a readable format
   const readableType = intervention.type
     .replace('TYPE_', '')
-    .replace(/_/g, ' ')
-    .toLowerCase()
-    .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize each word
+    .replace(/_/g, ' ');
 
   // Return intervention.name if it exists; otherwise, use readableType + index
   return intervention.name
