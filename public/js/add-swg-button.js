@@ -80,7 +80,7 @@ function analyticsEventLogger(subs) {
         // showOffersor subscribe(SKU)
         function() {
           subscriptions.subscribe(
-              'SWGPD.1364-3969-4803-51719');  // Show offers carousel
+              'SWGPD.9393-6870-9481-85493');  // Show offers carousel
         });
   
   
