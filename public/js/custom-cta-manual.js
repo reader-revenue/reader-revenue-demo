@@ -25,8 +25,7 @@ import {
   
   const ctaConfigurationType = 'TYPE_BYO_CTA';
   
-  const buttonContainer = document.querySelector('#ctas');
-  
+  const buttonContainer = document.querySelector('#ctas');  
   (self.SWG = self.SWG || []).push(async (subscriptions) => {
     subscriptions.configure({ paySwgVersion: '2' });
     subscriptions.init('process.env.PUBLICATION_ID');
