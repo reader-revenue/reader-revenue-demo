@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import {newsletterCache, registerEventManager} from './newsletter-methods.js';
+import {ctaCache, registerEventManager} from './cta-methods.js';
 
-const configurationId = '49c12712-9750-4571-8c67-96722561c13a';
+const configurationId = '8bebde75-07e4-4cbc-8117-785435a30848';
 
 (self.SWG = self.SWG || []).push(async (subscriptions) => {
   // Configure the events logger
@@ -25,22 +25,22 @@ const configurationId = '49c12712-9750-4571-8c67-96722561c13a';
   // Get all available interventions
   const availableInterventions =
     await subscriptions.getAvailableInterventions();
-
+    
   console.log({availableInterventions});
 
-  // Return the prompt, if available, for the current configurationId
-  const prompt = availableInterventions.find(({intervention}) => {
+  // Return the CTA, if available, for the current configurationId
+  const cta = availableInterventions.find(({intervention}) => {
     return intervention.configurationId === configurationId;
   });
 
-  console.log({prompt});
+  console.log({cta});
 
-  // Show the prompt, if available
-  prompt?.show({
+  // Show the CTA, if available
+  cta?.show({
     isClosable: true,
     onResult: (result) => {
       console.log(result);
-      newsletterCache.signup(result);
+      ctaCache.signup(result);
 
       // Acknowledge that the email has been handled by the publisher
       return true;

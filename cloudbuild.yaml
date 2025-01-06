@@ -36,8 +36,10 @@ steps:
         sed -i "s/##OAUTH_CLIENT_ID##/${_OAUTH_CLIENT_ID}/g" app.yaml
         sed -i "s/##OAUTH_CLIENT_SECRET##/${_OAUTH_CLIENT_SECRET}/g" app.yaml
         sed -i "s/##PUBLICATION_ID##/${_PUBLICATION_ID}/g" app.yaml
-        sed -i "s/##PROMPT_CONFIG##/${_PROMPT_CONFIG}/g" app.yaml
-        sed -i "s/##PROMPT_CONFIG_BASE64##/${_PROMPT_CONFIG_BASE64}/g" app.yaml
+        sed -i "s/##CTA_CONFIG##/${_CTA_CONFIG}/g" app.yaml
+        sed -i "s/##CTA_CONFIG_BASE64##/${_CTA_CONFIG_BASE64}/g" app.yaml
+        sed -i "s/##SKU_ID##/${SKU_ID}/g" app.yaml
+        sed -i "s/##NEWSLETTER_CTA_CONFIGURATION_ID##/${NEWSLETTER_CTA_CONFIGURATION_ID}/g" app.yaml
         gcloud config set app/cloud_build_timeout 1600
         gcloud app deploy
 timeout: 1600s

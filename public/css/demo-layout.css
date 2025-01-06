@@ -404,12 +404,12 @@ pre code.hljs {
   padding: 0 5px;
 }
 
-#prompts>button {
+#csa>button {
   display: block;
   margin-bottom: 10px;
 }
 
-#prompts>button:last-child {
+#csa>button:last-child {
   margin-bottom: 0;
 }
 

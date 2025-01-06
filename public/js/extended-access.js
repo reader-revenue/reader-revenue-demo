@@ -93,7 +93,7 @@ function InitGaaMetering() {
 
   // Callback that must ensure the publisher’s standard paywall is shown to the user.
   // This is used when Extended Access is not granted to the user or if the user
-  // clicks “Subscribe” on the Extended Access prompt.
+  // clicks “Subscribe” on the Extended Access CTA.
   // Do not copy the implementation for the callback and see documentation for your own implementation at:
   // https://developers.google.com/news/subscribe/extended-access/integration-steps/web-implementation#handle-extended-access-grants
   function showPaywall() {
