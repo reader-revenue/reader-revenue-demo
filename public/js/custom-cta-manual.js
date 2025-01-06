@@ -18,14 +18,14 @@
  * @fileoverview This client-side js file to handle Custom CTAs
  */
 import {
-    createButtonsForAvailablePrompts,
+  createButtonsForAvailableCtas,
     registerEventManager,
-  } from './prompt-methods.js';
+  } from './cta-methods.js';
   
   
-  const promptConfigurationType = 'TYPE_BYO_CTA';
+  const ctaConfigurationType = 'TYPE_BYO_CTA';
   
-  const buttonContainer = document.querySelector('#prompts');
+  const buttonContainer = document.querySelector('#ctas');
   
   (self.SWG = self.SWG || []).push(async (subscriptions) => {
     subscriptions.configure({ paySwgVersion: '2' });
@@ -40,12 +40,12 @@ import {
   
     // Filter interventions by the current type
     const filteredInterventions = availableInterventions.filter(
-        (intervention) => intervention.type === promptConfigurationType
+        (intervention) => intervention.type === ctaConfigurationType
     );
   
     console.log(filteredInterventions);
   
     // Create buttons for the filtered interventions
-    await createButtonsForAvailablePrompts(buttonContainer, filteredInterventions);
+    await createButtonsForAvailableCtas(buttonContainer, filteredInterventions);
   });
   
