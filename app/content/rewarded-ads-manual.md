@@ -13,7 +13,7 @@ This page demonstrates how RRM:E rewarded ads work and documents how to implemen
 
 ## Test the manual rewarded ad invocation
 
-<div id="prompts"></div>
+<div id="ctas"></div>
 
 ## Rewarded Ads Overview
 
@@ -23,7 +23,7 @@ A publisher can configure rewarded ads for manual invocation using an initialize
 2. The publisher fetches a valid rewarded ad using the `configurationId` and then displays it.
 3. When configuring the rewarded ad display code, the publisher provides a callback to store the user engagement result and acknowledge the interaction.
 
-### Prompt Configuration Examples
+### CTA Configuration Examples
 
 <ul class="flexible-list">
   <li class="flexible-list-item">
@@ -54,13 +54,13 @@ After creating a configuration, the Publisher Center provides a `configurationId
 This array of configuration objects is for example purposes only. Publishers must use the `configurationId` to invoke a specific rewarded ad, but are not required to use an array as in these examples.
 !!!
 
-### Invoke Rewarded Ads Prompts
+### Invoke Rewarded Ads CTAs
 
 To configure rewarded ads, `swg.js` must first be initialized. These examples demonstrate using the library in `manual` mode, but the APIs are also available in automatic mode.
 
-### Get the rewarded ad prompt instance to display
+### Get the rewarded ad CTA instance to display
 
-To invoke a rewarded ad prompt, the publisher must use the `configurationId` from the Publisher Center. Use the `subscriptions.getAvailableInterventions()` method from the initialized `swg.js` library to fetch the ad configuration.
+To invoke a rewarded ad CTA, the publisher must use the `configurationId` from the Publisher Center. Use the `subscriptions.getAvailableInterventions()` method from the initialized `swg.js` library to fetch the ad configuration.
 
 ```javascript
 const publisherConfiguration = {
@@ -70,17 +70,17 @@ const publisherConfiguration = {
 
 const availableInterventions = await subscriptions.getAvailableInterventions();
 
-const prompt = availableInterventions.find(({configurationId}) => {
+const cta = availableInterventions.find(({configurationId}) => {
     return configurationId === publisherConfiguration.configurationId;
 });
 ```
 
-### Show the rewarded ad prompt
+### Show the rewarded ad CTA
 
-To display the rewarded ad prompt, use the returned value from `subscriptions.getAvailableInterventions()` and invoke the `show` method:
+To display the rewarded ad CTA, use the returned value from `subscriptions.getAvailableInterventions()` and invoke the `show` method:
 
 ```javascript
-prompt?.show({
+cta?.show({
     isClosable: true,
     onResult: (result) => {
         // Handle user engagement results here.
@@ -105,9 +105,9 @@ This complete example accomplishes the following:
 1. Initializes `swg.js` library in manual mode.
 2. When the library is ready, use the `8c9f1d2b-4f73-4e9d-bdfd-332d19367258` configurationId to request a rewarded ad to display.  
 3. When the button is clicked, display the rewarded ad.
-4. Store the results of a successful rewarded ad engagement with the sample `PromptPersistence()` library.
+4. Store the results of a successful rewarded ad engagement with the sample `CtaPersistence()` library.
 
-!!! note `PromptPersistence()` is an example implementation.
+!!! note `CtaPersistence()` is an example implementation.
 In a production environment, a publisher would use the rewarded ad response to send data to the publisher's customer management system or equivalent. 
 !!!
 
@@ -123,17 +123,17 @@ In a production environment, a publisher would use the rewarded ad response to s
 <script type="module">
 
 // Example library for storing engagement data
-import {PromptPersistence} from './prompt-persistence.js';
-const promptCache = new PromptPersistence();
+import {CtaPersistence} from './cta-persistence.js';
+const ctaCache = new CtaPersistence();
 
-const promptConfigurations = [
+const ctaConfigurations = [
   {
     name: 'Rewarded Ad',
     configurationId: '8c9f1d2b-4f73-4e9d-bdfd-332d19367258',
   },
 ];
 
-const buttonContainer = document.querySelector('#prompts');
+const buttonContainer = document.querySelector('#ctas');
 
 (self.SWG = self.SWG || []).push(async (subscriptions) => {
   subscriptions.configure({paySwgVersion: '2'});
@@ -153,14 +153,14 @@ const buttonContainer = document.querySelector('#prompts');
     (availableIntervention) => availableIntervention.configurationId
   );
 
-  for (const promptConfiguration of promptConfigurations) {
+  for (const ctaConfiguration of ctaConfigurations) {
     const buttonEnabledState = availableInterventionConfigurationIds.includes(
-      promptConfiguration.configurationId
+      ctaConfiguration.configurationId
     );
 
-    createButtonForPrompt(
+    createButtonForCta(
       availableInterventions,
-      promptConfiguration,
+      ctaConfiguration,
       buttonEnabledState,
       buttonContainer
     );
@@ -170,45 +170,45 @@ const buttonContainer = document.querySelector('#prompts');
 // The following helper functions are not required but help to provide a clear syntax in the above example.
 
 // Helper function for returning a specific rewarded ad (if available) from all interventions
-async function getPrompt(availableInterventions, specifiedConfigurationId) {
+async function getCta(availableInterventions, specifiedConfigurationId) {
   return availableInterventions.find(({configurationId}) => {
     return configurationId === specifiedConfigurationId;
   });
 }
 
 // Launch a given rewarded ad
-async function launchSpecificPrompt(prompt) {
-  prompt?.show({
+async function launchSpecificCta(cta) {
+  cta?.show({
     isClosable: true,
     onResult: (result) => {
       console.log(result);
-      promptCache.record(result); // Record the engagement result
+      ctaCache.record(result); // Record the engagement result
     },
   });
 }
 
 // Helper function for creating a button to launch a rewarded ad
-async function createButtonForPrompt(
+async function createButtonForCta(
   availableInterventions,
-  promptConfiguration,
+  ctaConfiguration,
   buttonEnabledState,
   container
 ) {
   const button = document.createElement('button');
-  const prompt = await getPrompt(
+  const cta = await getCta(
     availableInterventions,
-    promptConfiguration.configurationId
+    ctaConfiguration.configurationId
   );
 
   if (buttonEnabledState == true) {
     button.onclick = () => {
-      launchSpecificPrompt(prompt);
+      launchSpecificCta(cta);
     };
   } else {
     button.setAttribute('disabled', 'true');
   }
 
-  button.textContent = `${buttonEnabledState == false ? '✅' : ''} ${promptConfiguration.name}`;
+  button.textContent = `${buttonEnabledState == false ? '✅' : ''} ${ctaConfiguration.name}`;
   container.appendChild(button);
 }
 

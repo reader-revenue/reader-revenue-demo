@@ -82,16 +82,16 @@ SWG_OVERRIDE=another-value
 PAY_SWG_VERSION='1' # For SwG Classic
 # PAY_SWG_VERSION='2' # For RRM:E, default value of this variable is ommitted
 
-# Prompt Configurations
+# CTA Configurations
 # This value is a stringified JSON configuration of the following schema:
-# { "TYPE_<prompt type>": [
+# { "TYPE_<CTA type>": [
 #   {"name": "Configuration_Name","configurationId":"1234"},
 #   ... 
 # ]}
-PROMPT_CONFIG='{"TYPE_NEWSLETTER_SIGNUP":[{"name":"Newsletter_Signup","configurationId":"8bebde75-07e4-4cbc-8117-785435a30848"},{"name":"Breakin_News","configurationId":"d7c52c18-dcca-4ca3-b4df-022c557b06b8"}],"TYPE_REWARDED_SURVEY":[{"name":"Multiple_Questions","configurationId":"ef6def43-2565-4e5b-ad06-80ebecaa715e"}]}'
+CTA_CONFIG='{"TYPE_NEWSLETTER_SIGNUP":[{"name":"Newsletter_Signup","configurationId":"8bebde75-07e4-4cbc-8117-785435a30848"},{"name":"Breakin_News","configurationId":"d7c52c18-dcca-4ca3-b4df-022c557b06b8"}],"TYPE_REWARDED_SURVEY":[{"name":"Multiple_Questions","configurationId":"ef6def43-2565-4e5b-ad06-80ebecaa715e"}]}'
 # If the current system cannot support string-encoded JSON as an environmental var,
 # a base64-encoded version can be used:
-PROMPT_CONFIG_BASE64=eyJUWVBFX05FV1NMRVRURVJfU0lHTlVQIjpbeyJuYW1lIjoiTmV3c2xldHRlcl9TaWdudXAiLCJjb25maWd1cmF0aW9uSWQiOiI4YmViZGU3NS0wN2U0LTRjYmMtODExNy03ODU0MzVhMzA4NDgifSx7Im5hbWUiOiJCcmVha2luX05ld3MiLCJjb25maWd1cmF0aW9uSWQiOiJkN2M1MmMxOC1kY2NhLTRjYTMtYjRkZi0wMjJjNTU3YjA2YjgifV0sIlRZUEVfUkVXQVJERURfU1VSVkVZIjpbeyJuYW1lIjoiTXVsdGlwbGVfUXVlc3Rpb25zIiwiY29uZmlndXJhdGlvbklkIjoiZWY2ZGVmNDMtMjU2NS00ZTViLWFkMDYtODBlYmVjYWE3MTVlIn0seyJuYW1lIjoiU2luZ2xlX1F1ZXN0aW9uIiwiY29uZmlndXJhdGlvbklkIjoiMDdmZWZlODMtOGFhOS00OGVjLWExNzItZmYwNTIyMjA5Y2Y0In1dfQ
+CTA_CONFIG_BASE64=eyJUWVBFX05FV1NMRVRURVJfU0lHTlVQIjpbeyJuYW1lIjoiTmV3c2xldHRlcl9TaWdudXAiLCJjb25maWd1cmF0aW9uSWQiOiI4YmViZGU3NS0wN2U0LTRjYmMtODExNy03ODU0MzVhMzA4NDgifSx7Im5hbWUiOiJCcmVha2luX05ld3MiLCJjb25maWd1cmF0aW9uSWQiOiJkN2M1MmMxOC1kY2NhLTRjYTMtYjRkZi0wMjJjNTU3YjA2YjgifV0sIlRZUEVfUkVXQVJERURfU1VSVkVZIjpbeyJuYW1lIjoiTXVsdGlwbGVfUXVlc3Rpb25zIiwiY29uZmlndXJhdGlvbklkIjoiZWY2ZGVmNDMtMjU2NS00ZTViLWFkMDYtODBlYmVjYWE3MTVlIn0seyJuYW1lIjoiU2luZ2xlX1F1ZXN0aW9uIiwiY29uZmlndXJhdGlvbklkIjoiMDdmZWZlODMtOGFhOS00OGVjLWExNzItZmYwNTIyMjA5Y2Y0In1dfQ
 ```
 
 ### Overview

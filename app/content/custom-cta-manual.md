@@ -13,7 +13,7 @@ This page demonstrates how RRM:E Custom CTAs work and documents how to implement
 
 ## Test the manual custom CTA invocation
 
-<div id="prompts"></div>
+<div id="ctas"></div>
 
 ## Custom CTA Overview
 

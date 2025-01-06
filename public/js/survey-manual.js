@@ -15,20 +15,20 @@
  */
 
 /**
- * @fileoverview This client-side js file to handle survey prompts
+ * @fileoverview This client-side js file to handle survey CTAs
  */
 
 import {
-  createButtonsForPrompts,
+  createButtonsForCtas,
   registerEventManager,
-  parsePromptConfigurations,
-} from './prompt-methods.js';
+  parseCtaConfigurations,
+} from './cta-methods.js';
 
 
-const promptConfigurationType = 'TYPE_REWARDED_SURVEY';
-const promptConfigurations = parsePromptConfigurations(promptConfigurationType);
+const ctaConfigurationType = 'TYPE_REWARDED_SURVEY';
+const ctaConfigurations = parseCtaConfigurations(ctaConfigurationType);
 
-const buttonContainer = document.querySelector('#prompts');
+const buttonContainer = document.querySelector('#ctas');
 
 (self.SWG = self.SWG || []).push(async (subscriptions) => {
   subscriptions.configure({paySwgVersion: '2'});
@@ -38,12 +38,12 @@ const buttonContainer = document.querySelector('#prompts');
   const availableInterventions = await subscriptions.getAvailableInterventions();
 
   console.log({availableInterventions});
-  console.log(promptConfigurations);
+  console.log(ctaConfigurations);
 
-  await createButtonsForPrompts(
+  await createButtonsForCtas(
     buttonContainer, 
-    promptConfigurationType, 
-    promptConfigurations,
+    ctaConfigurationType, 
+    ctaConfigurations,
     availableInterventions)
   
 });

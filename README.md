@@ -56,6 +56,10 @@ substitutions can occur at build-time:
 -   `PUBLICATION_ID` - Used in client- and server-side code
 -   `SERVICE_ACCOUNT` - Specify a service account for server-side access
 -   `SERVICE_NAME` - The name of the deployed instance in App Engine
+-   `CTA_CONFIG` - CTA configuration object. Used in cta-methods.js.
+-   `CTA_CONFIG_BASE64` - Base64-encoded version of CTA_CONFIG.
+-   `NEWSLETTER_CTA_CONFIGURATION_ID` - Used in newsletter-automatic.js
+-   `SWG_SKU` - Used in add-swg-button.js
 
 See Google Cloud Build's help on [substitution variable values](https://cloud.google.com/build/docs/configuring-builds/substitute-variable-values)
 for more information.
@@ -91,6 +95,15 @@ PUBLICATION_ID=publisher-center-ppid.google.com
 OAUTH_CLIENT_ID=abcd-1234.apps.googleusercontent.com
 OAUTH_CLIENT_SECRET=secret-abc-1234
 GOOGLE_SITE_VERIFICATION=public-abc-1234
+
+# CTA configuration
+CTA_CONFIG=""
+CTA_CONFIG_BASE64="eyJUWVBFX05FV1NMRVRURVJfU0lHTlVQIjpbeyJuYW1lIjoiTmV3c2xldHRlcl9TaWdudXAiLCJjb25maWd1cmF0aW9uSWQiOiI4YmViZGU3NS0wN2U0LTRjYmMtODExNy03ODU0MzVhMzA4NDgifSx7Im5hbWUiOiJCcmVha2luX05ld3MiLCJjb25maWd1cmF0aW9uSWQiOiJkN2M1MmMxOC1kY2NhLTRjYTMtYjRkZi0wMjJjNTU3YjA2YjgifV0sIlRZUEVfUkVXQVJERURfU1VSVkVZIjpbeyJuYW1lIjoiTXVsdGlwbGVfUXVlc3Rpb25zIiwiY29uZmlndXJhdGlvbklkIjoiZWY2ZGVmNDMtMjU2NS00ZTViLWFkMDYtODBlYmVjYWE3MTVlIn0seyJuYW1lIjoiU2luZ2xlX1F1ZXN0aW9uIiwiY29uZmlndXJhdGlvbklkIjoiMDdmZWZlODMtOGFhOS00OGVjLWExNzItZmYwNTIyMjA5Y2Y0In1dfQ"
+NEWSLETTER_CTA_CONFIGURATION_ID=newsletter-config-1234
+
+# SwG configuration
+SWG_SKU=SWGPD.1234
+
 ```
 
 ## Next Steps

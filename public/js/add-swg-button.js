@@ -79,8 +79,7 @@ function analyticsEventLogger(subs) {
         // .. and onclick functions in the callback i.e.
         // showOffersor subscribe(SKU)
         function() {
-          subscriptions.subscribe(
-              'SWGPD.9393-6870-9481-85493');  // Show offers carousel
+          subscriptions.subscribe('process.env.SWG_SKU');// Show offers carousel
         });
   
   

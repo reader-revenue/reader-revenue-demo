@@ -20,52 +20,52 @@
 
 /**
  * newsletterPersistence
- * A class that exposes convenience functions for storing prompt response data using the browser's localStorage as a cache.
+ * A class that exposes convenience functions for storing CTA response data using the browser's localStorage as a cache.
  *
  * Note: In a production environment, a class like this could be used to
  * store and retrieve access_tokens and state information from a database.
  * This example stores state only in the browser's localStorage, which is temporary.
  */
-class PromptPersistence {
+class CtaPersistence {
   constructor() {
-    this._promptResponses = [];
+    this._ctaResponses = [];
     this.refresh();
   }
 
   //example: {TYPE_REWARDED_SURVEY, {..}}
   //For responseTypes, see https://github.com/subscriptions-project/swg-js/blob/8490f74371d18b78903d5f5a4dc07bbffb48e7b1/src/api/intervention-type.ts
   record(response, responseType) {
-    this._promptResponses.push({responseType, response});
+    this._ctaResponses.push({responseType, response});
     this.save();
   }
 
   get responses() {
-    return this._promptResponses;
+    return this._ctaResponses;
   }
 
   getByType(responseType) {
-    return this._promptResponses.filter((promptResponse)=>{ return promptResponse.responseType === responseType})
+    return this._ctaResponses.filter((ctaResponse)=>{ return ctaResponse.responseType === responseType})
   }
 
   refresh() {
     try {
       const {responses} = JSON.parse(
-        localStorage.getItem('promptResponses')
+        localStorage.getItem('ctaResponses')
       );
-      this._promptResponses = responses;
+      this._ctaResponses = responses;
     } catch (e) {
       console.log('Unable to restore responses from localStorage');
     }
   }
 
   save() {
-    const responses = this._promptResponses;
-    localStorage.setItem('promptResponses', JSON.stringify({responses}));
+    const responses = this._ctaResponses;
+    localStorage.setItem('ctaResponses', JSON.stringify({responses}));
   }
 
   reset() {
-    localStorage.removeItem('promptResponses');
+    localStorage.removeItem('ctaResponses');
   }
 }
 
-export {PromptPersistence};
+export {CtaPersistence};
