@@ -16,7 +16,7 @@
 
 import {ctaCache, registerEventManager} from './cta-methods.js';
 
-const configurationId = '8bebde75-07e4-4cbc-8117-785435a30848';
+const configurationId = 'process.env.NEWSLETTER_CTA_CONFIGURATION_ID';
 
 (self.SWG = self.SWG || []).push(async (subscriptions) => {
   // Configure the events logger
