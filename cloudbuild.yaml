@@ -40,6 +40,7 @@ steps:
         sed -i "s/##CTA_CONFIG_BASE64##/${_CTA_CONFIG_BASE64}/g" app.yaml
         sed -i "s/##SWG_SKU##/${_SWG_SKU}/g" app.yaml
         sed -i "s/##NEWSLETTER_CTA_CONFIGURATION_ID##/${_NEWSLETTER_CTA_CONFIGURATION_ID}/g" app.yaml
+        sed -i "s/##GTAG_CONSENT_MODE_ALL_DENIED##/${_GTAG_CONSENT_MODE_ALL_DENIED}/g" app.yaml
         gcloud config set app/cloud_build_timeout 1600
         gcloud app deploy
 timeout: 1600s
