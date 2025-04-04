@@ -23,6 +23,13 @@
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
+    // Consent mode V2 - https://support.google.com/analytics/answer/13802165?hl=en
+    gtag('consent', 'default', {
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied',
+      'analytics_storage': 'denied'
+    });
 
     {{#unless data.env.GTAG_DEBUG_MODE}}
     gtag('config', '{{data.env.GTAG_PROPERTY_ID}}');
