@@ -60,6 +60,10 @@ substitutions can occur at build-time:
 -   `CTA_CONFIG_BASE64` - Base64-encoded version of CTA_CONFIG.
 -   `NEWSLETTER_CTA_CONFIGURATION_ID` - Used in newsletter-automatic.js
 -   `SWG_SKU` - Used in add-swg-button.js
+-   `GTAG_PROPERTY_ID` - A unique id to send data to Google Analytics and/or Google Ads. It's also called [Google ID](https://support.google.com/analytics/answer/9539598).
+-   `GTAG_CONSENT_MODE_ALL_DENIED` - Set [default consent status](https://developers.google.com/tag-platform/security/guides/consent?consentmode=advanced#default-consent) to all denied
+-   `GTAG_DEBUG_MODE` - Enable [gtag debug mode](https://support.google.com/analytics/answer/7201382#zippy=%2Cgoogle-tag-gtagjs)
+
 
 See Google Cloud Build's help on [substitution variable values](https://cloud.google.com/build/docs/configuring-builds/substitute-variable-values)
 for more information.
@@ -104,6 +108,10 @@ NEWSLETTER_CTA_CONFIGURATION_ID=newsletter-config-1234
 # SwG configuration
 SWG_SKU=SWGPD.1234
 
+# Google Analytics
+GTAG_PROPERTY_ID=G-12345ABCDE
+GTAG_CONSENT_MODE_ALL_DENIED=true
+GTAG_DEBUG_MODE=true
 ```
 
 ## Next Steps
