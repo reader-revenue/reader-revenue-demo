@@ -21,24 +21,46 @@
  */
 import {insertHighlightedJson, Loader} from './utils.js';
 
-
-async function pollNotifications() {
-  return await fetch('/api/pub-sub/received').then(r => r.json());
+async function pollNotifications(pubSubVersion) {
+  return await fetch(`/api/pub-sub/received/${pubSubVersion}`)
+    .then(
+      r => r.json()
+    ).catch(
+      e => console.log(e));
 }
 
 function scheduleNotifications() {
+  const pubSubVersions = ['v1','v2'];
   let currentNotifications = '';
-  const output = '#notificationsLog';
-  insertHighlightedJson(output, []);
 
-  setInterval(async () => {
-    const notifications = await pollNotifications();
-    if (JSON.stringify(notifications) != currentNotifications) {
-      console.log('new pub/sub messages, re-displaying');
-      insertHighlightedJson(output, notifications);
-      currentNotifications = JSON.stringify(notifications);
-    }
-  }, 1000)
+  // loading icons
+  const loaders = {
+    v1: new Loader(document.getElementById('notificationsLog-v1')), 
+    v2: new Loader(document.getElementById('notificationsLog-v2'))
+  };
+  loaders['v1'].start();
+  loaders['v2'].start();
+  
+  // loop through each pubSubVersion
+  pubSubVersions.forEach((pubSubVersion)=>{
+    const startTime = Date.now();
+    setInterval(async () => {
+      //retrieve notifications for this version
+      const notifications = await pollNotifications(pubSubVersion);
+      if (notifications?.length > 0 && JSON.stringify(notifications) != currentNotifications) {
+        console.log(`new pub/sub messages, re-displaying for pubSubVersion ${pubSubVersion}`);
+        insertHighlightedJson(`#notificationsLog-${pubSubVersion}`, notifications, null, true);
+        currentNotifications = JSON.stringify(notifications);
+        // stop loading icon as now that there are notifications to show. 
+        if(loaders[pubSubVersion].isStopped===false) loaders[pubSubVersion].stop(); 
+      
+      // if there's no content to show after 5 seconds has passed, stop the loading icon and show an empty array.  
+      } else if(Date.now() - startTime >= 5000 && loaders[pubSubVersion].isStopped===false){
+        insertHighlightedJson(`#notificationsLog-${pubSubVersion}`, [], null, true);
+        loaders[pubSubVersion].stop();
+      }
+    }, 1000)
+  })
 }
 
 document.addEventListener('DOMContentLoaded', async function() {

@@ -46,8 +46,9 @@ function generateHighlightedJson(json) {
  * @param {string} id
  * @param {string} json
  * @param {string=} label
- */
-function insertHighlightedJson(id, json, label = undefined) {
+ * @param {boolean=} asParent
+*/
+function insertHighlightedJson(id, json, label = undefined, asParent = false) {
   const container = document.createElement('div');
   const formattedJson = generateHighlightedJson(json);
   if (label) {
@@ -56,7 +57,12 @@ function insertHighlightedJson(id, json, label = undefined) {
     container.appendChild(header);
   }
   container.appendChild(formattedJson);
-  document.querySelector(id).insertAdjacentElement('afterend', container);
+  
+  if(asParent===true){
+    document.querySelector(id).appendChild(container);
+  } else {
+    document.querySelector(id).insertAdjacentElement('afterend', container);
+  }
 }
 
 /**
@@ -123,14 +129,17 @@ class Loader {
     this.output = output;
     this.loader = document.createElement('img');
     this.loader.src = 'img/spinner.gif';
+    this.isStopped = true;
   }
 
   start() {
     this.output.append(this.loader);
+    this.isStopped = false;
   }
 
   stop() {
     this.loader.remove();
+    this.isStopped = true;
   }
 }
 

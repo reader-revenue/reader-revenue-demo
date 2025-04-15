@@ -25,7 +25,18 @@ There are many types of notifications that the configured topic will receive fro
 
 ## Notifications Log
 
-This console displays all pub/sub notifications that your application processes and stores in Cloud Datastore. It polls this application's `/api/pub-sub/received` endpoint every second, and displays the new messages as they come in. 
+This console displays all pub/sub notifications that your application processes and stores in Cloud Datastore. It polls this application's `/api/pub-sub/received:{notificationVersion}` endpoint every second, and displays the new messages as they come in. 
 
-<div id="notificationsLog">
+<div id=notificationsContainer>
+
+### Pub/Sub v1
+
+<div id="notificationsLog-v1" style="overflow:scroll; max-height:500px;">
+</div>
+
+### Pub/Sub v2
+
+<div id="notificationsLog-v2" style="overflow:scroll; max-height:500px;">
+</div>
+
 </div>
