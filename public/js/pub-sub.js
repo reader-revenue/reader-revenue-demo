@@ -33,32 +33,42 @@ function scheduleNotifications() {
   const pubSubVersions = ['v1','v2'];
   let currentNotifications = '';
 
-  // loading icons
-  const loaders = {
-    v1: new Loader(document.getElementById('notificationsLog-v1')), 
-    v2: new Loader(document.getElementById('notificationsLog-v2'))
-  };
-  loaders['v1'].start();
-  loaders['v2'].start();
-  
   // loop through each pubSubVersion
   pubSubVersions.forEach((pubSubVersion)=>{
-    const startTime = Date.now();
+    let emptyOutputPlaceHolder = null; 
+    const loader = new Loader(
+      document.getElementById(`notificationsLog-${pubSubVersion}`), 
+      // timeout to loading in 5 seconds
+      5000,
+      // callback onTimeout:  inserting an empty array [] as output
+      () => { 
+        emptyOutputPlaceHolder = insertHighlightedJson(`#notificationsLog-${pubSubVersion}`, [], null, null, true);
+      }
+    );
+    loader.start();
+
+    // periodically poll for notifications and update the UI if new Pub/Sub notitifications are detected.
     setInterval(async () => {
-      //retrieve notifications for this version
+      // poll the backend for notifications for the current pubSubVersion.
       const notifications = await pollNotifications(pubSubVersion);
+      // check if notifications were received AND if they differ from the cached version.
       if (notifications?.length > 0 && JSON.stringify(notifications) != currentNotifications) {
         console.log(`new pub/sub messages, re-displaying for pubSubVersion ${pubSubVersion}`);
-        insertHighlightedJson(`#notificationsLog-${pubSubVersion}`, notifications, null, true);
+        // remove the placeholder output ([]) if it's already added  
+        // emptyOutputPlaceHolder is non null if the loader's onTimeout callback is alraedy executed 
+        if(emptyOutputPlaceHolder){
+          emptyOutputPlaceHolder.remove();
+          emptyOutputPlaceHolder = null;
+        }
+        // display the new Pub/Sub notifications using syntax highlighting
+        insertHighlightedJson(`#notificationsLog-${pubSubVersion}`, notifications, null, null, true);
+        // cache the current notifications to check and compare in the next interval
         currentNotifications = JSON.stringify(notifications);
-        // stop loading icon as now that there are notifications to show. 
-        if(loaders[pubSubVersion].isStopped===false) loaders[pubSubVersion].stop(); 
-      
-      // if there's no content to show after 5 seconds has passed, stop the loading icon and show an empty array.  
-      } else if(Date.now() - startTime >= 5000 && loaders[pubSubVersion].isStopped===false){
-        insertHighlightedJson(`#notificationsLog-${pubSubVersion}`, [], null, true);
-        loaders[pubSubVersion].stop();
-      }
+        // stop the loading indicator now that content is displayed.
+        if(loader.isStopped===false) {
+          loader.stop();
+        }
+      } 
     }, 1000)
   })
 }
