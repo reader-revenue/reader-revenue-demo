@@ -43,12 +43,19 @@ function generateHighlightedJson(json) {
 
 /**
  * insertHighlightedJson
- * @param {string} id
+ * @param {string} baseElementId
  * @param {string} json
  * @param {string=} label
- */
-function insertHighlightedJson(id, json, label = undefined) {
+ * @param {string=} insertedElementId
+* @param {boolean=} asParent
+ * @return {Element} the container <div> element that is appended or inserted (afterend)
+*/
+function insertHighlightedJson(id, json, label = undefined, insertedElementId = null, asParent = false) {
   const container = document.createElement('div');
+  if(insertedElementId) {
+    container.id=insertedElementId;
+  }
+
   const formattedJson = generateHighlightedJson(json);
   if (label) {
     const header = document.createElement('h3');
@@ -56,7 +63,13 @@ function insertHighlightedJson(id, json, label = undefined) {
     container.appendChild(header);
   }
   container.appendChild(formattedJson);
-  document.querySelector(id).insertAdjacentElement('afterend', container);
+  
+  if(asParent===true){
+    document.querySelector(id).appendChild(container);
+  } else {
+    document.querySelector(id).insertAdjacentElement('afterend', container);
+  }
+  return container;
 }
 
 /**
@@ -119,18 +132,67 @@ function redirect(from, to = undefined) {
  * Creates an animated gif as a pretend loader
  */
 class Loader {
-  constructor(output) {
-    this.output = output;
+  /**
+   * @param {Element} outputElement - The DOM element to append the loader image to.
+   * @param {number | null} timeoutMs=null - Auto-stop timeout in milliseconds. If null, no timeout.
+   * @param {function | null} onTimeoutComplete=null - Callback function to execute *only* when the timeout stops the loader.
+  */
+  constructor(outputElement, timeoutMs=null, onTimeoutComplete = null) {
+    if (!outputElement || !(outputElement instanceof Element)) {
+      throw new Error('Loader requires a valid DOM Element for output.');
+    }
+    this.outputElement = outputElement;
     this.loader = document.createElement('img');
     this.loader.src = 'img/spinner.gif';
+    this.isStopped = true;
+    // timeout to stop the loader
+    this.timeoutMs = timeoutMs;
+    this.timeoutId;
+    if (this.onTimeoutComplete && typeof this.onTimeoutComplete !== 'function') {
+      throw new Error('Loader onTimeoutComplete option must be a function or null.');
+    }
+    this.onTimeoutComplete = onTimeoutComplete;
   }
 
   start() {
-    this.output.append(this.loader);
+    this.outputElement.append(this.loader);
+    this.isStopped = false;
+    // set timeout if timeoutSeconds is provided
+    if (!!this.timeoutMs && this.timeoutMs > 0) {
+      this._setupTimeout();
+    }
   }
 
   stop() {
     this.loader.remove();
+    this.isStopped = true;
+    // clear timeout if the loader is stopped manually
+    this._clearTimeout();
+  }
+
+  _setupTimeout(){
+    // Clear any previous timeout if there any
+    this._clearTimeout();
+    this.timeoutId = setTimeout(() => {
+      if (!this.isStopped) {
+        this.stop();
+      }
+      this._clearTimeout();
+      if(this.onTimeoutComplete){
+        this.onTimeoutComplete();
+      }
+    }, this.timeoutMs);
+  }
+
+  /**
+   * Helper method to clear the timeout.
+   * @private
+   */
+  _clearTimeout() {
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
+      this.timeoutId = null;
+    }
   }
 }
 

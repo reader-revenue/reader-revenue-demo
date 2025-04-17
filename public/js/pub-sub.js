@@ -21,24 +21,56 @@
  */
 import {insertHighlightedJson, Loader} from './utils.js';
 
-
-async function pollNotifications() {
-  return await fetch('/api/pub-sub/received').then(r => r.json());
+async function pollNotifications(pubSubVersion) {
+  return await fetch(`/api/pub-sub/received/${pubSubVersion}`)
+    .then(
+      r => r.json()
+    ).catch(
+      e => console.log(e));
 }
 
 function scheduleNotifications() {
+  const pubSubVersions = ['v1','v2'];
   let currentNotifications = '';
-  const output = '#notificationsLog';
-  insertHighlightedJson(output, []);
 
-  setInterval(async () => {
-    const notifications = await pollNotifications();
-    if (JSON.stringify(notifications) != currentNotifications) {
-      console.log('new pub/sub messages, re-displaying');
-      insertHighlightedJson(output, notifications);
-      currentNotifications = JSON.stringify(notifications);
-    }
-  }, 1000)
+  // loop through each pubSubVersion
+  pubSubVersions.forEach((pubSubVersion)=>{
+    let emptyOutputPlaceHolder = null; 
+    const loader = new Loader(
+      document.getElementById(`notificationsLog-${pubSubVersion}`), 
+      // timeout to loading in 5 seconds
+      5000,
+      // callback onTimeout:  inserting an empty array [] as output
+      () => { 
+        emptyOutputPlaceHolder = insertHighlightedJson(`#notificationsLog-${pubSubVersion}`, [], null, null, true);
+      }
+    );
+    loader.start();
+
+    // periodically poll for notifications and update the UI if new Pub/Sub notitifications are detected.
+    setInterval(async () => {
+      // poll the backend for notifications for the current pubSubVersion.
+      const notifications = await pollNotifications(pubSubVersion);
+      // check if notifications were received AND if they differ from the cached version.
+      if (notifications?.length > 0 && JSON.stringify(notifications) != currentNotifications) {
+        console.log(`new pub/sub messages, re-displaying for pubSubVersion ${pubSubVersion}`);
+        // remove the placeholder output ([]) if it's already added  
+        // emptyOutputPlaceHolder is non null if the loader's onTimeout callback is alraedy executed 
+        if(emptyOutputPlaceHolder){
+          emptyOutputPlaceHolder.remove();
+          emptyOutputPlaceHolder = null;
+        }
+        // display the new Pub/Sub notifications using syntax highlighting
+        insertHighlightedJson(`#notificationsLog-${pubSubVersion}`, notifications, null, null, true);
+        // cache the current notifications to check and compare in the next interval
+        currentNotifications = JSON.stringify(notifications);
+        // stop the loading indicator now that content is displayed.
+        if(loader.isStopped===false) {
+          loader.stop();
+        }
+      } 
+    }, 1000)
+  })
 }
 
 document.addEventListener('DOMContentLoaded', async function() {
