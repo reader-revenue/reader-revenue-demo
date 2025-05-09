@@ -231,10 +231,14 @@ to create the CTA, as well as the newsletter subscriber's information. The `conf
     'userEmail': 'example@example.com',
     'displayName': 'John Johnson',
     'givenName': 'John',
-    'familyName': 'Johnson'
+    'familyName': 'Johnson',
+    'termsAndConditionsConsent': true
   }
 }
 ```
+
+!!! caution **NOTE:** The `termsAndConditionsConsent` value is a boolean if the newsletter has been configured with an optional or required checkbox, or null if the checkbox has not been configured.
+!!!
 
 #### Complete Example
 
