@@ -31,10 +31,14 @@ async function pollNotifications(pubSubVersion) {
 
 function scheduleNotifications() {
   const pubSubVersions = ['v1','v2'];
-  let currentNotifications = '';
 
   // loop through each pubSubVersion
   pubSubVersions.forEach((pubSubVersion)=>{
+    
+    // CurrentNotifications will contain a stringified version of the current set of notifications
+    // which is used to prevent unnecessary DOM updates.
+    let currentNotifications = '';
+
     let emptyOutputPlaceHolder = null; 
     const loader = new Loader(
       document.getElementById(`notificationsLog-${pubSubVersion}`), 
