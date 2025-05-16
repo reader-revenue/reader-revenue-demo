@@ -7,7 +7,7 @@ rather than user-scoped `access_token` authentication.
 
 !!! info **Service Account Setup**
 For more information on creating and configuring Service Accounts, please see the
-[Subscription Linking Service Account Setup](https://developers.google.com/news/subscribe/subscription-linking/implementation/server-side#create_a_service_account) devsite article.
+[Monetization API Service Account Setup](https://developers.google.com/news/reader-revenue/monetization/reference/monetization-api#endpoint_authentication_with_service_accounts) devsite article.
 !!!
 
 #### API Tests

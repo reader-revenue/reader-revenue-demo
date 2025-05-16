@@ -65,6 +65,11 @@ app.use('/img', img);
 app.use('/js', js);
 app.use('/css', css);
 
+// redirect from the old Subscription Linking page path to the new one
+app.get('/subscription-linking/client-side', (req, res) => {
+  res.redirect('/subscription-linking');
+});
+
 // Boot the server
 console.log(
   `Booted at ${new Date().toUTCString()} at ${process.env.HOST}:${
