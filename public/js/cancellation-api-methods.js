@@ -29,16 +29,16 @@ async function cancelEntitlementsPlans(publicationId, readerId, planId, cancelIm
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({cancel_immediately: cancelImmediately})
   };
-  console.log('cancelEntitlementsPlans');
   return await fetch(url, requestOptions).then(
     async (r) => {
       const json = await r.json();
       if(json.errors) throw new Error(JSON.stringify(json.errors));
-      console.log('cancelEntitlementsPlans response json - ', json);
+      console.log('cancelEntitlementsPlans: response json - ', json);
       return json;
     }
   ).catch(e=>{
     console.error(e);
+    return e;
   })
 }
 
@@ -64,6 +64,7 @@ async function refundOrders(publicationId, readerId, orderId) {
     }
   ).catch(e=>{
     console.error(e);
+    return e;
   })
 }
 

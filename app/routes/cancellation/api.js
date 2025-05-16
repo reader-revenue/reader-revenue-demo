@@ -21,26 +21,18 @@ const router = express.Router();
 const api = new CancellationApi;
 const client = api.init();
 
-console.log('client ', client.publications.readers.entitlementsplans.get);
-console.log('client ', client.publications.readers.entitlementsplans.cancel);
-console.log('client ', client.publications.readers.entitlementsplans);
-console.log('client ', client.publications.readers.orders.get);
-console.log('client ', client.publications.readers.orders.refund);
-console.log('client ', client.publications.readers.orders);
 /**
  * POST /publications/:publicationId/readers/:readerId/orders/:orderId:refund
  */
 router.post('/publications/:publicationId/readers/:readerId/orders/:orderId/refund', express.json(), async (req, res) => {
   try {
     const {publicationId, readerId, orderId} = req.params;
-    console.log('api.js');
     const name = `publications/${publicationId}/readers/${readerId}/orders/${orderId}`;
     const response = await client.publications.readers.orders.refund({name});
-    console.log('reund an order... ', name)
     return res.json(response.data);
   } catch (e) {
     console.error(e)
-    res.status(e.status).json({errors: e.errors});
+    return res.status(e.status).json({errors: e.errors});
   }
 })
 
@@ -49,16 +41,15 @@ router.post('/publications/:publicationId/readers/:readerId/orders/:orderId/refu
  */
 router.post('/publications/:publicationId/readers/:readerId/entitlementsplans/:entitlementsplans/cancel', express.json(), async (req, res) => {
   try {
-    console.log('api.js');
     const {publicationId, readerId, entitlementsplans} = req.params;
 
     const name = `publications/${publicationId}/readers/${readerId}/entitlementsplans/${entitlementsplans}`;
+    console.log('name ', name);
     const response = await client.publications.readers.entitlementsplans.cancel({name});
-    console.log('cancelling an entitlement plan ... ', name);
     return res.json(response.data);
   } catch (e) {
     console.error(e)
-    res.status(e.status).json({errors: e.errors});
+    return res.status(e.status).json({errors: e.errors});
   }
 })
 

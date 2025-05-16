@@ -20,32 +20,8 @@ import {
 } from './cancellation-api-methods.js';
 import {insertHighlightedJson, Loader} from './utils.js';
 
-let readerId = '37843b703beaf19aa8843bf9ab70e7bb';
-let orderId = 'SWG.6745-3183-8280-64835';
-let entitlementsPlanId = 'bee20751c9ae75214cd31dc957da2a51';
+let readerId, orderId, entitlementsPlanId = '';
 let publicationId = 'process.env.PUBLICATION_ID';
-
-/**
- * renderReaderIdForm
- * @param {string} selector
- */
-function renderReaderIdForm(selector) {
-  const input = document.createElement('input');
-  input.setAttribute('placeholder', 'Paste readerId here');
-  input.setAttribute('id', 'readerId');
-  input.setAttribute('value', '37843b703beaf19aa8843bf9ab70e7bb');
-
-  const form = document.createElement('form');
-  form.appendChild(input);
-
-  // Use the form input to update readerId
-  input.onchange = (event)=>{
-    readerId = event.target.value;
-    console.log(`reader_id updated to ${readerId}`);
-  };
-
-  document.querySelector(selector).appendChild(form);
-}
 
 /**
  * renderPublicationIdForm
@@ -57,6 +33,7 @@ function renderPublicationIdForm(selector) {
   input.setAttribute('placeholder', 'Paste publicationId here');
   input.setAttribute('id', 'publicationId');
   input.setAttribute('value', 'process.env.PUBLICATION_ID');
+  input.setAttribute('class', 'id-input');
 
   const form = document.createElement('form');
   form.appendChild(input);
@@ -65,6 +42,31 @@ function renderPublicationIdForm(selector) {
   input.onchange = (event)=>{
     publicationId = event.target.value;
     console.log(`publicationId updated to ${publicationId}`);
+    handleCancelButtonAvailability();
+    handleRefundButtonAvailability();
+  };
+  document.querySelector(selector).appendChild(form);
+}
+
+/**
+ * renderReaderIdForm
+ * @param {string} selector
+ */
+function renderReaderIdForm(selector) {
+  const input = document.createElement('input');
+  input.setAttribute('placeholder', 'Paste readerId here');
+  input.setAttribute('id', 'readerId');
+  input.setAttribute('class', 'id-input');
+
+  const form = document.createElement('form');
+  form.appendChild(input);
+
+  // Use the form input to update readerId
+  input.onchange = (event)=>{
+    readerId = event.target.value;
+    console.log(`reader_id updated to ${readerId}`);
+    handleCancelButtonAvailability();
+    handleRefundButtonAvailability();
   };
   document.querySelector(selector).appendChild(form);
 }
@@ -77,13 +79,14 @@ function renderEntitlementsPlanIdForm(selector) {
   const input = document.createElement('input');
   input.setAttribute('placeholder', 'Paste entitlementsPlansId here');
   input.setAttribute('id', 'entitlementsPlansId');
-  input.setAttribute('value', 'bee20751c9ae75214cd31dc957da2a51');
-  
+  input.setAttribute('class', 'id-input');
+
   const form = document.createElement('form');
   form.appendChild(input);
 
   input.onchange = (event)=>{
     entitlementsPlanId = event.target.value;
+    handleCancelButtonAvailability();
   };
   document.querySelector(selector).appendChild(form);
 }
@@ -95,25 +98,28 @@ function renderOrderIdForm(selector) {
   const input = document.createElement('input');
   input.setAttribute('placeholder', 'Paste entitlementsPlansId here');
   input.setAttribute('id', 'entitlementsPlansId');
-  input.setAttribute('value', 'SWG.6745-3183-8280-64835');
-  
+  input.setAttribute('class', 'id-input');
+
   const form = document.createElement('form');
   form.appendChild(input);
   input.onchange = (event)=>{
     orderId = event.target.value;
+    handleRefundButtonAvailability();
   };
   document.querySelector(selector).appendChild(form);
 }
 
 /**--------------------buttons--------------------**/
-
 /**
  * Creates a button to cancel entitlements plans
  * @param {string} selector
  */
 function renderCancelEntitlementsPlansButton(selector) {
   const button = document.createElement('button');
+  button.setAttribute('id', 'cancelButton');
   button.classList.add('btn', 'btn-primary');
+  button.setAttribute('disabled','true');
+  
   button.onclick = async () => {
     const loaderOutput = document.createElement('div');
     document.querySelector('#APIOutput').append(loaderOutput);
@@ -136,6 +142,9 @@ function renderCancelEntitlementsPlansButton(selector) {
 function renderRefundOrderButton(selector) {
   const button = document.createElement('button');
   button.classList.add('btn', 'btn-primary');
+  button.setAttribute('id', 'refundButton');
+  button.setAttribute('disabled','true');
+  
   button.onclick = async () => {
     const loaderOutput = document.createElement('div');
     document.querySelector('#APIOutput').append(loaderOutput);
@@ -149,6 +158,27 @@ function renderRefundOrderButton(selector) {
   button.innerText = 'Refund Order';
   document.querySelector(selector).appendChild(button);
 }
+
+// Set the availability of the cancel button
+function handleCancelButtonAvailability(){
+  const button = document.querySelector('#cancelButton');
+  if(!publicationId || !readerId || !entitlementsPlanId) {
+    button.setAttribute('disabled','true');
+  } else {
+    button.removeAttribute('disabled');
+  }
+}
+
+// Set the availability of the refund button
+function handleRefundButtonAvailability(){
+  const button = document.querySelector('#refundButton');
+  if(!publicationId || !readerId || !orderId) {
+    button.setAttribute('disabled','true');
+  } else {
+    button.removeAttribute('disabled');
+  }
+}
+
 
 export {
   renderCancelEntitlementsPlansButton,

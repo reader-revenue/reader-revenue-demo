@@ -96,7 +96,7 @@ function analyticsEventLogger(subs) {
   
     subscriptions.setOnPaymentResponse(async (paymentResponse) => {
       let response = await paymentResponse;
-      console.log(response);
+      console.log('paymentResponse :', response);
       await response.complete();
       console.log(
           'response and transaction is complete, launching entitlements flow');

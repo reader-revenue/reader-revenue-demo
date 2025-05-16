@@ -34,6 +34,7 @@ function renderReaderIdForm(selector) {
   const input = document.createElement('input');
   input.setAttribute('placeholder', 'Paste readerId here');
   input.setAttribute('id', 'readerId');
+  input.setAttribute('class', 'id-input');
 
   const form = document.createElement('form');
   form.appendChild(input);
@@ -44,7 +45,7 @@ function renderReaderIdForm(selector) {
 
     // Set the availability of buttons based on readerId
     document.querySelectorAll('.btn').forEach((button)=>{
-      if(readerId === '' || readerId === undefined) {
+      if(!readerId) {
         button.setAttribute('disabled','true');
       } else {
         button.removeAttribute('disabled');
@@ -66,6 +67,7 @@ function renderPublicationIdForm(selector) {
   input.setAttribute('placeholder', 'Paste publicationId here');
   input.setAttribute('id', 'publicationId');
   input.setAttribute('value', 'process.env.PUBLICATION_ID');
+  input.setAttribute('class', 'id-input');
 
   const form = document.createElement('form');
   form.appendChild(input);
@@ -76,7 +78,7 @@ function renderPublicationIdForm(selector) {
 
     // Set the availability of buttons based on publicationId
     document.querySelectorAll('.btn').forEach((button)=>{
-      if(publicationId === '' || publicationId === undefined) {
+      if(!publicationId) {
         button.setAttribute('disabled','true');
       } else {
         button.removeAttribute('disabled');
