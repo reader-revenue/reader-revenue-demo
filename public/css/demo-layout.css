@@ -442,3 +442,7 @@ pre code.hljs {
   display:block;
   margin-bottom:5px;
 }
+
+.id-input {
+  width: 400px;
+}
