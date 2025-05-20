@@ -1,5 +1,5 @@
 /**
- * Copyright 2024 Google LLC
+ * Copyright 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,7 +75,6 @@ function renderReaderIdForm(selector) {
  * @param {string} selector
  */
 function renderEntitlementsPlanIdForm(selector) {
-  console.log('renderEntitlementsPlanIdForm selector - ', selector);
   const input = document.createElement('input');
   input.setAttribute('placeholder', 'Paste entitlementsPlansId here');
   input.setAttribute('id', 'entitlementsPlansId');
@@ -178,7 +177,6 @@ function handleRefundButtonAvailability(){
     button.removeAttribute('disabled');
   }
 }
-
 
 export {
   renderCancelEntitlementsPlansButton,

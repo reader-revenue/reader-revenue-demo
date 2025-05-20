@@ -1,5 +1,5 @@
 /**
- * Copyright 2023-2024 Google LLC
+ * Copyright 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,9 +42,7 @@ router.post('/publications/:publicationId/readers/:readerId/orders/:orderId/refu
 router.post('/publications/:publicationId/readers/:readerId/entitlementsplans/:entitlementsplans/cancel', express.json(), async (req, res) => {
   try {
     const {publicationId, readerId, entitlementsplans} = req.params;
-
     const name = `publications/${publicationId}/readers/${readerId}/entitlementsplans/${entitlementsplans}`;
-    console.log('name ', name);
     const response = await client.publications.readers.entitlementsplans.cancel({name});
     return res.json(response.data);
   } catch (e) {

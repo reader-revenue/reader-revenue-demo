@@ -10,7 +10,7 @@ For more information on creating and configuring Service Accounts, please see th
 [Monetization API Service Account Setup](https://developers.google.com/news/reader-revenue/monetization/reference/monetization-api#endpoint_authentication_with_service_accounts) devsite article.
 !!!
 
-#### API Tests
+## API Tests
 
 Each of the following buttons requires a `readerId` to function. To properly test these,
 you can use the [Add Subscribe with Google button](/swg/add-button) example to purchase an
@@ -69,14 +69,15 @@ the Monetization API does not require this. Any `readerId` for the current publi
 
 <div id="APIOutput"></div>
 
-# Implementation Samples
+## Implementation Samples
 
-While most of the logic for using the Publication API can be done client-side,
-certain aspects of the OAuth flow must be done server-side. The following code
-samples are split across the client and server, illustrating the type of logic
-that should happen at each layer.
+### A custom client generated rom the API discovery document  
 
-## Server-side code sample
+#### Generate a client from the API discovery document 
+
+You can use the generators to create a custom client based on the [Discovery Document](https://developers.google.com/api-client-library). Refer [how to generate a client from the API Discovery Document](https://developers.google.com/news/reader-revenue/monetization/reference/client-configuration#generate_a_client_from_the_api_discovery_document) for an example in Node.js . 
+
+#### Use the custom client generated from the API Discovery Document (Node.js)
 
 After configuring your application to be able to use a service account, you can 
 use the generated API client to access the Monetization API.
@@ -114,5 +115,8 @@ const base = `publications/${process.env.PUBLICATION_ID}`;
 const endpoint = `readers/${readerId}`;
 const name = `${base}/${endpoint}`;
 const reader = await client.publications.readers.get({name});
-
 ```
+
+### REST API
+
+Alternatively, you can call the REST API endpoints. Refer to the [developer site](https://developers.google.com/news/reader-revenue/monetization/reference/client-configuration#rest-api) section for more details.

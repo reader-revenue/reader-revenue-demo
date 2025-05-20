@@ -32,7 +32,6 @@ function generateHighlightedJson(json) {
   code.classList.add('hljs', 'language-json');
 
   const textString = JSON.stringify(json, null, 2);
-  if(!textString) return;
   const formattedTextString = hljs.highlight(textString, {language: 'json'});
   const textNodeFromString = document
     .createRange()
@@ -58,7 +57,6 @@ function insertHighlightedJson(id, json, label = undefined, insertedElementId = 
   }
 
   const formattedJson = generateHighlightedJson(json);
-  if(!formattedJson) return;
   if (label) {
     const header = document.createElement('h3');
     header.innerHTML = label;

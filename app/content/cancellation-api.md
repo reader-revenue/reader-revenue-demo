@@ -10,7 +10,7 @@ For more information on creating and configuring Service Accounts, please see th
 [Monetization API Service Account Setup](https://developers.google.com/news/reader-revenue/monetization/reference/monetization-api#endpoint_authentication_with_service_accounts) devsite article.
 !!!
 
-#### API Tests
+## API Tests
 
 <div id="publicationIdForm"><code>publicationId</code> input:</div>
 <div id="readerIdForm"><code>readerId</code> input:</div>
@@ -53,9 +53,25 @@ For more information on creating and configuring Service Accounts, please see th
 
 <br>
 
-# Implementation Samples
+## Implementation Samples
 
-## Server-side code sample
+### A custom client generated rom the API discovery document  
+
+#### Generate a client from the API discovery document 
+
+You can use the generators to create a custom client based on the [Discovery Document](https://developers.google.com/api-client-library). Refer [how to generate a client from the API Discovery Document](https://developers.google.com/news/reader-revenue/monetization/reference/client-configuration#generate_a_client_from_the_api_discovery_document) for an example in Node.js . 
+
+!!! hint **Regenerate your client for the Cancellation API**
+The Cancellation API endpoints are newer than the Publication and Monetization API endpoints. If your client was generated before the Cancellation API was supported, you must regenerate it using the latest API Discovery Document.
+!!!
+
+#### Use the custom client generated from the API Discovery Document (Node.js)
+
+After configuring your application to be able to use a service account, you can 
+use the generated API client to access the Cancellation API.
+
+Refer to the [developer site](https://developers.google.com/news/reader-revenue/monetization/reference/client-configuration#use_the_custom_client_generated_from_the_api_discovery_document) for more details.
+
 
 ```javascript
 import subscribewithgoogle from '@googleapis/subscribewithgoogle';
@@ -105,3 +121,7 @@ async cancelEntitlementsPlans(){
   return res.json(response.data);
 }
 ```
+
+### REST API
+
+Alternatively, you can call the REST API endpoints. Refer to the [developer site](https://developers.google.com/news/reader-revenue/monetization/reference/client-configuration#rest-api) section for more details.
