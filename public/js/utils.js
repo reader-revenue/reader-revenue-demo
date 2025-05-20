@@ -32,7 +32,6 @@ function generateHighlightedJson(json) {
   code.classList.add('hljs', 'language-json');
 
   const textString = JSON.stringify(json, null, 2);
-  if(!textString) return;
   const formattedTextString = hljs.highlight(textString, {language: 'json'});
   const textNodeFromString = document
     .createRange()
@@ -58,7 +57,6 @@ function insertHighlightedJson(id, json, label = undefined, insertedElementId = 
   }
 
   const formattedJson = generateHighlightedJson(json);
-  if(!formattedJson) return;
   if (label) {
     const header = document.createElement('h3');
     header.innerHTML = label;
@@ -198,6 +196,100 @@ class Loader {
   }
 }
 
+/**
+ * @param {string=} initialValue
+ * @param {string=} id
+ * @param {string=} className
+ * @param {string=} placeHolder
+ * @param {function?} onUpdateCallback
+ * @returns {Element}
+ */
+function createInput(initialValue = '', id = '', className = '', placeHolder = '', onUpdateCallback = null) {
+  const input = document.createElement('input');
+  input.setAttribute('value', initialValue);
+  if(id){
+    input.setAttribute('id', id);
+  }
+  if(className){
+    input.setAttribute('class', className);
+  }
+  if(placeHolder){
+    input.setAttribute('placeholder', placeHolder);
+  }
+  if(onUpdateCallback){
+    input.onchange = (event) => onUpdateCallback(event.target.value)
+  }
+  return input;
+}
+
+/**
+ * @returns {Element}
+ */
+function createHeaderRow(){
+  const headerRow = document.createElement('div');
+  headerRow.setAttribute('class', 'sl-input-header-row');
+  const ppidHeader = document.createElement('div');
+  ppidHeader.innerText = 'PPID';
+  const pubIdHeader = document.createElement('div');
+  pubIdHeader.innerText = 'Publication ID';
+  headerRow.appendChild(pubIdHeader);
+  headerRow.appendChild(ppidHeader);  
+  return headerRow;
+}
+
+/**
+ * @param {string=} buttonText
+ * @param {string=} id
+ * @param {string=} className
+ * @param {boolean=} disabled
+ * @param {function} callback
+ * @returns {Element}
+ */
+function createButton(buttonText='', id = '', className = '', disabled=false, callback){
+  const button = document.createElement('button');
+  button.innerText = buttonText;
+  if(id){
+    button.setAttribute('id', id);
+  }
+  if(className){
+    button.setAttribute('class', className);
+  }
+  if(disabled){
+    button.disabled = true;
+  }
+  if(callback){
+    button.onclick = (event) => callback(event);
+  }
+  return button;
+}
+
+/**
+ * @param {Element[]} childElements
+ * @returns {Element}
+ */
+function createForm(childElements){
+  const form = document.createElement('form');
+  childElements.forEach(element =>{
+    form.appendChild(element); 
+  })
+  return form;
+}
+
+/**
+ * @param {string} className
+ * @param {Element[]} childElements
+ * @returns {Element}
+ */
+function createRow(className, childElements){
+  const row = document.createElement('div');
+  row.setAttribute('class', className);
+  childElements.forEach(element =>{
+    row.appendChild(element); 
+  })
+  return row;
+}
+
+
 export {
   generateHighlightedJson,
   insertHighlightedJson,
@@ -205,4 +297,9 @@ export {
   parseJwtHeader,
   redirect,
   Loader,
+  createInput,
+  createHeaderRow,
+  createRow,
+  createButton,
+  createForm
 };
