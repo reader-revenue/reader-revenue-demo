@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import cookieParser from "cookie-parser";
-
-
-
-export default cookieParser(process.env.COOKIE_SECRET || '');
+const secret = process.env.COOKIE_SECRET || '';
+const cookies = cookieParser(secret);
+export default cookies;
+//# sourceMappingURL=cookies.js.map

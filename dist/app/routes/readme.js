@@ -13,27 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-const overrides = (req, res, next) => {
-  try {
-    const validOverrides = process.env.ENV_OVERRIDES.split(',');
-
-    for (let override of validOverrides) {
-      try {
-        if (override in req.query) {
-          process.env[override] = req.query[override];
-          console.log(`
-                      successfully set ${override} to ${req.query[override]}`);
-        }
-      } catch (e) {
-        // override not set, do nothing
-      }
-    } 
-  } catch (e) {
-    // no overrides set via ENV_OVERRIDES, do nothing
-  }
-
-  next();
-};
-
-export default overrides;
+import express from 'express';
+const router = express.Router();
+router.get('/', async (req, res) => {
+    return res.end(`Random number: ${Math.round(Math.random() * 1000)}`);
+});
+export default router;
+//# sourceMappingURL=readme.js.map

@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "./dist",
+    "rootDir": "./",
+    "allowJs": true,
+    "checkJs": false,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": false, // Start with lenient settings
+    "lib": ["ESNext", "DOM"], // Added ESNext for modern features, DOM for client-side code (though not primary focus)
+    "resolveJsonModule": true // Good practice to include for importing JSON files if needed
+  },
+  "include": [
+    "**/*.ts", // Include all .ts files in the project
+    "**/*.js"  // Include all .js files for gradual migration, respecting allowJs
+  ],
+  "exclude": [
+    "node_modules",
+    "dist", // Exclude the output directory
+    "public/js" // Exclude client-side JS from this primary server-side TSConfig for now
+  ]
+}

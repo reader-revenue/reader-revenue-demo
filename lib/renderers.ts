@@ -1,0 +1,199 @@
+/**
+ * Copyright 2023 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * @fileoverview Description of this file.
+ */
+
+import * as admonitionExtension from 'marked-admonition-extension';
+import { marked, MarkedExtension } from 'marked';
+import * as url from 'url';
+import { create, ExpressHandlebars } from 'express-handlebars';
+import * as Handlebars from 'handlebars'; // Import Handlebars namespace for type assertion
+import { markedHighlight } from 'marked-highlight';
+import { readFile } from 'fs/promises';
+import customHeadingId from 'marked-custom-heading-id';
+import hljs from 'highlight.js';
+import { Buffer } from 'buffer'; // Import Buffer
+
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+
+// Define a type for the safe environment variables
+interface SafeEnvVars {
+  GOOGLE_SITE_VERIFICATION?: string;
+  OAUTH_CLIENT_ID?: string;
+  PUBLICATION_ID?: string;
+  ENV_NAME?: string;
+  PROXY_URL?: string;
+  GTAG_PROPERTY_ID?: string;
+  GTAG_DEBUG_MODE?: string;
+  GTAG_CONSENT_MODE_ALL_DENIED?: string;
+  CTA_CONFIG?: string;
+  CTA_CONFIG_BASE64?: string;
+  SWG_OVERRIDE?: string;
+  PAY_SWG_VERSION?: string;
+  NEWSLETTER_CTA_CONFIGURATION_ID?: string;
+  SWG_SKU?: string;
+  [key: string]: string | undefined; // Index signature for dynamic access
+}
+
+function safeEnvVars(): SafeEnvVars {
+  const {
+    GOOGLE_SITE_VERIFICATION,
+    OAUTH_CLIENT_ID,
+    PUBLICATION_ID,
+    ENV_NAME,
+    PROXY_URL,
+    GTAG_PROPERTY_ID,
+    GTAG_DEBUG_MODE,
+    GTAG_CONSENT_MODE_ALL_DENIED,
+    CTA_CONFIG,
+    CTA_CONFIG_BASE64,
+    SWG_OVERRIDE,
+    PAY_SWG_VERSION,
+    NEWSLETTER_CTA_CONFIGURATION_ID,
+    SWG_SKU,
+  } = process.env;
+
+  return {
+    GOOGLE_SITE_VERIFICATION,
+    OAUTH_CLIENT_ID,
+    PUBLICATION_ID,
+    ENV_NAME,
+    PROXY_URL,
+    GTAG_PROPERTY_ID,
+    GTAG_DEBUG_MODE,
+    GTAG_CONSENT_MODE_ALL_DENIED,
+    CTA_CONFIG,
+    CTA_CONFIG_BASE64,
+    SWG_OVERRIDE,
+    PAY_SWG_VERSION,
+    NEWSLETTER_CTA_CONFIGURATION_ID,
+    SWG_SKU,
+  };
+}
+
+// Define a type for the data object passed to render functions
+interface RenderData {
+  env?: SafeEnvVars;
+  [key: string]: any; // Allow other properties
+}
+
+marked.use({
+  gfm: true,
+  breaks: false,
+} as MarkedExtension); // Added type assertion for options
+marked.use(customHeadingId() as MarkedExtension); // Added type assertion
+marked.use(
+  markedHighlight({
+    langPrefix: 'hljs language-',
+    highlight(code: string, lang: string): string {
+      const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+      return hljs.highlight(code, { language }).value;
+    },
+  }) as MarkedExtension // Added type assertion
+);
+// Use the extension directly, not .default, and cast to MarkedExtension
+marked.use(admonitionExtension as unknown as MarkedExtension);
+
+
+const partialsDir = `${__dirname}../app/views/partials/`;
+
+const hbs: ExpressHandlebars = create({
+  extname: '.html',
+  partialsDir,
+});
+
+// Explicitly type hbs.handlebars
+const handlebarsCompiler = hbs.handlebars as typeof Handlebars;
+
+async function renderMarkdown(filePath: string, template: string, data: RenderData): Promise<string> {
+  let body: string, compiledTemplate: Handlebars.TemplateDelegate<any>;
+
+  try {
+    data.env = safeEnvVars();
+    const fileBuffer = await readFile(filePath);
+    const markdownFile = fileBuffer.toString();
+    const markdownBody = marked.parse(markdownFile) as string;
+    const handlebarMarkdownTemplate = handlebarsCompiler.compile(markdownBody);
+    body = handlebarMarkdownTemplate(data);
+  } catch (e: any) {
+    console.error('Failed to parse markdown file', e);
+    throw new Error(e.message);
+  }
+
+  try {
+    const templateBuffer = await readFile(template);
+    const rawTemplate = templateBuffer.toString();
+    compiledTemplate = handlebarsCompiler.compile(rawTemplate);
+  } catch (e: any) {
+    console.error('Failed to parse template file', e);
+    throw new Error(e.message);
+  }
+
+  return compiledTemplate(
+    {
+      body,
+      data,
+    },
+    {
+      partials: await hbs.getPartials() as { [name: string]: Handlebars.TemplateDelegate; },
+    }
+  );
+}
+
+async function renderHtml(filePath: string, data: RenderData): Promise<string> {
+  try {
+    data.env = safeEnvVars();
+    const fileBuffer = await readFile(filePath);
+    const htmlFile = fileBuffer.toString();
+    const htmlBodyTemplate = handlebarsCompiler.compile(htmlFile);
+    return htmlBodyTemplate(data);
+  } catch (e: any) {
+    console.error(e);
+    throw new Error(`Html file wasn't parseable: ${e.message}`);
+  }
+}
+
+async function renderStaticFile(filePath: string, data: RenderData = {}): Promise<string> {
+  try {
+    data.env = data.env || safeEnvVars(); // Ensure env is initialized
+    const fileBuffer = await readFile(filePath);
+    const staticFile = fileBuffer.toString();
+
+    const pattern = /\bprocess\.env\.([A-Za-z0-9_]+)\b/g; // More specific regex
+    const replacedStaticFile = staticFile.replace(pattern, (match, paramName: string) => {
+      const value = data.env?.[paramName];
+      return typeof value === 'string' ? value : match; // Keep original if not found or not string
+    });
+
+    return replacedStaticFile;
+  } catch (e: any) {
+    console.error(e);
+    throw new Error(`Static file wasn't parseable: ${e.message}`);
+  }
+}
+
+async function renderStaticImage(filePath: string): Promise<Buffer> {
+  try {
+    return await readFile(filePath);
+  } catch (e: any) {
+    console.error(e);
+    throw new Error(`Static image wasn't parseable: ${e.message}`);
+  }
+}
+
+export { renderMarkdown, renderHtml, renderStaticFile, renderStaticImage };

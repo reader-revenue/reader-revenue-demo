@@ -64,9 +64,13 @@ app.use('/js', js);
 app.use('/css', css);
 
 // Boot the server
+const port = parseInt(process.env.PORT || '8080', 10);
+const host = process.env.HOST || '0.0.0.0';
+
 console.log(
-  `Booted at ${new Date().toUTCString()} at ${process.env.HOST}:${
-    process.env.PORT
-  }`
+  `Attempting to boot server at ${new Date().toUTCString()} on ${host}:${port}`
 );
-app.listen(process.env.PORT, process.env.HOST);
+
+app.listen(port, host, () => {
+  console.log(`Server listening on http://${host}:${port}`);
+});

@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-/**
- * @fileoverview Description of this file.
- */
+import cookieParser from "cookie-parser";
+import { RequestHandler } from "express";
 
-import redirectSSL from 'redirect-ssl';
+const secret = process.env.COOKIE_SECRET || '';
+const cookies: RequestHandler = cookieParser(secret);
 
-export default redirectSSL.create({
-  enabled: process.env.NODE_ENV === 'production',
-});
+export default cookies;
