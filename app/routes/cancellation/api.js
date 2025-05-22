@@ -42,8 +42,12 @@ router.post('/publications/:publicationId/readers/:readerId/orders/:orderId/refu
 router.post('/publications/:publicationId/readers/:readerId/entitlementsplans/:entitlementsplans/cancel', express.json(), async (req, res) => {
   try {
     const {publicationId, readerId, entitlementsplans} = req.params;
+    const body = req.body;
     const name = `publications/${publicationId}/readers/${readerId}/entitlementsplans/${entitlementsplans}`;
-    const response = await client.publications.readers.entitlementsplans.cancel({name});
+    const response = await client.publications.readers.entitlementsplans.cancel({
+      name,
+      cancelImmediately: body.cancelImmediately
+    });
     return res.json(response.data);
   } catch (e) {
     console.error(e)

@@ -27,7 +27,7 @@ async function cancelEntitlementsPlans(publicationId, readerId, planId, cancelIm
   const requestOptions = {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({cancel_immediately: cancelImmediately})
+    body: JSON.stringify({cancelImmediately: cancelImmediately})
   };
   return await fetch(url, requestOptions).then(
     async (r) => {

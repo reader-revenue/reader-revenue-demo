@@ -21,8 +21,18 @@ import {
 } from './monetization-api-methods.js';
 import {insertHighlightedJson, Loader} from './utils.js';
 
+let readerId = '';
+
+// wait for the readerId input to be rendered
+window.onload = (event) =>{
+  readerId = localStorage.getItem('readerId'); 
+  if (readerId){
+    document.getElementById('readerId').value = readerId;
+    toggleButtonAvailability(true)
+  }
+};
+
 // Global reader_id used by helper functions
-let readerId = undefined;
 let publicationId = 'process.env.PUBLICATION_ID';
 
 /**
@@ -42,15 +52,8 @@ function renderReaderIdForm(selector) {
   // Use the form input to update readerId
   input.onchange = (event)=>{
     readerId = event.target.value;
-
     // Set the availability of buttons based on readerId
-    document.querySelectorAll('.btn').forEach((button)=>{
-      if(!readerId) {
-        button.setAttribute('disabled','true');
-      } else {
-        button.removeAttribute('disabled');
-      }
-    })
+    toggleButtonAvailability(!!readerId)
     console.log(`reader_id updated to ${readerId}`);
   };
 
@@ -75,15 +78,8 @@ function renderPublicationIdForm(selector) {
   // Use the form input to update publicationId
   input.onchange = (event)=>{
     publicationId = event.target.value;
-
     // Set the availability of buttons based on publicationId
-    document.querySelectorAll('.btn').forEach((button)=>{
-      if(!publicationId) {
-        button.setAttribute('disabled','true');
-      } else {
-        button.removeAttribute('disabled');
-      }
-    })
+    toggleButtonAvailability(!!publicationId)
     console.log(`publicationId updated to ${publicationId}`);
   };
 
@@ -145,6 +141,7 @@ function renderFetchMemberButton(selector) {
 function renderFetchOrderButton(selector) {
   const button = document.createElement('button');
   button.classList.add('btn', 'btn-primary');
+  button.setAttribute('id','fetchOrderButton');
   button.setAttribute('disabled','true');
   button.onclick = async () => {
     const loaderOutput = document.createElement('div');
@@ -164,6 +161,12 @@ function renderFetchOrderButton(selector) {
   };
   button.innerText = 'Query order data';
   document.querySelector(selector).appendChild(button);
+}
+
+function toggleButtonAvailability(enable){
+  document.querySelectorAll('.btn').forEach(button=>{
+    enable ? button.removeAttribute('disabled') : button.setAttribute('disabled','true');;
+  });  
 }
 
 export {

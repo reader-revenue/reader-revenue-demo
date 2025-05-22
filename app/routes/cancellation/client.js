@@ -24,7 +24,7 @@ class CancellationApi {
     this.auth = new subscribewithgoogle.auth.GoogleAuth({
       keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
       scopes: [
-        'https://www.googleapis.com/auth/subscribewithgoogle.publications.entitlements.readonly',
+        /* 'manage' covers both read & write  */
         'https://www.googleapis.com/auth/subscribewithgoogle.publications.entitlements.manage'
       ],
     })

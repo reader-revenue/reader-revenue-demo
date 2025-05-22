@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-@font-face {
+ @font-face {
   font-family: "Product Sans";
   font-style: normal;
   font-weight: 300;
@@ -445,4 +445,20 @@ pre code.hljs {
 
 .id-input {
   width: 400px;
+}
+/*checkbox to toggle cancel a plan immediately*/
+#cancelImmediately {
+  transform: scale(1.5);
+}
+
+/*cancellable plan table*/
+#planTable {
+  border: 1px solid black;
+}
+#planTableHead {
+  background-color: #2c5e77;
+  color: #fff;
+}
+#planTableBody {
+  background-color: #e4f0f5;
 }

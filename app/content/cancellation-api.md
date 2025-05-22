@@ -18,6 +18,9 @@ For more information on creating and configuring Service Accounts, please see th
 <div id="orderIdForm"><code>orderId</code> input:</div>
 
 <br>
+<div id="planTableDiv"> </div>
+<br>
+
 <table>
   <thead>
     <tr>
@@ -32,7 +35,9 @@ For more information on creating and configuring Service Accounts, please see th
   <tbody>
     <tr id="cancelEntitlementsPlansButton">
       <td>
-        <div class="button"></div>
+        <div class="button"></div> 
+        <br>
+        <input id="cancelImmediately" type="checkbox" checked>&nbsp;&nbsp;Cancel immediately</input>
       </td>
       <td>
         <p>Use the Cancellation API's <a href="https://developers.google.com/news/reader-revenue/monetization/sell/cancel-entitlements"><code>entitlementsPlans</code></a> endpoint to cancel an entitlement for a given <code>readerId</code> and <code>entitlementsPlansId</code>.</p>

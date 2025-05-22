@@ -20,8 +20,17 @@ import {
 } from './cancellation-api-methods.js';
 import {insertHighlightedJson, Loader} from './utils.js';
 
-let readerId, orderId, entitlementsPlanId = '';
+// global variables for the input elements
+let orderIdInputEl, publicationIdInputEl, readerIdInputEl, entitlementsPlansIdInputEl;
 let publicationId = 'process.env.PUBLICATION_ID';
+
+/* wait for the inputs to be rendered*/
+window.onload = (event) =>{
+  orderIdInputEl = document.getElementById('orderId');
+  publicationIdInputEl = document.getElementById('publicationId');
+  readerIdInputEl = document.getElementById('readerId');
+  entitlementsPlansIdInputEl = document.getElementById('entitlementsPlansId');
+};
 
 /**
  * renderPublicationIdForm
@@ -40,10 +49,8 @@ function renderPublicationIdForm(selector) {
 
   // Use the form input to update publicationId
   input.onchange = (event)=>{
-    publicationId = event.target.value;
-    console.log(`publicationId updated to ${publicationId}`);
-    handleCancelButtonAvailability();
-    handleRefundButtonAvailability();
+    handleCancelButtonAvailability(publicationIdInputEl.value, readerIdInputEl.value, entitlementsPlansIdInputEl.value);
+    handleRefundButtonAvailability(publicationIdInputEl.value, readerIdInputEl.value, orderIdInputEl.value);
   };
   document.querySelector(selector).appendChild(form);
 }
@@ -63,10 +70,8 @@ function renderReaderIdForm(selector) {
 
   // Use the form input to update readerId
   input.onchange = (event)=>{
-    readerId = event.target.value;
-    console.log(`reader_id updated to ${readerId}`);
-    handleCancelButtonAvailability();
-    handleRefundButtonAvailability();
+    handleCancelButtonAvailability(publicationIdInputEl.value, readerIdInputEl.value, entitlementsPlansIdInputEl.value);
+    handleRefundButtonAvailability(publicationIdInputEl.value, readerIdInputEl.value, orderIdInputEl.value);
   };
   document.querySelector(selector).appendChild(form);
 }
@@ -84,8 +89,7 @@ function renderEntitlementsPlanIdForm(selector) {
   form.appendChild(input);
 
   input.onchange = (event)=>{
-    entitlementsPlanId = event.target.value;
-    handleCancelButtonAvailability();
+    handleCancelButtonAvailability(publicationIdInputEl.value, readerIdInputEl.value, entitlementsPlansIdInputEl.value); 
   };
   document.querySelector(selector).appendChild(form);
 }
@@ -95,16 +99,15 @@ function renderEntitlementsPlanIdForm(selector) {
  */
 function renderOrderIdForm(selector) {
   const input = document.createElement('input');
-  input.setAttribute('placeholder', 'Paste entitlementsPlansId here');
-  input.setAttribute('id', 'entitlementsPlansId');
+  input.setAttribute('placeholder', 'Paste orderId here');
+  input.setAttribute('id', 'orderId');
   input.setAttribute('class', 'id-input');
 
   const form = document.createElement('form');
   form.appendChild(input);
   input.onchange = (event)=>{
-    orderId = event.target.value;
-    handleRefundButtonAvailability();
-  };
+    handleRefundButtonAvailability(publicationIdInputEl.value, readerIdInputEl.value, orderIdInputEl.value);
+   };
   document.querySelector(selector).appendChild(form);
 }
 
@@ -125,7 +128,11 @@ function renderCancelEntitlementsPlansButton(selector) {
     const loader = new Loader(loaderOutput);
     loader.start();
     const entitlementsplans =
-        await cancelEntitlementsPlans(publicationId, readerId, entitlementsPlanId);
+        await cancelEntitlementsPlans(
+          publicationIdInputEl.value, 
+          readerIdInputEl.value, 
+          entitlementsPlansIdInputEl.value,
+          !!document.getElementById('cancelImmediately').checked);
     loader.stop();
     insertHighlightedJson(
         '#APIOutput', entitlementsplans, 'Cancelled entitlementsplans for the given <code>planId</code>');
@@ -149,7 +156,11 @@ function renderRefundOrderButton(selector) {
     document.querySelector('#APIOutput').append(loaderOutput);
     const loader = new Loader(loaderOutput);
     loader.start();
-    const readerData = await refundOrders(publicationId, readerId, orderId);
+    const readerData = await refundOrders(
+      publicationIdInputEl.value, 
+      readerIdInputEl.value, 
+      orderIdInputEl.value,
+    );
     loader.stop();
     insertHighlightedJson(
         '#APIOutput', readerData, 'Refunded order data for given <code>orderId</code>');
@@ -159,9 +170,9 @@ function renderRefundOrderButton(selector) {
 }
 
 // Set the availability of the cancel button
-function handleCancelButtonAvailability(){
+function handleCancelButtonAvailability(publicationId, readerId, entitlementsPlansId){
   const button = document.querySelector('#cancelButton');
-  if(!publicationId || !readerId || !entitlementsPlanId) {
+  if(!publicationId || !readerId || !entitlementsPlansId) {
     button.setAttribute('disabled','true');
   } else {
     button.removeAttribute('disabled');
@@ -169,7 +180,7 @@ function handleCancelButtonAvailability(){
 }
 
 // Set the availability of the refund button
-function handleRefundButtonAvailability(){
+function handleRefundButtonAvailability(publicationId, readerId, orderId){
   const button = document.querySelector('#refundButton');
   if(!publicationId || !readerId || !orderId) {
     button.setAttribute('disabled','true');
@@ -181,9 +192,10 @@ function handleRefundButtonAvailability(){
 export {
   renderCancelEntitlementsPlansButton,
   renderRefundOrderButton,
-  
   renderReaderIdForm,
   renderPublicationIdForm,
   renderEntitlementsPlanIdForm,
-  renderOrderIdForm
+  renderOrderIdForm,
+  handleRefundButtonAvailability,
+  handleCancelButtonAvailability
 };
