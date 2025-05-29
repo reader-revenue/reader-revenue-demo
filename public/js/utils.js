@@ -196,6 +196,106 @@ class Loader {
   }
 }
 
+/**
+ * @param {string=} initialValue
+ * @param {string=} id
+ * @param {string=} className
+ * @param {string=} placeHolder
+ * @param {boolean=} shouldInputEnabled
+ * @param {function?} onUpdateCallback
+ * @returns {Element}
+ */
+function createInput(initialValue = '', id = '', className = '', placeHolder = '', shouldInputEnabled = true,onUpdateCallback = null) {
+  const input = document.createElement('input');
+  input.setAttribute('value', initialValue);
+  if(id){
+    input.setAttribute('id', id);
+  }
+  if(className){
+    input.setAttribute('class', className);
+  }
+  if(placeHolder){
+    input.setAttribute('placeholder', placeHolder);
+  }
+  if(!shouldInputEnabled){
+    input.setAttribute('disabled', true);
+  }
+  if(onUpdateCallback){
+    input.onchange = (event) => onUpdateCallback(event.target.value)
+  }
+  return input;
+}
+
+/**
+ * create a header row element for a two column table
+ * @returns {Element}
+ */
+function createHeaderRow(col1HeaderText, col2HeaderText){
+  const headerRow = document.createElement('div');
+  headerRow.setAttribute('class', 'header-row');
+  const col1Header = document.createElement('div');
+  col1Header.innerText = col1HeaderText;
+  const col2Header = document.createElement('div');
+  col2Header.innerText = col2HeaderText;
+  headerRow.appendChild(col1Header);
+  headerRow.appendChild(col2Header);  
+  return headerRow;
+}
+
+/**
+ * @param {string} className
+ * @param {Element[]} childElements
+ * @returns {Element}
+ */
+function createRow(className, childElements){
+  const row = document.createElement('div');
+  if(className){
+    row.classList.add(className);
+  }
+  childElements.forEach(element =>{
+    row.appendChild(element); 
+  })
+  return row;
+}
+
+/**
+ * @param {string=} buttonText
+ * @param {string=} id
+ * @param {Array=} classNames
+ * @param {boolean=} shouldButtonEnabled
+ * @param {function} callback
+ * @returns {Element}
+ */
+function createButton(buttonText='', id = '', classNames = [], shouldButtonEnabled=true, callback){
+  const button = document.createElement('button');
+  button.innerText = buttonText;
+  if(id){
+    button.setAttribute('id', id);
+  }
+  if(classNames.length > 0){
+    classNames.forEach((clazz) => button.classList.add(clazz));
+  }
+  if(!shouldButtonEnabled){
+    button.disabled = true;
+  }
+  if(callback){
+    button.onclick = (event) => callback(event);
+  }
+  return button;
+}
+
+/**
+ * @param {Element[]} childElements
+ * @returns {Element}
+ */
+function createForm(childElements){
+  const form = document.createElement('form');
+  childElements.forEach(element =>{
+    form.appendChild(element); 
+  })
+  return form;
+}
+
 export {
   generateHighlightedJson,
   insertHighlightedJson,
@@ -203,4 +303,9 @@ export {
   parseJwtHeader,
   redirect,
   Loader,
+  createInput,
+  createHeaderRow,
+  createRow,
+  createButton,
+  createForm
 };

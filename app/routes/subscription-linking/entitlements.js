@@ -60,5 +60,5 @@ function oneMonthFromNow() {
   }
   
   export {
-    basicEntitlement, premiumEntitlement, allEntitlements, noEntitlements
+    basicEntitlement, premiumEntitlement, allEntitlements, noEntitlements, oneMonthFromNow
   }
