@@ -36,6 +36,7 @@ steps:
         sed -i "s/##OAUTH_CLIENT_ID##/${_OAUTH_CLIENT_ID}/g" app.yaml
         sed -i "s/##OAUTH_CLIENT_SECRET##/${_OAUTH_CLIENT_SECRET}/g" app.yaml
         sed -i "s/##PUBLICATION_ID##/${_PUBLICATION_ID}/g" app.yaml
+        sed -i "s/##PUBLICATION_ID_SL_BUNDLE##/${_PUBLICATION_ID_SL_BUNDLE}/g" app.yaml
         sed -i "s/##CTA_CONFIG##/${_CTA_CONFIG}/g" app.yaml
         sed -i "s/##CTA_CONFIG_BASE64##/${_CTA_CONFIG_BASE64}/g" app.yaml
         sed -i "s/##SWG_SKU##/${_SWG_SKU}/g" app.yaml

@@ -20,6 +20,7 @@
   font-weight: 300;
   src: local("Open Sans"), local("OpenSans"), url(https://fonts.gstatic.com/s/productsans/v5/HYvgU2fE2nRJvZ5JFAumwegdm0LZdjqr5-oayXSOefg.woff2) format("woff2");
 }
+
 html, body {
   font: 300 16px/24px "Product Sans", "Roboto", "Noto Sans", "Noto Sans JP", "Noto Sans KR", "Noto Naskh Arabic", "Noto Sans Thai", "Noto Sans Hebrew", "Noto Sans Bengali", "sans-serif";
   background-color: #e8eaed;
@@ -441,4 +442,41 @@ pre code.hljs {
 #paymentResponse>textarea, #paymentResponse>button {
   display:block;
   margin-bottom:5px;
+}
+
+.id-input {
+  width: 400px;
+}
+
+/*checkbox to toggle cancel a plan immediately*/
+#cancelImmediately {
+  transform: scale(1.5);
+}
+
+/*cancellable plan table*/
+#planTable {
+  border: 1px solid black;
+}
+
+#planTableHead {
+  background-color: #2c5e77;
+  color: #fff;
+}
+
+#planTableBody {
+  background-color: #e4f0f5;
+}
+
+/*Subscription Linking ppid / publication id input table*/
+.input-row {
+  display : flex;
+  gap : 10px;
+  margin-bottom : 10px;
+}
+
+.header-row {
+  display : flex;
+  gap : 80px;
+  font-weight : bold;
+  margin-bottom : 5px;
 }

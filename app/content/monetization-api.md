@@ -114,5 +114,4 @@ const base = `publications/${process.env.PUBLICATION_ID}`;
 const endpoint = `readers/${readerId}`;
 const name = `${base}/${endpoint}`;
 const reader = await client.publications.readers.get({name});
-
 ```
