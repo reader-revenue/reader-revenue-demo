@@ -442,3 +442,18 @@ pre code.hljs {
   display:block;
   margin-bottom:5px;
 }
+
+/*cancellable plan table*/
+#slBundleTableHead {
+  background-color: #2c5e77;
+  color: #fff;
+}
+#slBundleTableBody {
+  background-color: #e4f0f5;
+}
+td {
+  border: 2px solid black;
+}
+th {
+  width: 200px;
+}
