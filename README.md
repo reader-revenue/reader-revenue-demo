@@ -54,6 +54,7 @@ substitutions can occur at build-time:
 -   `OAUTH_CLIENT_ID` - Useful for authorized js origins
 -   `OAUTH_CLIENT_SECRET` - Useful for authenticated api calls
 -   `PUBLICATION_ID` - Used in client- and server-side code
+-   `PUBLICATION_ID_SL_BUNDLE` - Used in the demo for bundling Subscription Linking as an additional publication to link, in addition to `PUBLICATION_ID`.
 -   `SERVICE_ACCOUNT` - Specify a service account for server-side access
 -   `SERVICE_NAME` - The name of the deployed instance in App Engine
 -   `CTA_CONFIG` - CTA configuration object. Used in cta-methods.js.

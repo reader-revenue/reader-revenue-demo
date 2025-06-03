@@ -31,7 +31,7 @@
     "redirect-ssl": "^3.0.0"
   },
   "engines": {
-    "node": "18.x"
+    "node": "20.x"
   },
   "repository": {
     "url": "https://github.com/reader-revenue/reader-revenue-demo"
