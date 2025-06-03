@@ -15,6 +15,11 @@
  */
 
 import {
+  queryLocalEntitlementsPlans,
+  queryOrderData
+} from './monetization-api-methods.js';
+
+import {
   cancelEntitlementsPlans,
   refundOrders
 } from './cancellation-api-methods.js';
@@ -22,6 +27,43 @@ import {insertHighlightedJson, Loader, createInput, createForm, createButton} fr
 
 let readerId, orderId, entitlementsPlanId = '';
 let publicationId = 'process.env.PUBLICATION_ID';
+
+/** 
+ * Auto-filling readerId, publicationId, and entitlementsPlanId if readerId is stored in localstorage
+ */
+async function autoFillIds(){
+  if(localStorage.getItem('readerId')){
+    readerId = localStorage.getItem('readerId');
+    const entitlementsplans = await queryLocalEntitlementsPlans(publicationId, readerId);
+    // filterling out cancelled / to-be-cancelled entitlementsplans
+    const filteredPlans = entitlementsplans?.userEntitlementsPlans?.filter(plan => {
+      return plan.recurringPlanDetails.recurringPlanState != 'CANCELED' &&
+             plan.recurringPlanDetails.recurringPlanState != 'WAITING_TO_CANCEL';
+    });
+    if(filteredPlans?.length>0){
+      entitlementsPlanId = filteredPlans[0].planId;
+      orderId = filteredPlans[0].purchaseInfo.latestOrderId;   
+      showCancellablePlans(filteredPlans);
+    }
+  } 
+}
+
+/** 
+ * Showing cancellable plans 
+ * @param {Array} filteredPlans
+ */
+function showCancellablePlans(filteredPlans){
+  const planList = document.createElement('ul')
+  filteredPlans.map((plan)=> { 
+    const planItem = document.createElement('li')
+    planItem.innerHTML = `EntitlementsPlanID: ${plan.planId.bold()} (status: ${plan.recurringPlanDetails.recurringPlanState})`;
+    planList.appendChild(planItem);
+  });
+  const title = document.createElement('p');
+  title.innerText = 'Cancellable Plans';
+  title.appendChild(planList);
+  document.querySelector('#cancellablePlans').appendChild(title);
+}
 
 /**
  * renderPublicationIdForm
@@ -50,7 +92,7 @@ function renderPublicationIdForm(selector) {
  */
 function renderReaderIdForm(selector) {
   const input = createInput(
-    '', 
+    readerId, 
     'readerId', 
     'id-input', 
     'Paste readerId here',
@@ -69,7 +111,7 @@ function renderReaderIdForm(selector) {
  */
 function renderEntitlementsPlanIdForm(selector) {
   const input = createInput(
-    '', 
+    entitlementsPlanId, 
     'entitlementsPlansId', 
     'id-input',
     'Paste readerId here',
@@ -87,7 +129,7 @@ function renderEntitlementsPlanIdForm(selector) {
  */
 function renderOrderIdForm(selector) {
   const input = createInput(
-    '', 
+    orderId, 
     'orderId', 
     'id-input',
     'Paste orderId here',
@@ -106,14 +148,15 @@ function renderOrderIdForm(selector) {
  * @param {string} selector
  */
 function renderCancelEntitlementsPlansButton(selector) {
-  const button = createButton('Cancel Entitlements Plans', 'cancelButton', 'btn-primary', true,
+  const shouldButtonEnabled = !!publicationId && !!readerId && !!entitlementsPlanId;
+  const button = createButton('Cancel Entitlements Plans', 'cancelButton', ['btn','btn-primary'], shouldButtonEnabled,
     async () => {
       const loaderOutput = document.createElement('div');
       document.querySelector('#APIOutput').append(loaderOutput);
       const loader = new Loader(loaderOutput);
       loader.start();
       const entitlementsplans =
-          await cancelEntitlementsPlans(publicationId, readerId, entitlementsPlanId);
+          await cancelEntitlementsPlans(publicationId, readerId, entitlementsPlanId, !!document.getElementById('cancelImmediately').checked);
       loader.stop();
       insertHighlightedJson(
           '#APIOutput', entitlementsplans, 'Cancelled entitlementsplans for the given <code>planId</code>');
@@ -127,7 +170,8 @@ function renderCancelEntitlementsPlansButton(selector) {
  * @param {string} selector
  */
 function renderRefundOrderButton(selector) {
-  const button = createButton('Refund Order', 'refundButton', 'btn-primary', true,
+  const shouldButtonEnabled = !!publicationId && !!readerId && !!orderId;
+  const button = createButton('Refund Order', 'refundButton', ['btn','btn-primary'], shouldButtonEnabled,
     async () => {
       const loaderOutput = document.createElement('div');
       document.querySelector('#APIOutput').append(loaderOutput);
@@ -165,9 +209,9 @@ function handleRefundButtonAvailability(){
 export {
   renderCancelEntitlementsPlansButton,
   renderRefundOrderButton,
-  
   renderReaderIdForm,
   renderPublicationIdForm,
   renderEntitlementsPlanIdForm,
-  renderOrderIdForm
+  renderOrderIdForm,
+  autoFillIds
 };

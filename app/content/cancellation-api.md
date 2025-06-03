@@ -16,7 +16,7 @@ For more information on creating and configuring Service Accounts, please see th
 <div id="readerIdForm"><code>readerId</code> input:</div>
 <div id="entitlementsPlansIdForm"><code>entitlementsPlansId</code> input:</div>
 <div id="orderIdForm"><code>orderId</code> input:</div>
-
+<div id="cancellablePlans"></div>
 <br>
 <table>
   <thead>
@@ -33,6 +33,8 @@ For more information on creating and configuring Service Accounts, please see th
     <tr id="cancelEntitlementsPlansButton">
       <td>
         <div class="button"></div>
+        <br>
+        <input id="cancelImmediately" type="checkbox" checked>&nbsp;&nbsp;Cancel immediately</input>
       </td>
       <td>
         <p>Use the Cancellation API's <a href="https://developers.google.com/news/reader-revenue/monetization/sell/cancel-entitlements"><code>entitlementsPlans</code></a> endpoint to cancel an entitlement for a given <code>readerId</code> and <code>entitlementsPlansId</code>.</p>
@@ -102,7 +104,11 @@ async refundOrders(){
   const readerId = ''; //TODO
   const orderId = ''; //TODO
   const name = `publications/${publicationId}/readers/${readerId}/orders/${orderId}`;
-  const response = await client.publications.readers.orders.refund({name});
+  const response = await client.publications.readers.orders.refund({
+    name,
+    // boolean value to decide cancel the subscription immediately, or wait for the end of the current cycle period
+    cancelImmediately: false
+  });
   return res.json(response.data);
 }
 

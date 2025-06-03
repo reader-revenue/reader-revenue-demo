@@ -223,38 +223,55 @@ function createInput(initialValue = '', id = '', className = '', placeHolder = '
 }
 
 /**
+ * create a header row element for a two column table
  * @returns {Element}
  */
-function createHeaderRow(){
+function createHeaderRow(col1HeaderText, col2HeaderText){
   const headerRow = document.createElement('div');
-  headerRow.setAttribute('class', 'sl-input-header-row');
-  const ppidHeader = document.createElement('div');
-  ppidHeader.innerText = 'PPID';
-  const pubIdHeader = document.createElement('div');
-  pubIdHeader.innerText = 'Publication ID';
-  headerRow.appendChild(pubIdHeader);
-  headerRow.appendChild(ppidHeader);  
+  headerRow.setAttribute('class', 'header-row');
+  const col1Header = document.createElement('div');
+  col1Header.innerText = col1HeaderText;
+  const col2Header = document.createElement('div');
+  col2Header.innerText = col2HeaderText;
+  headerRow.appendChild(col1Header);
+  headerRow.appendChild(col2Header);  
   return headerRow;
+}
+
+/**
+ * @param {string} className
+ * @param {Element[]} childElements
+ * @returns {Element}
+ */
+function createRow(className, childElements){
+  const row = document.createElement('div');
+  if(className){
+    row.classList.add(className);
+  }
+  childElements.forEach(element =>{
+    row.appendChild(element); 
+  })
+  return row;
 }
 
 /**
  * @param {string=} buttonText
  * @param {string=} id
- * @param {string=} className
- * @param {boolean=} disabled
+ * @param {Array=} classNames
+ * @param {boolean=} shouldButtonEnabled
  * @param {function} callback
  * @returns {Element}
  */
-function createButton(buttonText='', id = '', className = '', disabled=false, callback){
+function createButton(buttonText='', id = '', classNames = [], shouldButtonEnabled=true, callback){
   const button = document.createElement('button');
   button.innerText = buttonText;
   if(id){
     button.setAttribute('id', id);
   }
-  if(className){
-    button.setAttribute('class', className);
+  if(classNames.length > 0){
+    classNames.forEach((clazz) => button.classList.add(clazz));
   }
-  if(disabled){
+  if(!shouldButtonEnabled){
     button.disabled = true;
   }
   if(callback){
@@ -274,21 +291,6 @@ function createForm(childElements){
   })
   return form;
 }
-
-/**
- * @param {string} className
- * @param {Element[]} childElements
- * @returns {Element}
- */
-function createRow(className, childElements){
-  const row = document.createElement('div');
-  row.setAttribute('class', className);
-  childElements.forEach(element =>{
-    row.appendChild(element); 
-  })
-  return row;
-}
-
 
 export {
   generateHighlightedJson,

@@ -20,11 +20,12 @@ import {
   renderReaderIdForm,
   renderPublicationIdForm,
   renderEntitlementsPlanIdForm,
-  renderOrderIdForm
+  renderOrderIdForm,
+  autoFillIds
 } from './cancellation-api-buttons.js';
 
 document.addEventListener('DOMContentLoaded', async function() {
-
+  await autoFillIds();
   renderReaderIdForm('#readerIdForm');
   renderPublicationIdForm('#publicationIdForm');
   renderEntitlementsPlanIdForm('#entitlementsPlansIdForm');
