@@ -19,10 +19,10 @@ import {
   queryMemberData,
   queryOrderData
 } from './monetization-api-methods.js';
-import {insertHighlightedJson, Loader} from './utils.js';
+import {insertHighlightedJson, Loader, createInput, createForm, createButton} from './utils.js';
 
 // Global reader_id used by helper functions
-let readerId = undefined;
+let readerId = localStorage.getItem('readerId') || '';
 let publicationId = 'process.env.PUBLICATION_ID';
 
 /**
@@ -31,28 +31,16 @@ let publicationId = 'process.env.PUBLICATION_ID';
  * @param {string} selector
  */
 function renderReaderIdForm(selector) {
-  const input = document.createElement('input');
-  input.setAttribute('placeholder', 'Paste readerId here');
-  input.setAttribute('id', 'readerId');
-
-  const form = document.createElement('form');
-  form.appendChild(input);
-
-  // Use the form input to update readerId
-  input.onchange = (event)=>{
-    readerId = event.target.value;
-
-    // Set the availability of buttons based on readerId
-    document.querySelectorAll('.btn').forEach((button)=>{
-      if(readerId === '' || readerId === undefined) {
-        button.setAttribute('disabled','true');
-      } else {
-        button.removeAttribute('disabled');
-      }
-    })
-    console.log(`reader_id updated to ${readerId}`);
-  };
-
+  const readerIdInput = createInput(
+    readerId, 
+    'readerId', 
+    'id-input', 
+    'Paste readerId here', 
+    (newValue)=> {
+      readerId = newValue;
+      handleButtonAvailability();
+    });
+  const form = createForm([readerIdInput]);
   document.querySelector(selector).appendChild(form);
 }
 
@@ -62,30 +50,30 @@ function renderReaderIdForm(selector) {
  * @param {string} selector
  */
 function renderPublicationIdForm(selector) {
-  const input = document.createElement('input');
-  input.setAttribute('placeholder', 'Paste publicationId here');
-  input.setAttribute('id', 'publicationId');
-  input.setAttribute('value', 'process.env.PUBLICATION_ID');
-
-  const form = document.createElement('form');
-  form.appendChild(input);
-
-  // Use the form input to update publicationId
-  input.onchange = (event)=>{
-    publicationId = event.target.value;
-
-    // Set the availability of buttons based on publicationId
-    document.querySelectorAll('.btn').forEach((button)=>{
-      if(publicationId === '' || publicationId === undefined) {
-        button.setAttribute('disabled','true');
-      } else {
-        button.removeAttribute('disabled');
-      }
-    })
-    console.log(`publicationId updated to ${publicationId}`);
-  };
-
+  const publicationIdInput = createInput(
+    publicationId, 
+    'publicationId', 
+    'id-input', 
+    'Paste publicationId here', 
+    (newValue)=> {
+      publicationId = newValue;
+      handleButtonAvailability();
+    });
+  const form = createForm([publicationIdInput]);
   document.querySelector(selector).appendChild(form);
+}
+
+/**
+ * check if buttons should be enabled
+ */
+function handleButtonAvailability(){
+  document.querySelectorAll('.btn').forEach((button)=>{
+    if(!publicationId || !readerId) {
+      button.setAttribute('disabled','true');
+    } else {
+      button.removeAttribute('disabled');
+    }
+  });
 }
 
 /**
@@ -94,10 +82,7 @@ function renderPublicationIdForm(selector) {
  * @param {string} selector
  */
 function renderFetchEntitlementsPlansButton(selector) {
-  const button = document.createElement('button');
-  button.classList.add('btn', 'btn-primary');
-  button.setAttribute('disabled','true');
-  button.onclick = async () => {
+  const button = createButton('Query entitlement plans', '', ['btn', 'btn-primary'], !!readerId, async() =>{
     const loaderOutput = document.createElement('div');
     document.querySelector('#APIOutput').append(loaderOutput);
     const loader = new Loader(loaderOutput);
@@ -107,8 +92,7 @@ function renderFetchEntitlementsPlansButton(selector) {
     loader.stop();
     insertHighlightedJson(
         '#APIOutput', entitlementsplans, 'Manually queried entitlementsplans for the given <code>readerId</code>');
-  };
-  button.innerText = 'Query entitlement plans';
+  });
   document.querySelector(selector).appendChild(button);
 }
 
@@ -118,20 +102,18 @@ function renderFetchEntitlementsPlansButton(selector) {
  * @param {string} selector
  */
 function renderFetchMemberButton(selector) {
-  const button = document.createElement('button');
-  button.classList.add('btn', 'btn-primary');
-  button.setAttribute('disabled','true');
-  button.onclick = async () => {
-    const loaderOutput = document.createElement('div');
-    document.querySelector('#APIOutput').append(loaderOutput);
-    const loader = new Loader(loaderOutput);
-    loader.start();
-    const readerData = await queryMemberData(publicationId, readerId);
-    loader.stop();
-    insertHighlightedJson(
-        '#APIOutput', readerData, 'Member data for given <code>readerId</code>');
-  };
-  button.innerText = 'Query member data';
+  const button = createButton('Query member data', '', ['btn', 'btn-primary'], !!readerId, async() =>{
+    button.classList.add('btn', 'btn-primary');
+    button.setAttribute('disabled','true');
+      const loaderOutput = document.createElement('div');
+      document.querySelector('#APIOutput').append(loaderOutput);
+      const loader = new Loader(loaderOutput);
+      loader.start();
+      const readerData = await queryMemberData(publicationId, readerId);
+      loader.stop();
+      insertHighlightedJson(
+          '#APIOutput', readerData, 'Member data for given <code>readerId</code>');
+  });
   document.querySelector(selector).appendChild(button);
 }
 
@@ -141,10 +123,7 @@ function renderFetchMemberButton(selector) {
  * @param {string} selector
  */
 function renderFetchOrderButton(selector) {
-  const button = document.createElement('button');
-  button.classList.add('btn', 'btn-primary');
-  button.setAttribute('disabled','true');
-  button.onclick = async () => {
+  const button = createButton('Query order data', '', ['btn', 'btn-primary'], !!readerId, async() =>{
     const loaderOutput = document.createElement('div');
     document.querySelector('#APIOutput').append(loaderOutput);
     const loader = new Loader(loaderOutput);
@@ -154,13 +133,11 @@ function renderFetchOrderButton(selector) {
       return plan.recurringPlanDetails.recurringPlanState != 'CANCELED'
     })
     const orderId = filteredPlans[0].purchaseInfo.latestOrderId;
-
     const readerData = await queryOrderData(publicationId, readerId, orderId);
     loader.stop();
     insertHighlightedJson(
         '#APIOutput', readerData, 'Order data for the given <code>readerId</code>\'s most recent order that is not canceled.');
-  };
-  button.innerText = 'Query order data';
+  });
   document.querySelector(selector).appendChild(button);
 }
 
