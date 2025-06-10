@@ -29,12 +29,19 @@ async function pollNotifications(pubSubVersion) {
       e => console.log(e));
 }
 
+function getMostRecentTimestamp(notifications) {
+  return notifications.pop().created
+}
+
 function scheduleNotifications() {
   const pubSubVersions = ['v1','v2'];
-  let currentNotifications = '';
 
   // loop through each pubSubVersion
   pubSubVersions.forEach((pubSubVersion)=>{
+
+    // placeholder to hold most recent timestamp
+    let savedRecentTimestamp = 0
+
     let emptyOutputPlaceHolder = null; 
     const loader = new Loader(
       document.getElementById(`notificationsLog-${pubSubVersion}`), 
@@ -51,8 +58,12 @@ function scheduleNotifications() {
     setInterval(async () => {
       // poll the backend for notifications for the current pubSubVersion.
       const notifications = await pollNotifications(pubSubVersion);
+
+      // find the created timestamp from the last notification
+      const mostRecentTimestamp = getMostRecentTimestamp(notifications);
+
       // check if notifications were received AND if they differ from the cached version.
-      if (notifications?.length > 0 && JSON.stringify(notifications) != currentNotifications) {
+      if (notifications?.length > 0 && savedRecentTimestamp != mostRecentTimestamp) {
         console.log(`new pub/sub messages, re-displaying for pubSubVersion ${pubSubVersion}`);
         // remove the placeholder output ([]) if it's already added  
         // emptyOutputPlaceHolder is non null if the loader's onTimeout callback is alraedy executed 
@@ -62,8 +73,10 @@ function scheduleNotifications() {
         }
         // display the new Pub/Sub notifications using syntax highlighting
         insertHighlightedJson(`#notificationsLog-${pubSubVersion}`, notifications, null, null, true);
-        // cache the current notifications to check and compare in the next interval
-        currentNotifications = JSON.stringify(notifications);
+        
+        // cache the current timestamp
+        savedRecentTimestamp = mostRecentTimestamp;
+
         // stop the loading indicator now that content is displayed.
         if(loader.isStopped===false) {
           loader.stop();
