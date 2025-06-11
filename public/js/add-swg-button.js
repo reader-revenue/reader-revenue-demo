@@ -96,7 +96,9 @@ function analyticsEventLogger(subs) {
   
     subscriptions.setOnPaymentResponse(async (paymentResponse) => {
       let response = await paymentResponse;
-      console.log(response);
+      console.log('paymentResponse :', response);
+      // caching readerId for Cancellation API & Monetization API demos
+      localStorage.setItem('readerId', response.entitlements.entitlements[0].readerId);
       await response.complete();
       console.log(
           'response and transaction is complete, launching entitlements flow');

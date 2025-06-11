@@ -196,6 +196,121 @@ class Loader {
   }
 }
 
+/**
+ * @param {object} [options={}] - An object containing configuration options for the input.
+ * @param {string?} [options.placeHolder] - The text place holder to display for the input.
+ * @param {string?} [options.id] - The ID attribute for the input.
+ * @param {string[]?} [options.classNames] - An array of class names to add to the input.
+ * @param {boolean?} [options.enable] - - If `false`, the input will be disabled (grayed out + readonly)
+ * @param {function(Event)?: void} [options.callback] - A callback function to execute when the input value is changed.
+ * The function receives the updated value t as its argument.
+ * @returns {Element}
+ */
+function createInput(options = {}) {
+  const input = document.createElement('input');
+  Object.keys(options).forEach(key =>{
+    switch(key){
+      case 'initialValue':
+        input.setAttribute('value', options[key]);
+        break;
+      case 'id':
+        input.setAttribute('id', options[key]);
+        break;
+      case 'classNames':
+        options[key].forEach((clazz) => input.classList.add(clazz));
+        break;
+      case 'placeHolder':
+        input.setAttribute('placeholder', options[key]);
+        break;
+      case 'disable':
+        input.disabled = options[key];
+        break;
+      case 'callback':
+        input.onchange = (event) => options[key](event.target.value);
+        break;
+    } 
+  });
+  return input;
+}
+
+/**
+ * create a header row element for a table
+ * @param {string[]} headerTexts the number of the column depends on the array length
+ * @returns {Element}
+ */
+function createHeaderRow(headerTexts){
+  const headerRow = document.createElement('div');
+  headerRow.setAttribute('class', 'header-row');
+  headerTexts.forEach(headerText=>{
+    const colHeader = document.createElement('div');
+    colHeader.innerText = headerText;    
+    headerRow.appendChild(colHeader);
+  })
+  return headerRow;
+}
+
+/**
+ * @param {string} className
+ * @param {Element[]} childElements
+ * @returns {Element}
+ */
+function createRow(className, childElements){
+  const row = document.createElement('div');
+  if(className){
+    row.classList.add(className);
+  }
+  childElements.forEach(element =>{
+    row.appendChild(element); 
+  })
+  return row;
+}
+
+/**
+ * @param {object} [options={}] - An object containing configuration options for the button.
+ * @param {string?} [options.buttonText] - The text content to display inside the button.
+ * @param {string?} [options.id] - The ID attribute for the button.
+ * @param {string[]?} [options.classNames=[]] - An array of class names to add to the button.
+ * @param {boolean?} [options.enable] - If `false`, the button will be disabled.
+ * @param {function(Event)?: void} [options.callback] - A callback function to execute when the button is clicked.
+ * The function receives the click `Event` object as its argument.
+ * @returns {Element}
+ */
+function createButton(options={}){
+  const button = document.createElement('button');
+  Object.keys(options).forEach(key =>{
+    switch(key){
+      case 'buttonText':
+        button.innerText = options[key];
+        break;
+      case 'id':
+        button.setAttribute('id', options[key]);
+        break;
+      case 'classNames':
+        options[key].forEach((clazz) => button.classList.add(clazz));
+        break;
+      case 'disable':
+        button.disabled = options[key];
+        break;
+      case 'callback':
+        button.onclick = (event) => options[key](event);
+        break;
+    }    
+  });
+  return button;
+}
+
+/**
+ * @param {Element[]} childElements
+ * @returns {Element}
+ */
+function createForm(childElements){
+  const form = document.createElement('form');
+  childElements.forEach(element =>{
+    form.appendChild(element); 
+  })
+  return form;
+}
+
 export {
   generateHighlightedJson,
   insertHighlightedJson,
@@ -203,4 +318,9 @@ export {
   parseJwtHeader,
   redirect,
   Loader,
+  createInput,
+  createHeaderRow,
+  createRow,
+  createButton,
+  createForm
 };
