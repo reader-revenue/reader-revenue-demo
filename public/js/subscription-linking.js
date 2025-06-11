@@ -19,16 +19,19 @@ import hljs from 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/es/
 import {Loader, createInput, createButton, createForm, createRow, createHeaderRow} from './utils.js';
 import { AnalyticsEventHandler } from './subscription-linking-event-handler.js';
 
+/* Glocal Constants */
+const PUB_ID_1 = 'process.env.PUBLICATION_ID';
+const PUB_ID_2 = 'process.env.PUBLICATION_ID_SL_BUNDLE';
+/* Glocal variables. The ppids change based on the user input */
 let ppid1 = randomPpid();
 let ppid2 = randomPpid();
-let pubId1 = 'process.env.PUBLICATION_ID';
-let pubId2 = 'process.env.PUBLICATION_ID_SL_BUNDLE';
 
 /**
  * linkSubscription
  * Initiates a linked subscription
- * @param {number} {ppid}
- */
+ * @param {number} ppid
+ * @param {object} eventHandler
+*/
 function linkSubscription(ppid, eventHandler) {
   self.SWG.push(async (subscriptions) => {
       try {
@@ -44,17 +47,19 @@ function linkSubscription(ppid, eventHandler) {
 
 /**
  * linkSubscriptions: link multiple publications
- * @param {array} 
- */
+ * @param {{publicationId: string, ppid: string}[]} slDataArr 
+ *  An array containing data for the subscriptions to be linked.
+ *  It is expected to contain exactly two element in the array
+ * @param {object} eventHandler
+*/
 function linkSubscriptions(slDataArr, eventHandler) {
-  console.log('linkSubscriptions ', slDataArr);
   self.SWG.push(async (subscriptions) => {
       try {
         const result = await subscriptions.linkSubscriptions({linkTo: [
             { publicationId: slDataArr[0].publicationId, publisherProvidedId: slDataArr[0].ppid },
             { publicationId: slDataArr[1].publicationId, publisherProvidedId: slDataArr[1].ppid }
         ]});
-        console.log('bundle result - ', result);
+        console.log('Subscription Linking bundle result - ', result);
         eventHandler.logCallback(result);
       } catch(e) {
         console.log(e);
@@ -84,7 +89,7 @@ function createSingleSLForm(eventHandler) {
       linkSubscription(ppid, eventHandler)
     }
   });
-  const inputPubId = createInput({'initialValue': pubId1, 'id': 'single-sl-pubid-input', 'disable':true});
+  const inputPubId = createInput({'initialValue': PUB_ID_1, 'id': 'single-sl-pubid-input', 'disable':true});
   const ppidInput = createInput({'initialValue': ppid, 'id': 'ppid-input', 
     'callback': (newValue)=> {
       ppid = newValue;
@@ -108,15 +113,15 @@ function createBundleSLForm(eventHandler) {
     'callback' : (event)=>{
       event.preventDefault();
       const slDataArr = [
-        {'publicationId':pubId1, 'ppid': ppid1},
-        {'publicationId':pubId2, 'ppid': ppid2},
+        {'publicationId':PUB_ID_1, 'ppid': ppid1},
+        {'publicationId':PUB_ID_2, 'ppid': ppid2},
       ];
       linkSubscriptions(slDataArr, eventHandler);
     }
   });
   // Publication ID input. The default value is env.PUBLICATION_ID
-  const inputPubId1 = createInput({'initialValue': pubId1, 'id':'bundle-pubid-input-1','disable': true});
-  const inputPubId2 = createInput({'initialValue': pubId2, 'id':'bundle-pubid-input-2','disable': true});
+  const inputPubId1 = createInput({'initialValue': PUB_ID_1, 'id':'bundle-pubid-input-1','disable': true});
+  const inputPubId2 = createInput({'initialValue': PUB_ID_2, 'id':'bundle-pubid-input-2','disable': true});
   // PPID ID input. The default value is ppid1, which has been randomly created by randomPpid()
   const inputPPID1 = createInput({'initialValue': ppid1, 'id':'bundle-ppid-input-1',
     'callback': (newValue)=> {
@@ -146,7 +151,6 @@ function createBundleSLForm(eventHandler) {
  */
 function createQueryEntitlementsForm() {
   let ppid = ppid1;
-  let pubId = pubId1; // env.PUBLICATION_ID
   const output = document.createElement('pre');
   const queryEntitlementsButton = createButton({
     'buttonText': 'Query Entitlements for PPID',
@@ -156,7 +160,7 @@ function createQueryEntitlementsForm() {
       code.classList.add('hljs', 'language-json');  
       const loader = new Loader(output);
       loader.start();
-      const entitlements = await queryEntitlementsForPpid(ppid, pubId);
+      const entitlements = await queryEntitlementsForPpid(ppid, PUB_ID_1);
       const textString = JSON.stringify(entitlements, null, 2);
       const formattedTextString = hljs.highlight(textString, {language: 'json'})
       const textNodeFromString = document
@@ -168,7 +172,7 @@ function createQueryEntitlementsForm() {
     }
   });
   // Publication ID input. The default value is env.PUBLICATION_ID
-  const pubIdInput = createInput({'initialValue': pubId1, 'id':'pubid-query', 'disable': true});
+  const pubIdInput = createInput({'initialValue': PUB_ID_1, 'id':'pubid-query', 'disable': true});
   // PPID ID input. The default value is ppid1, which has been randomly created by randomPpid()
   const ppidInput = createInput({'initialValue': ppid1, 'id':'ppid-query',
     'callback': (newValue)=> {
@@ -191,7 +195,6 @@ function createQueryEntitlementsForm() {
  */
 function createUpdateEntitlementsForm() {
   let ppid = ppid1;
-  let pubId = pubId1; // env.PUBLICATION_ID
   const output = document.createElement('pre');
   const updateEntitlementsButton = createButton({'buttonText': 'Update Entitlements for PPID', 
     'callback': async (event) => {
@@ -200,7 +203,7 @@ function createUpdateEntitlementsForm() {
       code.classList.add('hljs', 'language-json');
       const loader = new Loader(output);
       loader.start();
-      const entitlements = await updateEntitlementsForPpid(ppid, pubId);
+      const entitlements = await updateEntitlementsForPpid(ppid, PUB_ID_1);
       const textString = JSON.stringify(entitlements, null, 2);
       const formattedTextString = hljs.highlight(textString, {language: 'json'})
       const textNodeFromString = document.createRange().createContextualFragment(
@@ -211,7 +214,7 @@ function createUpdateEntitlementsForm() {
     }
   });
   // Publication ID input. The default value is env.PUBLICATION_ID
-  const pubIdInput = createInput({'initialValue': pubId1, id: 'pubid-query', 'disable': true});
+  const pubIdInput = createInput({'initialValue': PUB_ID_1, id: 'pubid-query', 'disable': true});
   // PPID ID input. The default value is ppid1, which has been randomly created by randomPpid()
   const ppidInput = createInput({'initialValue': ppid1, 'id': 'ppid-query', 
     'callback' :(newValue) => {
@@ -283,6 +286,9 @@ function analyticsEventLogger(subs, eventHandler) {
   });
 }
 
+/**
+ * Create and render forms on DOMContentLoaded
+ */
 document.addEventListener('DOMContentLoaded', function () {
   const eventHandler = new AnalyticsEventHandler();
   createSingleSLForm(eventHandler);
