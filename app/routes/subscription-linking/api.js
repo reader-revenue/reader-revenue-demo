@@ -73,8 +73,10 @@ router.put('/readers/:publicationId/:ppid/entitlements', async (req, res, next) 
   try {
     const publicationId = req.params.publicationId;
     const ppid = req.params.ppid
-    const requestBody = basicEntitlement()
-
+    const requestBody = basicEntitlement(publicationId);
+    console.log(publicationId);
+    console.log(ppid);
+    console.log(requestBody);
     const update = await client.publications.readers.updateEntitlements({
       name: `publications/${publicationId}/readers/${ppid}/entitlements`,
       requestBody

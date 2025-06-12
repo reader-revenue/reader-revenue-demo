@@ -19,12 +19,23 @@ import hljs from 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/es/
 import {Loader, createInput, createButton, createForm, createRow, createHeaderRow} from './utils.js';
 import { AnalyticsEventHandler } from './subscription-linking-event-handler.js';
 
-/* Glocal Constants */
-const PUB_ID_1 = 'process.env.PUBLICATION_ID';
-const PUB_ID_2 = 'process.env.PUBLICATION_ID_SL_BUNDLE';
-/* Glocal variables. The ppids change based on the user input */
-let ppid1 = randomPpid();
-let ppid2 = randomPpid();
+/* Global variable */
+const subscriptionLinkingData = {
+  single: {
+    publicationId: 'process.env.PUBLICATION_ID',
+    ppid: randomPpid()
+  },
+  bundle: {
+    pub1: {
+      publicationId: 'process.env.PUBLICATION_ID',
+      ppid: randomPpid()
+    },
+    pub2: {
+      publicationId: 'process.env.PUBLICATION_ID_SL_BUNDLE',
+      ppid: randomPpid()
+    }
+  }
+};
 
 /**
  * linkSubscription
@@ -54,16 +65,19 @@ function linkSubscription(ppid, eventHandler) {
 */
 function linkSubscriptions(slDataArr, eventHandler) {
   self.SWG.push(async (subscriptions) => {
-      try {
-        const result = await subscriptions.linkSubscriptions({linkTo: [
-            { publicationId: slDataArr[0].publicationId, publisherProvidedId: slDataArr[0].ppid },
-            { publicationId: slDataArr[1].publicationId, publisherProvidedId: slDataArr[1].ppid }
-        ]});
-        console.log('Subscription Linking bundle result - ', result);
-        eventHandler.logCallback(result);
-      } catch(e) {
-        console.log(e);
-      }
+    const linkToPayload = slDataArr.map(sub => ({
+      publicationId: sub.publicationId.trim(),
+      publisherProvidedId: sub.ppid.trim()
+    }));      
+    try {
+      const result = await subscriptions.linkSubscriptions({
+        linkTo: linkToPayload
+      });
+      console.log('Subscription Linking bundle result - ', result);
+      eventHandler.logCallback(result);
+    } catch(e) {
+      console.log(e);
+    }
   });
 }
 
@@ -80,20 +94,24 @@ function randomPpid() {
  * createSingleSLForm()
  * Creates a form, and appends it to the DOM after #initiateLink
  */
-function createSingleSLForm(eventHandler) {
-  let ppid = ppid1;
+function createSingleSLForm(singleLinkData, eventHandler) {
   const button = createButton({
     'buttonText': 'Initiate Link',
     'callback' : (event)=>{
       event.preventDefault();
-      linkSubscription(ppid, eventHandler)
+      linkSubscription(singleLinkData.ppid, eventHandler)
     }
   });
-  const inputPubId = createInput({'initialValue': PUB_ID_1, 'id': 'single-sl-pubid-input', 'disable':true});
-  const ppidInput = createInput({'initialValue': ppid, 'id': 'ppid-input', 
+  const inputPubId = createInput({'initialValue': singleLinkData.publicationId, 'id': 'single-sl-pubid-input',
     'callback': (newValue)=> {
-      ppid = newValue;
-      button.disabled = !!ppid ? false : true;
+      singleLinkData.publicationId = newValue;
+      button.disabled = !!singleLinkData.publicationId ? false : true;
+    }
+  });
+  const ppidInput = createInput({'initialValue': singleLinkData.ppid, 'id': 'ppid-input', 
+    'callback': (newValue)=> {
+      singleLinkData.ppid = newValue;
+      button.disabled = !!singleLinkData.ppid ? false : true;
     }
   });
   const headerRow = createHeaderRow(['PublicationID', 'PPID']);
@@ -106,33 +124,43 @@ function createSingleSLForm(eventHandler) {
  * createBundleSLForm()
  * Creates a form, and appends it to the DOM after #initiateLink
  */
-function createBundleSLForm(eventHandler) {
+function createBundleSLForm(bundleLinkData, eventHandler) {
   // button to start the linking
   const button = createButton({
     'buttonText': 'Bundle Multiple Subscription Linking',
     'callback' : (event)=>{
       event.preventDefault();
       const slDataArr = [
-        {'publicationId':PUB_ID_1, 'ppid': ppid1},
-        {'publicationId':PUB_ID_2, 'ppid': ppid2},
+        {'publicationId':bundleLinkData.pub1.publicationId, 'ppid': bundleLinkData.pub1.ppid},
+        {'publicationId':bundleLinkData.pub2.publicationId, 'ppid': bundleLinkData.pub2.ppid},
       ];
       linkSubscriptions(slDataArr, eventHandler);
     }
   });
   // Publication ID input. The default value is env.PUBLICATION_ID
-  const inputPubId1 = createInput({'initialValue': PUB_ID_1, 'id':'bundle-pubid-input-1','disable': true});
-  const inputPubId2 = createInput({'initialValue': PUB_ID_2, 'id':'bundle-pubid-input-2','disable': true});
-  // PPID ID input. The default value is ppid1, which has been randomly created by randomPpid()
-  const inputPPID1 = createInput({'initialValue': ppid1, 'id':'bundle-ppid-input-1',
+  const inputPubId1 = createInput({'initialValue': bundleLinkData.pub1.publicationId, 'id':'bundle-pubid-input-1', 
     'callback': (newValue)=> {
-      ppid1 = newValue;
-      button.disabled = !!ppid1 ? false : true;
+      bundleLinkData.pub1.publicationId = newValue;
+      button.disabled = !!bundleLinkData.pub1.publicationId ? false : true;
     }
   });
-  const inputPPID2 = createInput({'initialValue': ppid2, 'id':'bundle-ppid-input-2',
+  const inputPubId2 = createInput({'initialValue': bundleLinkData.pub2.publicationId, 'id':'bundle-pubid-input-2',
+    'callback': (newValue)=> {  
+      bundleLinkData.pub2.publicationId = newValue;
+      button.disabled = !!bundleLinkData.pub2.publicationId ? false : true;
+    }
+  });
+  // PPID ID input. The default value is created by randomPpid()
+  const inputPPID1 = createInput({'initialValue': bundleLinkData.pub1.ppid, 'id':'bundle-ppid-input-1',
     'callback': (newValue)=> {
-      ppid2 = newValue;
-      button.disabled = newValue ? false : true;
+      bundleLinkData.pub1.ppid = newValue;
+      button.disabled = !!bundleLinkData.pub1.ppid ? false : true;
+    }
+  });
+  const inputPPID2 = createInput({'initialValue': bundleLinkData.pub2.ppid, 'id':'bundle-ppid-input-2',
+    'callback': (newValue)=> {
+      bundleLinkData.pub2.ppid = newValue;
+      button.disabled = bundleLinkData.pub2.ppid ? false : true;
     }
   });
   // Create containers for each row
@@ -149,8 +177,7 @@ function createBundleSLForm(eventHandler) {
  * Creates a form, and appends it to the DOM after #initiateLink.
  * Used for querying entitlements from the api
  */
-function createQueryEntitlementsForm() {
-  let ppid = ppid1;
+function createQueryEntitlementsForm(singleLinkData) {
   const output = document.createElement('pre');
   const queryEntitlementsButton = createButton({
     'buttonText': 'Query Entitlements for PPID',
@@ -160,7 +187,7 @@ function createQueryEntitlementsForm() {
       code.classList.add('hljs', 'language-json');  
       const loader = new Loader(output);
       loader.start();
-      const entitlements = await queryEntitlementsForPpid(ppid, PUB_ID_1);
+      const entitlements = await queryEntitlementsForPpid(singleLinkData.ppid, singleLinkData.publicationId);
       const textString = JSON.stringify(entitlements, null, 2);
       const formattedTextString = hljs.highlight(textString, {language: 'json'})
       const textNodeFromString = document
@@ -172,12 +199,17 @@ function createQueryEntitlementsForm() {
     }
   });
   // Publication ID input. The default value is env.PUBLICATION_ID
-  const pubIdInput = createInput({'initialValue': PUB_ID_1, 'id':'pubid-query', 'disable': true});
-  // PPID ID input. The default value is ppid1, which has been randomly created by randomPpid()
-  const ppidInput = createInput({'initialValue': ppid1, 'id':'ppid-query',
+  const pubIdInput = createInput({'initialValue': singleLinkData.publicationId, 'id':'pubid-query', 
     'callback': (newValue)=> {
-      ppid = newValue;
-      queryEntitlementsButton.disabled = newValue ? false : true;
+      singleLinkData.publicationId = newValue;
+      queryEntitlementsButton.disabled = !!singleLinkData.publicationId ? false : true;
+    }
+  }); 
+  // PPID ID input. The default value is randomly created by randomPpid()
+  const ppidInput = createInput({'initialValue': singleLinkData.ppid, 'id':'ppid-query',
+    'callback': (newValue)=> {
+      singleLinkData.ppid = newValue;
+      queryEntitlementsButton.disabled = !!singleLinkData.ppid ? false : true;
     }
   });
   // Set these tow inputs into a row
@@ -193,8 +225,7 @@ function createQueryEntitlementsForm() {
  * Creates a form, and appends it to the DOM after #initiateLink.
  * Used for querying entitlements from the api
  */
-function createUpdateEntitlementsForm() {
-  let ppid = ppid1;
+function createUpdateEntitlementsForm(singleLinkData) {
   const output = document.createElement('pre');
   const updateEntitlementsButton = createButton({'buttonText': 'Update Entitlements for PPID', 
     'callback': async (event) => {
@@ -203,7 +234,7 @@ function createUpdateEntitlementsForm() {
       code.classList.add('hljs', 'language-json');
       const loader = new Loader(output);
       loader.start();
-      const entitlements = await updateEntitlementsForPpid(ppid, PUB_ID_1);
+      const entitlements = await updateEntitlementsForPpid(singleLinkData.ppid, singleLinkData.publicationId);
       const textString = JSON.stringify(entitlements, null, 2);
       const formattedTextString = hljs.highlight(textString, {language: 'json'})
       const textNodeFromString = document.createRange().createContextualFragment(
@@ -214,12 +245,17 @@ function createUpdateEntitlementsForm() {
     }
   });
   // Publication ID input. The default value is env.PUBLICATION_ID
-  const pubIdInput = createInput({'initialValue': PUB_ID_1, id: 'pubid-query', 'disable': true});
-  // PPID ID input. The default value is ppid1, which has been randomly created by randomPpid()
-  const ppidInput = createInput({'initialValue': ppid1, 'id': 'ppid-query', 
+  const pubIdInput = createInput({'initialValue': singleLinkData.publicationId, id: 'pubid-query',  
+    'callback': (newValue)=> {
+      singleLinkData.publicationId = newValue;
+      queryEntitlementsButton.disabled = !!singleLinkData.publicationId ? false : true;
+    }
+  }); 
+  // PPID ID input. The default value is randomly created by randomPpid()
+  const ppidInput = createInput({'initialValue': singleLinkData.ppid, 'id': 'ppid-query',
     'callback' :(newValue) => {
-      ppid = newValue;
-      updateEntitlementsButton.disabled = newValue ? false : true;
+      singleLinkData.ppid = newValue;
+      updateEntitlementsButton.disabled = singleLinkData.ppid ? false : true;
     }
   });
   // Set these tow inputs into a row
@@ -269,11 +305,11 @@ async function updateEntitlementsForPpid(ppid, publicationId) {
 
 /**
  * analyticsEventLogger(subs)
- * @param {object} subs The subscription object from instantiating swg.js
+ * @param {object} subscription The subscription object from instantiating swg.js
  * Creates an eventManager that listens to events fired by swg.js.
  */
-function analyticsEventLogger(subs, eventHandler) {
-  subs.getEventManager().then(manager => {
+function analyticsEventLogger(subscription, eventHandler) {
+  subscription.getEventManager().then(manager => {
       manager.registerEventListener((event) => {
         eventHandler.logEvent(event);
         //intent.determination can be one of the following:
@@ -291,12 +327,11 @@ function analyticsEventLogger(subs, eventHandler) {
  */
 document.addEventListener('DOMContentLoaded', function () {
   const eventHandler = new AnalyticsEventHandler();
-  createSingleSLForm(eventHandler);
-  createBundleSLForm(eventHandler);
-  createQueryEntitlementsForm();
-  createUpdateEntitlementsForm();
+  createBundleSLForm(subscriptionLinkingData.bundle, eventHandler);
+  createQueryEntitlementsForm(subscriptionLinkingData.single);
+  createUpdateEntitlementsForm(subscriptionLinkingData.single);
   (self.SWG = self.SWG || []).push(subscriptions => {
-    subscriptions.init('process.env.PUBLICATION_ID');
     analyticsEventLogger(subscriptions, eventHandler);
+    createSingleSLForm(subscriptionLinkingData.single, eventHandler);
   });
 });

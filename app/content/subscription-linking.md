@@ -42,7 +42,7 @@ subscriptions.linkSubscriptions({linkTo: [
 
 ```html
 {
-  product_id: '{{env.PUBLICATION_ID}}:basic',
+  product_id: '{publicationId}:basic',
   subscription_token: 'abc1234',
   detail: 'This is our basic plan',
   expire_time: '{{oneMonthFromNow}}'

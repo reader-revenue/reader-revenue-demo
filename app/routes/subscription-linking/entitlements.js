@@ -35,13 +35,19 @@ function oneMonthFromNow() {
         expire_time: oneMonthFromNow()
       }
   
-  function basicEntitlement() {
+  function basicEntitlement(publicationId = null) {
+    if(publicationId){
+      basic.product_id = `${publicationId}:basic`
+    }
     return {
       entitlements: [basic]
     }
   }
   
-  function premiumEntitlement() {
+  function premiumEntitlement(publicationId = null) {
+    if(publicationId){
+      premium.product_id = `${publicationId}:premium`
+    }
     return {
       entitlements: [premium]
     }
