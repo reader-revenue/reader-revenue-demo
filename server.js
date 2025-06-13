@@ -65,9 +65,9 @@ app.use('/img', img);
 app.use('/js', js);
 app.use('/css', css);
 
-// redirect from the old Subscription Linking page path to the new one
+// redirecting old Subscription Linking demo url to the new one
 app.get('/subscription-linking/client-side', (req, res) => {
-  res.redirect('/subscription-linking');
+  res.redirect(301, '/subscription-linking');
 });
 
 // Boot the server

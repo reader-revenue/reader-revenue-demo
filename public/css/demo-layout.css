@@ -466,3 +466,17 @@ pre code.hljs {
 #planTableBody {
   background-color: #e4f0f5;
 }
+
+/*Subscription Linking ppid / publication id input table*/
+.input-row {
+  display : flex;
+  gap : 10px;
+  margin-bottom : 10px;
+}
+
+.header-row {
+  display : flex;
+  gap : 80px;
+  font-weight : bold;
+  margin-bottom : 5px;
+}

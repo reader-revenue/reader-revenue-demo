@@ -35,9 +35,9 @@ const storage = new Storage('subscription-linking');
 router.use(cors())
 
 // GetReader
-router.get('/readers/:ppid', async (req, res, next) => {
+router.get('/readers/:publicationId/:ppid', async (req, res, next) => {
   try {
-    const publicationId = process.env.PUBLICATION_ID;
+    const publicationId = req.params.publicationId;
     const ppid = req.params.ppid
 
     const reader = await client.publications.readers.get({
@@ -51,10 +51,11 @@ router.get('/readers/:ppid', async (req, res, next) => {
   }
 });
 
-router.get('/readers/:ppid/entitlements', async (req, res, next) => {
+// GetReaderEntitltements
+router.get('/readers/:publicationId/:ppid/entitlements', async (req, res, next) => {
   try {
-    const publicationId = process.env.PUBLICATION_ID;
-    const ppid = req.params.ppid
+    const publicationId = req.params.publicationId;
+    const ppid = req.params.ppid;
 
     const reader = await client.publications.readers.get({
       name: `publications/${publicationId}/readers/${ppid}/entitlements`,
@@ -67,13 +68,15 @@ router.get('/readers/:ppid/entitlements', async (req, res, next) => {
   }
 });
 
-router.put('/readers/:ppid/entitlements', async (req, res, next) => {
+// UpdateReaderEntitlements
+router.put('/readers/:publicationId/:ppid/entitlements', async (req, res, next) => {
   try {
-    const publicationId = process.env.PUBLICATION_ID
+    const publicationId = req.params.publicationId;
     const ppid = req.params.ppid
-
-    const requestBody = basicEntitlement()
-
+    const requestBody = basicEntitlement(publicationId);
+    console.log(publicationId);
+    console.log(ppid);
+    console.log(requestBody);
     const update = await client.publications.readers.updateEntitlements({
       name: `publications/${publicationId}/readers/${ppid}/entitlements`,
       requestBody
