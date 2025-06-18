@@ -42,11 +42,15 @@ async function handleRedirectFromOAuth(authorization_code) {
  */
 async function handleCachedCredentials() {
   console.log(getAuthzCred('refreshToken'));
-  const entitlements =
+  const result =
       await queryLocalEntitlements(getAuthzCred('accessToken'));
-
+  if(result.entitlements?.length > 0){
+    // if the user has any entitlements, store it in the local storage 
+    // so that the readerId can be automatically filled in the field for other demos (Monetization API, Cancellation API etc.)  
+    localStorage.setItem('readerId', result.entitlements[0].readerId);
+  }
   insertHighlightedJson(
-      '#GISOutput', entitlements, 'Entitlements from cached credentials');
+      '#GISOutput', result, 'Entitlements from cached credentials');
 
 }
 

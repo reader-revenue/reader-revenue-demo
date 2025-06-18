@@ -69,10 +69,15 @@ function renderFetchEntitlementsButton(selector) {
     document.querySelector('#GISOutput').append(loaderOutput);
     const loader = new Loader(loaderOutput);
     loader.start();
-    const entitlements = await queryLocalEntitlements(accessToken);
+    const result = await queryLocalEntitlements(accessToken);
+    if(result.entitlements?.length > 0){
+      // if the user has any entitlements, store it in the local storage 
+      // so that the readerId can be automatically filled in the field for other demos (Monetization API, Cancellation API etc.)  
+      localStorage.setItem('readerId', result.entitlements[0].readerId);
+    }
     loader.stop();
     insertHighlightedJson(
-        '#GISOutput', entitlements, 'Manually queried entitlements');
+        '#GISOutput', result, 'Manually queried entitlements');
   };
   button.innerText = 'Query entitlements';
   document.querySelector(selector).appendChild(button);

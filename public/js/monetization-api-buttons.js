@@ -21,7 +21,7 @@ import {
 } from './monetization-api-methods.js';
 import {insertHighlightedJson, Loader, createInput, createForm, createButton} from './utils.js';
 
-// Global reader_id used by helper functions
+// Global variables
 let readerId = localStorage.getItem('readerId') || '';
 let publicationId = 'process.env.PUBLICATION_ID';
 
@@ -31,15 +31,16 @@ let publicationId = 'process.env.PUBLICATION_ID';
  * @param {string} selector
  */
 function renderReaderIdForm(selector) {
-  const readerIdInput = createInput(
-    readerId, 
-    'readerId', 
-    'id-input', 
-    'Paste readerId here', 
-    (newValue)=> {
+  const readerIdInput = createInput({
+    'initialValue': readerId, 
+    'id': 'readerId', 
+    'classNames': ['id-input'], 
+    'placeHolder': 'Paste readerId here', 
+    'callback': (newValue)=> {
       readerId = newValue;
       handleButtonAvailability();
-    });
+    }
+  });
   const form = createForm([readerIdInput]);
   document.querySelector(selector).appendChild(form);
 }
@@ -50,15 +51,16 @@ function renderReaderIdForm(selector) {
  * @param {string} selector
  */
 function renderPublicationIdForm(selector) {
-  const publicationIdInput = createInput(
-    publicationId, 
-    'publicationId', 
-    'id-input', 
-    'Paste publicationId here', 
-    (newValue)=> {
+  const publicationIdInput = createInput({
+    'initialValue': publicationId, 
+    'id': 'publicationId', 
+    'classNames': ['id-input'], 
+    'placeHolder': 'Paste publicationId here', 
+    'callback': (newValue)=> {
       publicationId = newValue;
       handleButtonAvailability();
-    });
+    }
+  });
   const form = createForm([publicationIdInput]);
   document.querySelector(selector).appendChild(form);
 }
@@ -82,16 +84,21 @@ function handleButtonAvailability(){
  * @param {string} selector
  */
 function renderFetchEntitlementsPlansButton(selector) {
-  const button = createButton('Query entitlement plans', '', ['btn', 'btn-primary'], !!readerId, async() =>{
-    const loaderOutput = document.createElement('div');
-    document.querySelector('#APIOutput').append(loaderOutput);
-    const loader = new Loader(loaderOutput);
-    loader.start();
-    const entitlementsplans =
+  const button = createButton({
+    'buttonText':'Query entitlement plans', 
+    'classNames':['btn', 'btn-primary'], 
+    'disable': !readerId, 
+    'callback': async() =>{
+      const loaderOutput = document.createElement('div');
+      document.querySelector('#APIOutput').append(loaderOutput);
+      const loader = new Loader(loaderOutput);
+      loader.start();
+      const entitlementsplans =
         await queryLocalEntitlementsPlans(publicationId, readerId);
-    loader.stop();
-    insertHighlightedJson(
+      loader.stop();
+      insertHighlightedJson(
         '#APIOutput', entitlementsplans, 'Manually queried entitlementsplans for the given <code>readerId</code>');
+    }
   });
   document.querySelector(selector).appendChild(button);
 }
@@ -102,9 +109,13 @@ function renderFetchEntitlementsPlansButton(selector) {
  * @param {string} selector
  */
 function renderFetchMemberButton(selector) {
-  const button = createButton('Query member data', '', ['btn', 'btn-primary'], !!readerId, async() =>{
-    button.classList.add('btn', 'btn-primary');
-    button.setAttribute('disabled','true');
+  const button = createButton({
+    'buttonText':'Query member plans', 
+    'classNames':['btn', 'btn-primary'], 
+    'disable': !readerId, 
+    'callback': async() =>{ 
+      button.classList.add('btn', 'btn-primary');
+      button.setAttribute('disabled','true');
       const loaderOutput = document.createElement('div');
       document.querySelector('#APIOutput').append(loaderOutput);
       const loader = new Loader(loaderOutput);
@@ -113,6 +124,7 @@ function renderFetchMemberButton(selector) {
       loader.stop();
       insertHighlightedJson(
           '#APIOutput', readerData, 'Member data for given <code>readerId</code>');
+      }
   });
   document.querySelector(selector).appendChild(button);
 }
@@ -123,20 +135,25 @@ function renderFetchMemberButton(selector) {
  * @param {string} selector
  */
 function renderFetchOrderButton(selector) {
-  const button = createButton('Query order data', '', ['btn', 'btn-primary'], !!readerId, async() =>{
-    const loaderOutput = document.createElement('div');
-    document.querySelector('#APIOutput').append(loaderOutput);
-    const loader = new Loader(loaderOutput);
-    loader.start();
-    const entitlementsplans = await queryLocalEntitlementsPlans(publicationId, readerId);
-    const filteredPlans = entitlementsplans.userEntitlementsPlans.filter((plan)=>{
-      return plan.recurringPlanDetails.recurringPlanState != 'CANCELED'
-    })
-    const orderId = filteredPlans[0].purchaseInfo.latestOrderId;
-    const readerData = await queryOrderData(publicationId, readerId, orderId);
-    loader.stop();
-    insertHighlightedJson(
-        '#APIOutput', readerData, 'Order data for the given <code>readerId</code>\'s most recent order that is not canceled.');
+  const button = createButton({
+    'buttonText':'Query order plans', 
+    'classNames':['btn', 'btn-primary'], 
+    'disable': !readerId, 
+    'callback': async() =>{
+      const loaderOutput = document.createElement('div');
+      document.querySelector('#APIOutput').append(loaderOutput);
+      const loader = new Loader(loaderOutput);
+      loader.start();
+      const entitlementsplans = await queryLocalEntitlementsPlans(publicationId, readerId);
+      const filteredPlans = entitlementsplans.userEntitlementsPlans.filter((plan)=>{
+        return plan.recurringPlanDetails.recurringPlanState != 'CANCELED'
+      })
+      const orderId = filteredPlans[0].purchaseInfo.latestOrderId;
+      const readerData = await queryOrderData(publicationId, readerId, orderId);
+      loader.stop();
+      insertHighlightedJson(
+          '#APIOutput', readerData, 'Order data for the given <code>readerId</code>\'s most recent order that is not canceled.');
+    }
   });
   document.querySelector(selector).appendChild(button);
 }
