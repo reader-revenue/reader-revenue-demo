@@ -49,10 +49,15 @@ async function queryMemberData(publicationId, readerId) {
  * Queries the Monetization API, but via a local endpoint
  * @params {string} publicationId
  * @params {string} readerId
- * @params {string} orderId
  * @returns {{object}}
  */
-async function queryOrderData(publicationId, readerId, orderId) {
+async function queryOrderData(publicationId, readerId) {
+  const entitlementsplans = await queryLocalEntitlementsPlans(publicationId, readerId);
+  const filteredPlans = entitlementsplans.userEntitlementsPlans.filter((plan)=>{
+    return plan.recurringPlanDetails.recurringPlanState != 'CANCELED'
+  }); 
+  // retrieving the latest orderId;
+  const orderId = filteredPlans[0].purchaseInfo.latestOrderId;
   const url = `${location.origin}/api/monetization/publications/${publicationId}/readers/${readerId}/orders/${orderId}`;
   const requestOptions = {
     headers: {'Content-Type': 'application/json'}
