@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-import {
-  queryLocalEntitlementsPlans,
-  queryMemberData,
-  queryOrderData
-} from './monetization-api-methods.js';
-import {insertHighlightedJson, Loader, createInput, createForm, createButton} from './utils.js';
+import {queryLocalEntitlementsPlans, queryMemberData, queryOrderData} from './monetization-api-methods.js';
+import {createInput, createForm, createButton, executeApiCall} from './utils.js';
 
-// Global reader_id used by helper functions
-let readerId = localStorage.getItem('readerId') || '';
-let publicationId = 'process.env.PUBLICATION_ID';
+// Global variables
+const monetizationState = {
+  readerId: localStorage.getItem('readerId') || '',
+  publicationId: 'process.env.PUBLICATION_ID'
+};
 
 /**
  * renderReaderIdForm
@@ -31,15 +29,16 @@ let publicationId = 'process.env.PUBLICATION_ID';
  * @param {string} selector
  */
 function renderReaderIdForm(selector) {
-  const readerIdInput = createInput(
-    readerId, 
-    'readerId', 
-    'id-input', 
-    'Paste readerId here', 
-    (newValue)=> {
-      readerId = newValue;
+  const readerIdInput = createInput({
+    'initialValue': monetizationState.readerId, 
+    'id': 'readerId', 
+    'classNames': ['id-input'], 
+    'placeHolder': 'Paste readerId here', 
+    'callback': (newValue)=> {
+      monetizationState.readerId = newValue;
       handleButtonAvailability();
-    });
+    }
+  });
   const form = createForm([readerIdInput]);
   document.querySelector(selector).appendChild(form);
 }
@@ -50,15 +49,16 @@ function renderReaderIdForm(selector) {
  * @param {string} selector
  */
 function renderPublicationIdForm(selector) {
-  const publicationIdInput = createInput(
-    publicationId, 
-    'publicationId', 
-    'id-input', 
-    'Paste publicationId here', 
-    (newValue)=> {
-      publicationId = newValue;
+  const publicationIdInput = createInput({
+    'initialValue': monetizationState.publicationId, 
+    'id': 'publicationId', 
+    'classNames': ['id-input'], 
+    'placeHolder': 'Paste publicationId here', 
+    'callback': (newValue)=> {
+      monetizationState.publicationId = newValue;
       handleButtonAvailability();
-    });
+    }
+  });
   const form = createForm([publicationIdInput]);
   document.querySelector(selector).appendChild(form);
 }
@@ -68,7 +68,7 @@ function renderPublicationIdForm(selector) {
  */
 function handleButtonAvailability(){
   document.querySelectorAll('.btn').forEach((button)=>{
-    if(!publicationId || !readerId) {
+    if(!monetizationState.publicationId || !monetizationState.readerId) {
       button.setAttribute('disabled','true');
     } else {
       button.removeAttribute('disabled');
@@ -82,16 +82,14 @@ function handleButtonAvailability(){
  * @param {string} selector
  */
 function renderFetchEntitlementsPlansButton(selector) {
-  const button = createButton('Query entitlement plans', '', ['btn', 'btn-primary'], !!readerId, async() =>{
-    const loaderOutput = document.createElement('div');
-    document.querySelector('#APIOutput').append(loaderOutput);
-    const loader = new Loader(loaderOutput);
-    loader.start();
-    const entitlementsplans =
-        await queryLocalEntitlementsPlans(publicationId, readerId);
-    loader.stop();
-    insertHighlightedJson(
-        '#APIOutput', entitlementsplans, 'Manually queried entitlementsplans for the given <code>readerId</code>');
+  const button = createButton({
+    'buttonText':'Query entitlement plans', 
+    'classNames':['btn', 'btn-primary'], 
+    'disable': !monetizationState.readerId, 
+    'callback': () => executeApiCall(
+      () => queryLocalEntitlementsPlans(monetizationState.publicationId, monetizationState.readerId),
+      'Manually queried entitlementsplans for the given <code>readerId</code>'
+    )
   });
   document.querySelector(selector).appendChild(button);
 }
@@ -102,17 +100,14 @@ function renderFetchEntitlementsPlansButton(selector) {
  * @param {string} selector
  */
 function renderFetchMemberButton(selector) {
-  const button = createButton('Query member data', '', ['btn', 'btn-primary'], !!readerId, async() =>{
-    button.classList.add('btn', 'btn-primary');
-    button.setAttribute('disabled','true');
-      const loaderOutput = document.createElement('div');
-      document.querySelector('#APIOutput').append(loaderOutput);
-      const loader = new Loader(loaderOutput);
-      loader.start();
-      const readerData = await queryMemberData(publicationId, readerId);
-      loader.stop();
-      insertHighlightedJson(
-          '#APIOutput', readerData, 'Member data for given <code>readerId</code>');
+  const button = createButton({
+    'buttonText':'Query member plans', 
+    'classNames':['btn', 'btn-primary'], 
+    'disable': !monetizationState.readerId, 
+    'callback': () => executeApiCall(
+      () => queryMemberData(monetizationState.publicationId, monetizationState.readerId),
+      'Member data for given <code>readerId</code>'
+    )
   });
   document.querySelector(selector).appendChild(button);
 }
@@ -123,20 +118,15 @@ function renderFetchMemberButton(selector) {
  * @param {string} selector
  */
 function renderFetchOrderButton(selector) {
-  const button = createButton('Query order data', '', ['btn', 'btn-primary'], !!readerId, async() =>{
-    const loaderOutput = document.createElement('div');
-    document.querySelector('#APIOutput').append(loaderOutput);
-    const loader = new Loader(loaderOutput);
-    loader.start();
-    const entitlementsplans = await queryLocalEntitlementsPlans(publicationId, readerId);
-    const filteredPlans = entitlementsplans.userEntitlementsPlans.filter((plan)=>{
-      return plan.recurringPlanDetails.recurringPlanState != 'CANCELED'
-    })
-    const orderId = filteredPlans[0].purchaseInfo.latestOrderId;
-    const readerData = await queryOrderData(publicationId, readerId, orderId);
-    loader.stop();
-    insertHighlightedJson(
-        '#APIOutput', readerData, 'Order data for the given <code>readerId</code>\'s most recent order that is not canceled.');
+  const button = createButton({
+    'buttonText':'Query order plans', 
+    'classNames':['btn', 'btn-primary'], 
+    'disable': !monetizationState.readerId, 
+    'callback': () => {
+      executeApiCall(
+      () => queryOrderData(monetizationState.publicationId, monetizationState.readerId),
+      'Order data for the given <code>readerId</code>\'s most recent order that is not canceled.'
+    )}
   });
   document.querySelector(selector).appendChild(button);
 }

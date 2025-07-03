@@ -311,6 +311,23 @@ function createForm(childElements){
   return form;
 }
 
+/**
+ * @param {Function} apiFunction
+ * @param {String} outputTitle
+ * @returns {Element}
+ */
+async function executeApiCall(apiFunction, outputTitle) {
+  const loaderOutput = document.createElement('div');
+  document.querySelector('#APIOutput').append(loaderOutput);
+  const loader = new Loader(loaderOutput);
+
+  loader.start();
+  const data = await apiFunction();
+  loader.stop();
+
+  insertHighlightedJson('#APIOutput', data, outputTitle);
+}
+
 export {
   generateHighlightedJson,
   insertHighlightedJson,
@@ -322,5 +339,6 @@ export {
   createHeaderRow,
   createRow,
   createButton,
-  createForm
+  createForm,
+  executeApiCall
 };
