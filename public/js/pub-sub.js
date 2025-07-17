@@ -21,8 +21,8 @@
  */
 import {insertHighlightedJson, Loader} from './utils.js';
 
-async function pollNotifications(pubSubVersion) {
-  return await fetch(`/api/pub-sub/received/${pubSubVersion}`)
+async function pollNotifications() {
+  return await fetch(`/api/pub-sub/received`)
     .then(
       r => r.json()
     ).catch(
@@ -34,56 +34,68 @@ function getMostRecentTimestamp(notifications) {
 }
 
 function scheduleNotifications() {
-  const pubSubVersions = ['v1','v2'];
+  // placeholder to hold most recent timestamp
+  let savedRecentTimestamp = 0
+  let emptyOutputPlaceHolder = null; 
+  const loader = new Loader(
+    document.getElementById(`notificationsLog`), 
+    // timeout to loading in 30 seconds
+    30000,
+    // callback onTimeout:  inserting an empty array [] as output
+    () => { 
+      emptyOutputPlaceHolder = insertHighlightedJson(`#notificationsLog`, [], null, null, true);
+    }
+  );
+  loader.start();
 
-  // loop through each pubSubVersion
-  pubSubVersions.forEach((pubSubVersion)=>{
+  // periodically poll for notifications and update the UI if new Pub/Sub notitifications are detected.
+  setInterval(async () => {
+    // poll the backend for notifications for the current pubSubVersion.
+    let notifications = await pollNotifications();
+    // find the created timestamp from the last notification
+    const mostRecentTimestamp = getMostRecentTimestamp(notifications);
 
-    // placeholder to hold most recent timestamp
-    let savedRecentTimestamp = 0
-
-    let emptyOutputPlaceHolder = null; 
-    const loader = new Loader(
-      document.getElementById(`notificationsLog-${pubSubVersion}`), 
-      // timeout to loading in 5 seconds
-      5000,
-      // callback onTimeout:  inserting an empty array [] as output
-      () => { 
-        emptyOutputPlaceHolder = insertHighlightedJson(`#notificationsLog-${pubSubVersion}`, [], null, null, true);
+    // check if notifications were received AND if they differ from the cached version.
+    if (notifications?.length > 0 && savedRecentTimestamp != mostRecentTimestamp) {
+      console.log(`new pub/sub messages received.`);
+      // filtering nofitifations
+      notifications = notifications.filter(notification => {
+        try {
+          const json = JSON.parse(notification.data);
+          // Keep the notification if it has an ID AND is not a test message from the webdriver tests.
+          return (
+            // filter out if id doesn't exist (= not a valid Pub/Sub message) 
+            json.id &&
+            // filter out if it is for the Subscription Linking automated webdriver tests,
+            !(
+              json.eventObjectType === 'SUBSCRIPTION_LINKING' &&
+              json.reader?.ppid?.startsWith('integration-test-')
+            )
+          );
+        } catch (e) {
+          // If JSON.parse fails, data is invalid as a Pub/Sub notification. Filter it out.
+          return false;
+        }
+      });
+      
+      // remove the placeholder output ([]) if it's already added  
+      // emptyOutputPlaceHolder is non null if the loader's onTimeout callback is alraedy executed 
+      if(emptyOutputPlaceHolder){
+        emptyOutputPlaceHolder.remove();
+        emptyOutputPlaceHolder = null;
       }
-    );
-    loader.start();
+      // display the new Pub/Sub notifications using syntax highlighting
+      insertHighlightedJson(`#notificationsLog`, notifications, null, null, true);
+      
+      // cache the current timestamp
+      savedRecentTimestamp = mostRecentTimestamp;
 
-    // periodically poll for notifications and update the UI if new Pub/Sub notitifications are detected.
-    setInterval(async () => {
-      // poll the backend for notifications for the current pubSubVersion.
-      const notifications = await pollNotifications(pubSubVersion);
-
-      // find the created timestamp from the last notification
-      const mostRecentTimestamp = getMostRecentTimestamp(notifications);
-
-      // check if notifications were received AND if they differ from the cached version.
-      if (notifications?.length > 0 && savedRecentTimestamp != mostRecentTimestamp) {
-        console.log(`new pub/sub messages, re-displaying for pubSubVersion ${pubSubVersion}`);
-        // remove the placeholder output ([]) if it's already added  
-        // emptyOutputPlaceHolder is non null if the loader's onTimeout callback is alraedy executed 
-        if(emptyOutputPlaceHolder){
-          emptyOutputPlaceHolder.remove();
-          emptyOutputPlaceHolder = null;
-        }
-        // display the new Pub/Sub notifications using syntax highlighting
-        insertHighlightedJson(`#notificationsLog-${pubSubVersion}`, notifications, null, null, true);
-        
-        // cache the current timestamp
-        savedRecentTimestamp = mostRecentTimestamp;
-
-        // stop the loading indicator now that content is displayed.
-        if(loader.isStopped===false) {
-          loader.stop();
-        }
-      } 
-    }, 1000)
-  })
+      // stop the loading indicator now that content is displayed.
+      if(loader.isStopped===false) {
+        loader.stop();
+      }
+    } 
+  }, 1000)
 }
 
 document.addEventListener('DOMContentLoaded', async function() {

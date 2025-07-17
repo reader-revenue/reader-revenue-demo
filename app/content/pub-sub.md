@@ -23,20 +23,11 @@ After completing these steps, every time a notification is sent to the configure
 There are many types of notifications that the configured topic will receive from Reader Revenue Manager: Enterprise. In a production environment, each type of notification would result in a different type of action (e.g. account creation, entitlement updates). This example serves only as a utility for easily viewing and debugging all pub/sub notifications.
 !!!
 
-## Notifications Log
+This console displays all pub/sub notifications that your application processes and stores in Cloud Datastore. It polls this application's `/api/pub-sub/received` endpoint every second, and displays the new messages as they come in. 
 
-This console displays all pub/sub notifications that your application processes and stores in Cloud Datastore. It polls this application's `/api/pub-sub/received:{notificationVersion}` endpoint every second, and displays the new messages as they come in. 
+
+### Pub/Sub
 
 <div id=notificationsContainer>
-
-### Pub/Sub v1
-
-<div id="notificationsLog-v1" style="overflow:scroll; max-height:500px;">
-</div>
-
-### Pub/Sub v2
-
-<div id="notificationsLog-v2" style="overflow:scroll; max-height:500px;">
-</div>
-
+    <div id="notificationsLog" style="overflow:scroll; max-height:500px;"></div>
 </div>
