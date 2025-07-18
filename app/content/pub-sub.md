@@ -28,6 +28,10 @@ This console displays all pub/sub notifications that your application processes 
 
 ### Pub/Sub
 
-<div id=notificationsContainer>
+<div id="select-event-filter-container"></div>
+<br>
+<div id="checkbox-filter-container"></div>
+<br>
+<div id="notificationsContainer">
     <div id="notificationsLog" style="overflow:scroll; max-height:500px;"></div>
 </div>
