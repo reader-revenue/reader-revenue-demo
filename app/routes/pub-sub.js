@@ -63,7 +63,7 @@ router.get('/received', async (req, res) => {
     }
   });
   // Check if the notification volumn has been increased from the previous call
-  // The number of nofirications that previously retreived are passed as a query param from the client-side
+  // The number of notifications that previously retreived are passed as a query param from the client-side
   if(notifications.length === 0 || notifications.length === req.query.previousMessageVolume){
     return res.json([]);
   }
