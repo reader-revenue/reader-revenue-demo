@@ -59,28 +59,33 @@ function scheduleNotifications() {
   );
   loader.start();
 
-  // periodically poll for notifications and update the UI if new Pub/Sub notitifications are detected.
-  setInterval(async () => {
+  // A variable to hold the interval ID.
+  // This is the key to stopping the interval later.
+  let pollingInterval;
+  // Start the polling interval and save its ID.
+  pollingInterval = setInterval(async () => {
     // poll the backend for new notifications
     let notifications = await pollNotifications();
-    // check if notifications were received 
+    // check if notifications were received
     if (notifications?.length > 0) {
       // cache the latest notifications
       cachedNotifications = notifications;
-      // remove the placeholder output ([]) if it's already added  
-      // emptyOutputPlaceHolder is non null if the loader's onTimeout callback is alraedy executed 
-      if(emptyOutputPlaceHolder){
+      // remove the placeholder output ([]) if it's already added
+      // emptyOutputPlaceHolder is non null if the loader's onTimeout callback is already executed
+      if (emptyOutputPlaceHolder) {
         emptyOutputPlaceHolder.remove();
         emptyOutputPlaceHolder = null;
       }
       // Filter the notifications and show in #notificationsLog
       showNotifications(filter(notifications));
       // stop the loading indicator now that content is displayed.
-      if(loader.isStopped===false) {
+      if (loader.isStopped === false) {
         loader.stop();
       }
-    } 
-  }, 1000)
+      // Kill the interval here after showing the notifications
+      clearInterval(pollingInterval);
+    }
+  }, 1000);
 }
 document.addEventListener('DOMContentLoaded', async function() {
   await scheduleNotifications();
@@ -133,7 +138,7 @@ function handleFilterChange(notifications){
   if(notifications.length===0){
     return;
   }
-  showNotifications();
+  showNotifications(notifications);
 }
 /**
  * Show the latest Pub/Sub notifications at #notificationsLog
