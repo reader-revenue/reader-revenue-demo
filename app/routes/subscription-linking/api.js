@@ -88,6 +88,25 @@ router.put('/readers/:publicationId/:ppid/entitlements', async (req, res, next) 
   }
 })
 
+// UnlinkSubscription
+router.delete('/readers/:publicationId/:ppid', async (req, res, next) => {
+  try {
+    const publicationId = req.params.publicationId;
+    const ppid = req.params.ppid
+    const requestBody = { force: true }
+    console.log(publicationId);
+    console.log(ppid);
+    const unlink = await client.publications.readers.delete({
+      name: `publications/${publicationId}/readers/${ppid}`,
+      requestBody
+    });
+
+    return res.json({unlink});
+  } catch (e) {
+    next(e)
+  }
+})
+
 router.get('/get/ppid/:ppid', async (req, res) => {
   try {
     const results = await storage.readByDataKeyValue('ppid', req.params.ppid);

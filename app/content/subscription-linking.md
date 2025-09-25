@@ -48,3 +48,5 @@ subscriptions.linkSubscriptions({linkTo: [
   expire_time: '{{oneMonthFromNow}}'
 }
 ```
+
+### Unlink an existing subscripton {#unlink}
