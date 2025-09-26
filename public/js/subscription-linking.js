@@ -353,10 +353,10 @@ function createUnlinkForm(singleLinkData) {
 }
 
 /**
- * UpdateEntitlementsForPpid(ppid)
- * @param {string} ppid The ppid of the subscriber.
- * @returns {{ppid: string}} The ppid.
- * Query entitlements for a given ppid
+ * Unlinks a user's subscription from a publication.
+ * @param {string} ppid The Publisher Provided ID (PPID) of the subscriber.
+ * @param {string} publicationId The ID of the publication to unlink from.
+ * @returns {Promise<object>} A promise that resolves to an empty object `{}` if the operation is successful.
  */
 async function unlinkSubscription(ppid, publicationId) {
   const host = location.host;
@@ -365,7 +365,7 @@ async function unlinkSubscription(ppid, publicationId) {
   const options = {method: 'DELETE'};
   try {
     return await fetch(url, options).then(r => r.json()).then(r => {
-      return r.update.data;
+      return r.unlink.data;
     });
   } catch (e) {
     throw new Error(`Unable to unlink subscription at ${url}`);

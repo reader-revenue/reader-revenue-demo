@@ -50,3 +50,7 @@ subscriptions.linkSubscriptions({linkTo: [
 ```
 
 ### Unlink an existing subscripton {#unlink}
+
+A successful delete returns an empty JSON object `{}`.
+
+Note: this demo uses the [`force: true` option](https://developers.google.com/news/subscribe/subscription-linking/api/methods#deletereader).
