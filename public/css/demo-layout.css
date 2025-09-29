@@ -481,6 +481,7 @@ pre code.hljs {
   margin-bottom : 5px;
 }
 
-#notificationsContainer { 
+#notificationsLog { 
   max-height: 500px;
+  overflow:scroll;
 }
