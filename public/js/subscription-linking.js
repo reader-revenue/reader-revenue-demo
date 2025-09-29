@@ -303,6 +303,75 @@ async function updateEntitlementsForPpid(ppid, publicationId) {
   }
 }
 
+
+/**
+ * createUnlinkForm()
+ * Creates a form, and appends it to the DOM after #initiateLink.
+ * Used for unlinking a given ppid from a publication
+ */
+function createUnlinkForm(singleLinkData) {
+  const { ppid, publicationId } = singleLinkData
+  const output = document.createElement('pre');
+  const unlinkButton = createButton({'buttonText': 'Unlink Subscription', 
+    'callback': async (event) => {
+      event.preventDefault();
+      const code = document.createElement('code');
+      code.classList.add('hljs', 'language-json');
+      const loader = new Loader(output);
+      loader.start();
+      const response = await unlinkSubscription(ppid, publicationId);
+      const textString = JSON.stringify(response, null, 2);
+      const formattedTextString = hljs.highlight(textString, {language: 'json'})
+      const textNodeFromString = document.createRange().createContextualFragment(
+          formattedTextString.value)
+      code.append(textNodeFromString)
+      loader.stop();
+      output.append(code)
+    }
+  });
+
+  // Publication ID input. The default value is env.PUBLICATION_ID
+  const pubIdInput = createInput({'initialValue': publicationId, id: 'pubid-query',  
+    'callback': (newValue)=> {
+      publicationId = newValue;
+      queryEntitlementsButton.disabled = !!publicationId ? false : true;
+    }
+  }); 
+  // PPID ID input. The default value is randomly created by randomPpid()
+  const ppidInput = createInput({'initialValue': ppid, 'id': 'ppid-query',
+    'callback' :(newValue) => {
+      ppid = newValue;
+      updateEntitlementsButton.disabled = ppid ? false : true;
+    }
+  });
+  // Set these tow inputs into a row
+  const row = createRow('input-row', [pubIdInput, ppidInput]);
+  // header row to make it clear these input elements are for publicationId and PPID
+  const headerRow = createHeaderRow(['PublicationID', 'PPID']);
+  const form = createForm([headerRow, row, unlinkButton, output]);
+  document.querySelector('#unlink').insertAdjacentElement('afterend', form);
+}
+
+/**
+ * Unlinks a user's subscription from a publication.
+ * @param {string} ppid The Publisher Provided ID (PPID) of the subscriber.
+ * @param {string} publicationId The ID of the publication to unlink from.
+ * @returns {Promise<object>} A promise that resolves to an empty object `{}` if the operation is successful.
+ */
+async function unlinkSubscription(ppid, publicationId) {
+  const host = location.host;
+  const endpoint = `api/subscription-linking/readers/${publicationId}/${ppid}`;
+  const url = `https://${host}/${endpoint}`;
+  const options = {method: 'DELETE'};
+  try {
+    return await fetch(url, options).then(r => r.json()).then(r => {
+      return r.unlink.data;
+    });
+  } catch (e) {
+    throw new Error(`Unable to unlink subscription at ${url}`);
+  }
+}
+
 /**
  * analyticsEventLogger(subs)
  * @param {object} subscription The subscription object from instantiating swg.js
@@ -330,6 +399,7 @@ document.addEventListener('DOMContentLoaded', function () {
   createBundleSLForm(subscriptionLinkingData.bundle, eventHandler);
   createQueryEntitlementsForm(subscriptionLinkingData.single);
   createUpdateEntitlementsForm(subscriptionLinkingData.single);
+  createUnlinkForm(subscriptionLinkingData.single);
   (self.SWG = self.SWG || []).push(subscriptions => {
     analyticsEventLogger(subscriptions, eventHandler);
     createSingleSLForm(subscriptionLinkingData.single, eventHandler);
