@@ -46,8 +46,12 @@ async function pollNotifications() {
     .then(r => r.json())
     .catch(e => console.log(e));
 }
-
-function scheduleNotifications() {
+document.addEventListener('DOMContentLoaded', async function() {
+  scheduleNotifications();
+  createEventTypeSelectElement();
+  createRecent100FilterCheckboxElement();
+});
+async function scheduleNotifications() {
   let emptyOutputPlaceHolder = null; 
   const loader = new Loader(
     document.getElementById(`notificationsLog`), 
@@ -58,35 +62,23 @@ function scheduleNotifications() {
     }
   );
   loader.start();
-
-  // periodically poll for notifications and update the UI if new Pub/Sub notitifications are detected.
-  setInterval(async () => {
-    // poll the backend for new notifications
-    let notifications = await pollNotifications();
-    // check if notifications were received 
-    if (notifications?.length > 0) {
-      // cache the latest notifications
-      cachedNotifications = notifications;
-      // remove the placeholder output ([]) if it's already added  
-      // emptyOutputPlaceHolder is non null if the loader's onTimeout callback is alraedy executed 
-      if(emptyOutputPlaceHolder){
-        emptyOutputPlaceHolder.remove();
-        emptyOutputPlaceHolder = null;
-      }
-      // Filter the notifications and show in #notificationsLog
-      showNotifications(filter(notifications));
-      // stop the loading indicator now that content is displayed.
-      if(loader.isStopped===false) {
-        loader.stop();
-      }
-    } 
-  }, 1000)
+  // poll the backend for new notifications
+  let notifications = await pollNotifications();
+  if (notifications?.length > 0) {
+    // cache the notifications to re-use them when a new filter is applied
+    cachedNotifications = notifications;
+    // remove the placeholder output ([]) if it's already added
+    // emptyOutputPlaceHolder is non null if the loader's onTimeout callback is already executed
+    if (emptyOutputPlaceHolder) {
+      emptyOutputPlaceHolder.remove();
+      emptyOutputPlaceHolder = null;
+    }
+    // Filter the notifications and show in #notificationsLog
+    showNotifications(filter(notifications));
+  }
+  // stop the loading indicator now that content is displayed.
+  loader.stop();
 }
-document.addEventListener('DOMContentLoaded', async function() {
-  await scheduleNotifications();
-  createEventTypeSelectElement();
-  createRecent100FilterCheckboxElement();
-});
 /**
  * Create select element to filter notifications depends on the eventType (e.g. SUBSCRIPTION_STARTED)
  * https://developers.google.com/news/reader-revenue/monetization/reference/pub-sub-types
@@ -133,7 +125,7 @@ function handleFilterChange(notifications){
   if(notifications.length===0){
     return;
   }
-  showNotifications();
+  showNotifications(notifications);
 }
 /**
  * Show the latest Pub/Sub notifications at #notificationsLog
