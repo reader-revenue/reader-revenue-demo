@@ -480,3 +480,8 @@ pre code.hljs {
   font-weight : bold;
   margin-bottom : 5px;
 }
+
+#notificationsLog { 
+  max-height: 500px;
+  overflow:scroll;
+}

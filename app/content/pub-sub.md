@@ -33,5 +33,5 @@ This console displays all pub/sub notifications that your application processes 
 <div id="checkbox-filter-container"></div>
 <br>
 <div id="notificationsContainer">
-    <div id="notificationsLog" style="overflow:scroll; max-height:500px;"></div>
+    <div id="notificationsLog"></div>
 </div>
