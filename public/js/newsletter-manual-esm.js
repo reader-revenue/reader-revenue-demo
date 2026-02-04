@@ -15,27 +15,33 @@
  */
 
 /**
- * @fileoverview This client-side js file to handle newsletter CTAs
+ * @fileoverview This client-side js file to handle newsletter CTAs via ESM
  */
 
+import { subscriptions } from "process.env.SWG_JS_MJS_URL";
 import {
   createButtonsForCtas,
   registerEventManager,
   parseCtaConfigurations,
-} from '/js/cta-methods.js';
+} from './cta-methods.js';
 
 const ctaConfigurationType = 'TYPE_NEWSLETTER_SIGNUP'
 const ctaConfigurations = parseCtaConfigurations(ctaConfigurationType);
 
 const buttonContainer = document.querySelector('#ctas');
 
-(self.SWG = self.SWG || []).push(async (subscriptions) => {
+(self.SWG = self.SWG || []).push(async (subscriptionsInstance) => {
+  // Note: 'subscriptions' is already imported from the MJS library, 
+  // but we use the one passed to the push callback for consistency if needed,
+  // or just use the imported one.
   subscriptions.configure({paySwgVersion: '2'});
   subscriptions.init('process.env.PUBLICATION_ID');
 
   await registerEventManager(subscriptions);
-  const availableInterventions = await subscriptions.getAvailableInterventions();
+  const availableInterventions =
+    await subscriptions.getAvailableInterventions();
 
+  // For debugging, view all available interventions in the browser console
   console.log({availableInterventions});
 
   await createButtonsForCtas(

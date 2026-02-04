@@ -41,8 +41,12 @@ variants.forEach(variant => {
   const srcPath = path.resolve(swgJsRoot, 'dist', variant.src);
   const destPath = path.resolve(publicJsDir, variant.dest);
   
-  if (fs.existsSync(destPath)) {
-    fs.unlinkSync(destPath);
+  try {
+    if (fs.lstatSync(destPath)) {
+      fs.unlinkSync(destPath);
+    }
+  } catch (e) {
+    // File doesn't exist, ignore
   }
   
   try {
@@ -57,8 +61,12 @@ console.log('Creating symbolic link for assets...');
 const publicAssetsDir = path.resolve(demoRoot, 'public/assets');
 const srcAssetsPath = path.resolve(swgJsRoot, 'assets');
 
-if (fs.existsSync(publicAssetsDir)) {
-  fs.unlinkSync(publicAssetsDir);
+try {
+  if (fs.lstatSync(publicAssetsDir)) {
+    fs.unlinkSync(publicAssetsDir);
+  }
+} catch (e) {
+  // File doesn't exist, ignore
 }
 
 try {

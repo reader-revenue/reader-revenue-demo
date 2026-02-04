@@ -1,12 +1,6 @@
-<script async
-  subscriptions-control="manual"
-  type="application/javascript"
-  src="{{env.SWG_JS_URL}}">
-</script>
+# Newsletter CTAs (ES Module)
 
-# Newsletter CTAs
-
-This page both demonstrates how RRM:E newsletter sign-up works, as well as documents
+This page both demonstrates how RRM:E newsletter sign-up works using ES Modules, as well as documents
 how to implement the CTAs.
 
 ## Test the manual newsletter invocation
@@ -16,7 +10,7 @@ how to implement the CTAs.
 ## Newsletter CTA Overview
 
 A publisher can configure one or more newsletters for manual invocation by using an
-initialized `swg.js` instance. In order to use this feature:
+initialized `swg.mjs` instance. In order to use this feature:
 
 1.  A publisher will provide Google with a CTA configuration per newsletter, and 
     will receive a `configurationId` in response to call this newsletter configuration.
@@ -35,17 +29,6 @@ CTA, and what data is passed to the publisher for each subscriber.
 ### CTA Configuration Examples
 
 <ul class="flexible-list">
-  <!-- <li class="flexible-list-item">
-    <img src="/img/newsletter-configurations_0000s_0004_standard.png">
-    <pre>
-    <code class="hljs language-json">
-{
-  "publicationId": "asdf-1234",
-  "name": "Daily Bugle"
-}
-    </code>
-    </pre>    
-  </li> -->
   <li class="flexible-list-item">
     <img src="/img/newsletter-configurations_0000s_0003_with-title.png">
     <pre>
@@ -83,19 +66,6 @@ CTA, and what data is passed to the publisher for each subscriber.
     </code>
     </pre> 
   </li>
-  <!-- <li class="flexible-list-item">
-    <img src="/img/newsletter-configurations_0000s_0000_alternate.png">
-    <pre>
-    <code class="hljs language-json">
-{
-  "publicationId": "asdf-1234",
-  "name": "Superhero Shots by the Daily Bugle",
-  "title": "Daily photo updates from around the town",
-  "body": "Sign up to receive breaking updates from around the web by intrepid photojournalists on the street."
-}
-    </code>
-    </pre> 
-  </li> -->
 </ul>
 
 ### Provide CTA Configuration to Google
@@ -158,17 +128,18 @@ newsletter configuration. These ids will then be used in subsequent javascript a
 
 ### Invoke Newsletter CTAs
 
-To configure newsletter CTAs, `swg.js` must first be configured on the page.
-These examples show using the initialization of the library in `manual` mode, but the
-APIs are also available in automatic mode. 
+To configure newsletter CTAs, `swg.mjs` must first be imported and initialized.
 
 ### Get the CTA instance to display
 
 To invoke a newsletter CTA, a publisher must use the `configurationId` provided by
 Google in response to submitting a CTA configuration. Publishers use the
-`configurationId` to fetch a valid CTA instance using the `subscriptions.getAvailableInterventions()` method from the initialized `swg.js` library.
+`configurationId` to fetch a valid CTA instance using the `subscriptions.getAvailableInterventions()` method from the imported `subscriptions` object.
 
 ```javascript
+import { subscriptions } from "{{env.SWG_JS_MJS_URL}}";
+subscriptions.init('{{env.PUBLICATION_ID}}');
+
 const publisherConfiguration = {
   name: 'Subscriber Newsletter',
   configurationId: '49c12712-9750-4571-8c67-96722561c13a',
@@ -222,7 +193,7 @@ cta?.show({
 ### Handle the response
 
 The `onResult` callback will include information on the configuration used
-to create the CTA, as well as the newsletter subscriber's information. The `configurationId` matches the `configurationId provided to the publisher from Google, in response to the per-newsletter configuration authored by the publisher in the initial step.
+to create the CTA, as well as the newsletter subscriber's information.
 
 ```javascript
 {
@@ -237,28 +208,26 @@ to create the CTA, as well as the newsletter subscriber's information. The `conf
 }
 ```
 
-!!! caution **NOTE:** The `termsAndConditionsConsent` value is a boolean if the newsletter has been configured with an optional or required checkbox, or null if the checkbox has not been configured.
-!!!
-
 #### Complete Example
 
 This complete example accomplishes the following:
 
-1. Initializes `swg.js` library in manual mode.
-2. When the library is ready, use the `newsletter-1234` configurationId to request a CTA to display.  
-3. When the button is clicked, display the CTA.
-4. Store the results of a successful CTA with the sample `NewsletterPersistence()` library.
-
-!!! note `CtaPersistence()` is an example implementation.
-In a production environment, a publisher would use the CTA response to send data to their own
-account or customer management system. 
-!!!
+1. Imports the `subscriptions` object from `swg.mjs`.
+2. Initializes the runtime using `subscriptions.init()`.
+3. Requests available interventions.
+4. Displays the newsletter CTA when the button is clicked.
 
 ```html
-<!-- manual swg.js initialization -->
-<script async
-    subscriptions-control="manual"
-    type="application/javascript"
-    src="{{env.SWG_JS_URL}}">
+<script type="module">
+// 1. Import SwG
+import { subscriptions } from "{{env.SWG_JS_MJS_URL}}";
+
+// 2. Initialize SwG
+subscriptions.configure({paySwgVersion: '2'});
+subscriptions.init('{{env.PUBLICATION_ID}}');
+
+// 3. Get available interventions and display them
+const availableInterventions = await subscriptions.getAvailableInterventions();
+// ... logic to find and show CTA ...
 </script>
 ```

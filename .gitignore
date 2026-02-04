@@ -5,7 +5,10 @@ node_modules
 !index.yaml
 !cloudbuild.yaml
 public/js/swg*local.js
+public/js/swg*local.mjs
 public/js/swg-gaa*.js
+public/js/swg-gaa*.mjs
 public/js/swg-basic*.js
+public/js/swg-basic*.mjs
 public/js/swg.js
 public/assets

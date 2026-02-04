@@ -130,6 +130,8 @@ Read the [documentation](https://developers.google.com/news/subscribe/guides/add
 
 Note: ESM initialization is **Passive-by-Default**, meaning it will not automatically scan the DOM or trigger entitlements until you call `init()` or `start()`.
 
+See the [ESM Manual CTA invocation](/newsletter/manual-esm) for a live example.
+
 ```html 
 <html>
   <head>
