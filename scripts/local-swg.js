@@ -14,13 +14,21 @@ if (!fs.existsSync(swgJsRoot)) {
 
 console.log(`Found swg-js at ${swgJsRoot}`);
 
-console.log('Building swg-js...');
+console.log('Building swg-js (IIFE)...');
 execSync('npm run build', { cwd: swgJsRoot, stdio: 'inherit' });
+
+console.log('Building swg-js (ESM)...');
+['basic', 'classic', 'gaa'].forEach(target => {
+  execSync(`npx vite build -- --target=${target} --esm`, { cwd: swgJsRoot, stdio: 'inherit' });
+});
 
 const variants = [
   { src: 'subscriptions.max.js', dest: 'swg-local.js' },
   { src: 'subscriptions-gaa.max.js', dest: 'swg-gaa-local.js' },
-  { src: 'basic-subscriptions.max.js', dest: 'swg-basic-local.js' }
+  { src: 'basic-subscriptions.max.js', dest: 'swg-basic-local.js' },
+  { src: 'subscriptions.mjs', dest: 'swg-local.mjs' },
+  { src: 'subscriptions-gaa.mjs', dest: 'swg-gaa-local.mjs' },
+  { src: 'basic-subscriptions.mjs', dest: 'swg-basic-local.mjs' }
 ];
 
 console.log('Creating symbolic links for JS...');
@@ -68,16 +76,12 @@ if (fs.existsSync(envPath)) {
 }
 
 if (!envContent.includes('SWG_OVERRIDE=local')) {
-  if (envContent && !envContent.endsWith('
-')) envContent += '
-';
-  envContent += 'SWG_OVERRIDE=local
-';
+  if (envContent && !envContent.endsWith('\n')) envContent += '\n';
+  envContent += 'SWG_OVERRIDE=local\n';
 }
 
 if (!envContent.includes('ENV_OVERRIDES=')) {
-  envContent += 'ENV_OVERRIDES=SWG_OVERRIDE
-';
+  envContent += 'ENV_OVERRIDES=SWG_OVERRIDE\n';
 } else if (!envContent.includes('SWG_OVERRIDE')) {
   envContent = envContent.replace(/ENV_OVERRIDES=(.*)/, 'ENV_OVERRIDES=$1,SWG_OVERRIDE');
 }

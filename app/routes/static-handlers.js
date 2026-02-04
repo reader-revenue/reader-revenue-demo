@@ -46,7 +46,8 @@ js.get('/*', async (req, res)=>{
   try {
     console.log(req.path);
     const renderedStaticFile = await renderStaticFile(`public/js/${req.path}`);
-    res.set('Content-Type','text/javascript').end(renderedStaticFile);
+    const contentType = req.path.endsWith('.mjs') ? 'application/javascript' : 'text/javascript';
+    res.set('Content-Type', contentType).end(renderedStaticFile);
   } catch(e) {
     res.status(500).end(`Error: failed to render ${req.path}`);
   }
