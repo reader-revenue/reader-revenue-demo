@@ -106,6 +106,12 @@ ENV_OVERRIDES=SWG_OVERRIDE
 - `SWG_OVERRIDE=local`: Tells the renderer to use local `/js/swg-local.js` instead of the production CDN.
 - `ENV_OVERRIDES`: Enables overriding environment variables via query parameters (e.g., `?swg-override=production` to switch back temporarily).
 
+You can also enable the mock buy flow by setting:
+```shell
+SWG_MOCK_BUYFLOW=true
+```
+This is useful for testing purchase flows without requiring real payment methods.
+
 #### 3. Run the demo
 
 Once linked and configured, start the demo server as usual:
@@ -151,6 +157,7 @@ NEWSLETTER_CTA_CONFIGURATION_ID=newsletter-config-1234
 
 # SwG configuration
 SWG_SKU=SWGPD.1234
+SWG_MOCK_BUYFLOW=true
 
 # Google Analytics
 GTAG_PROPERTY_ID=G-12345ABCDE
