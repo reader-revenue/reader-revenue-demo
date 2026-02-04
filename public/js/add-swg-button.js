@@ -50,17 +50,12 @@ function analyticsEventLogger(subs) {
 
     */ 
     const paySwgVersion = 'process.env.PAY_SWG_VERSION' == '1' ? '1' : '2'
-    const enableMockBuyFlow = 'process.env.SWG_MOCK_BUYFLOW' == 'true'
 
     //Only if the above evaluates to '2' do we use subscriptions.configure()
-    if (paySwgVersion == '2' || enableMockBuyFlow) {
+    if (paySwgVersion == '2') {
       subscriptions.configure({
         paySwgVersion,
-        enableMockBuyFlow
       });
-      if (enableMockBuyFlow) {
-        console.log("Initializing with mock")
-      }
     }
     subscriptions.init('process.env.PUBLICATION_ID');
 
