@@ -36,7 +36,7 @@ import proxy from './middleware/proxy.js';
 import ssl from './middleware/ssl.js';
 
 // Static routers with some custom behavior
-import {css, img, js} from './app/routes/static-handlers.js';
+import {css, img, js, assets} from './app/routes/static-handlers.js';
 
 // Configure app globals
 const app = express();
@@ -64,6 +64,7 @@ app.use('/api/cancellation', cancellationApi);
 app.use('/img', img);
 app.use('/js', js);
 app.use('/css', css);
+app.use('/assets', assets);
 
 // redirecting old Subscription Linking demo url to the new one
 app.get('/subscription-linking/client-side', (req, res) => {
