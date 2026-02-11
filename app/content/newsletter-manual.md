@@ -261,4 +261,106 @@ account or customer management system.
     type="application/javascript"
     src="{{env.SWG_JS_URL}}">
 </script>
+
+<!-- configuring swg.js to invoke and handle newsletter CTAs -->
+<script type="module">
+
+// Example library for storing email signups
+import {CtaPersistence} from './cta-persistence.js';
+const ctaCache = new CtaPersistence();
+
+const ctaConfigurations = [
+  {
+    name: 'Subscriber Newsletter',
+    configurationId: '49c12712-9750-4571-8c67-96722561c13a',
+  },
+  {
+    name: 'Breaking News',
+    configurationId: 'e98a2efb-d009-43c9-99ef-dda11c8c5a7f',
+  },
+];
+
+const buttonContainer = document.querySelector('#ctas');
+
+(self.SWG = self.SWG || []).push(async (subscriptions) => {
+  subscriptions.configure({paySwgVersion: '2'});
+  subscriptions.init('{{env.PUBLICATION_ID}}');
+
+  // Configure the event manager to log all events to the console
+  const eventManager = await subscriptions.getEventManager();
+  eventManager.registerEventListener(console.log);
+
+  const availableInterventions =
+    await subscriptions.getAvailableInterventions();
+
+  // For debugging, view all available interventions in the browser console
+  console.log({availableInterventions});
+
+  const availableInterventionConfigurationIds = availableInterventions.map(
+    (availableIntervention) => availableIntervention.configurationId
+  );
+
+  for (const ctaConfiguration of ctaConfigurations) {
+    const buttonEnabledState = availableInterventionConfigurationIds.includes(
+      ctaConfiguration.configurationId
+    );
+
+    createButtonForCta(
+      availableInterventions,
+      ctaConfiguration,
+      buttonEnabledState,
+      buttonContainer
+    );
+  }
+});
+
+
+<!--  The following helper functions are not required, 
+      but help to provide a clear syntax in the above example. -->
+
+
+// Helper function for returning a specific CTA (if available) from all interventions
+async function getCta(availableInterventions, specifiedConfigurationId) {
+  return availableInterventions.find(({configurationId}) => {
+    return configurationId === specifiedConfigurationId;
+  });
+}
+
+// Launch a given CTA
+async function launchSpecificCta(cta) {
+  cta?.show({
+    isClosable: true,
+    onResult: (result) => {
+      console.log(result);
+      newsletterCache.signup(result);
+    },
+  });
+}
+
+// Helper function for creating a button to launch a CTA
+async function createButtonForCta(
+  availableInterventions,
+  ctaConfiguration,
+  buttonEnabledState,
+  container
+) {
+  const button = document.createElement('button');
+  const cta = await getCta(
+    availableInterventions,
+    ctaConfiguration.configurationId
+  );
+
+  if (buttonEnabledState == true) {
+    button.onclick = () => {
+      launchSpecificCta(cta);
+    };
+  } else {
+    button.setAttribute('disabled', 'true');
+  }
+
+  button.textContent = `${buttonEnabledState == false ? '✅' : ''} ${newsletterConfiguration.name}`;
+  container.appendChild(button);
+}
+
+</script>
 ```

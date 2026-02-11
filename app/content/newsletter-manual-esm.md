@@ -138,6 +138,10 @@ Google in response to submitting a CTA configuration. Publishers use the
 
 ```javascript
 import { subscriptions } from "{{env.SWG_JS_MJS_URL}}";
+
+// Wait for the runtime to be ready
+await subscriptions.ready();
+
 subscriptions.init('{{env.PUBLICATION_ID}}');
 
 const publisherConfiguration = {
