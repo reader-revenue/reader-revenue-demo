@@ -20,6 +20,7 @@ import { renderStaticFile, renderStaticImage } from '../../lib/renderers.js';
 const img = express.Router();
 const js = express.Router();
 const css = express.Router();
+const assets = express.Router();
 
 img.get('/*', async (req, res)=>{
   try {
@@ -30,12 +31,33 @@ img.get('/*', async (req, res)=>{
   }
 })
 
+assets.get('/*', async (req, res)=>{
+  try {
+    const filePath = `public/assets/${req.path}`;
+    const ext = req.path.split('.').pop();
+    const contentType = ext === 'css' ? 'text/css' : (ext === 'svg' ? 'image/svg+xml' : 'text/plain');
+    res.set('Content-Type', contentType);
+    res.sendFile(filePath, { root: '.' });
+  } catch(e) {
+    console.error(`Error: failed to render ${req.path}`, e);
+    res.status(500).end(`Error: failed to render ${req.path}`);
+  }
+})
+
 js.get('/*', async (req, res)=>{
   try {
-    console.log(req.path);
-    const renderedStaticFile = await renderStaticFile(`public/js/${req.path}`);
-    res.set('Content-Type','text/javascript').end(renderedStaticFile);
+    const filePath = `public/js/${req.path}`;
+    if (req.path.includes('swg-local') || req.path.includes('swg-basic-local') || req.path.includes('swg-gaa-local')) {
+      const contentType = req.path.endsWith('.mjs') ? 'application/javascript' : 'text/javascript';
+      res.set('Content-Type', contentType);
+      return res.sendFile(filePath, { root: '.' });
+    }
+
+    const renderedStaticFile = await renderStaticFile(filePath);
+    const contentType = req.path.endsWith('.mjs') ? 'application/javascript' : 'text/javascript';
+    res.set('Content-Type', contentType).end(renderedStaticFile);
   } catch(e) {
+    console.error(`Error: failed to render ${req.path}`, e);
     res.status(500).end(`Error: failed to render ${req.path}`);
   }
 })
@@ -45,8 +67,9 @@ css.get('/*', async (req, res)=>{
     const renderedStaticFile = await renderStaticFile(`public/css/${req.path}`);
     res.set('Content-Type','text/css').end(renderedStaticFile);
   } catch(e) {
+    console.error(`Error: failed to render ${req.path}`, e);
     res.status(500).end(`Error: failed to render ${req.path}`);
   }
 })
 
-export { img, js, css };
+export { img, js, css, assets };

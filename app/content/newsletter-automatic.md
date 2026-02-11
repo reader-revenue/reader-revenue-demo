@@ -1,6 +1,6 @@
 <script async
   type="application/javascript"
-  src="https://news.google.com/swg/js/v1/swg.js">
+  src="{{env.SWG_JS_URL}}">
 </script>
 
 # Newsletter Automatic Initialization

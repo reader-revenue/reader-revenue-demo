@@ -1,8 +1,8 @@
 <script async src="https://accounts.google.com/gsi/client" defer></script>
-<script async subscriptions-control="manual" src="{{env.SWG_JS_URL}}"></script>
+<script async subscriptions-control="manual" src="{{env.SWG_JS_GAA_MJS_URL}}"></script>
 <script async src="{{env.SWG_JS_GAA_URL}}"></script>
 
-# Extended Access - Registration Flow
+# Extended Access - Registration Flow (ESM)
 
 Launch a registration dialog for anonymous users to sign up and gain extended access to paid articles.
 

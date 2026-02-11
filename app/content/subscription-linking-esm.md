@@ -1,10 +1,4 @@
-<script async
-  subscriptions-control="manual" 
-  type="application/javascript"
-  src="{{env.SWG_JS_URL}}">
-</script>
-
-# Subscription Linking
+# Subscription Linking (ESM)
 
 ## Client-side Javascript Demo
 
@@ -15,7 +9,14 @@ This form has a randomly created ppid, but can be set by the reader.
 <br>
 
 ```html
-<script>
+<script type="module">
+// 1. Import SwG
+import { subscriptions } from "{{env.SWG_JS_MJS_URL}}";
+
+// 2. Wait for the runtime to be ready
+await subscriptions.ready();
+
+// 3. Initiate linking
 subscriptions.linkSubscriptions({publisherProvidedId: `ppid` });
 </script>
 ```
@@ -25,11 +26,17 @@ subscriptions.linkSubscriptions({publisherProvidedId: `ppid` });
 <br>
 
 ```html
-<script>
+<script type="module">
+// 1. Import SwG
+import { subscriptions } from "{{env.SWG_JS_MJS_URL}}";
+
+// 2. Wait for the runtime to be ready
+await subscriptions.ready();
+
+// 3. Initiate linking for multiple publications
 subscriptions.linkSubscriptions({linkTo: [
   { publicationId: 'pubId1', publisherProvidedId: 'ppid1' },
-  { publicationId: 'pubId2', publisherProvidedId: 'ppid2' },
-   …
+  { publicationId: 'pubId2', publisherProvidedId: 'ppid2' }
 ]});
 </script>
 ```

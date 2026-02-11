@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Google LLC
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,32 +15,36 @@
  */
 
 /**
- * @fileoverview This client-side js file to handle newsletter CTAs
+ * @fileoverview This client-side js file to handle survey CTAs via ESM
  */
 
+import { subscriptions } from "process.env.SWG_JS_MJS_URL";
 import {
   createButtonsForCtas,
   registerEventManager,
   parseCtaConfigurations,
-} from '/js/cta-methods.js';
+} from "/js/cta-methods.js";
 
-const ctaConfigurationType = 'TYPE_NEWSLETTER_SIGNUP'
+const ctaConfigurationType = "TYPE_REWARDED_SURVEY";
 const ctaConfigurations = parseCtaConfigurations(ctaConfigurationType);
 
-const buttonContainer = document.querySelector('#ctas');
+const buttonContainer = document.querySelector("#ctas");
 
-(self.SWG = self.SWG || []).push(async (subscriptions) => {
-  subscriptions.configure({paySwgVersion: '2'});
-  subscriptions.init('process.env.PUBLICATION_ID');
+// Wait for the runtime to be installed and ready
+await subscriptions.ready();
 
-  await registerEventManager(subscriptions);
-  const availableInterventions = await subscriptions.getAvailableInterventions();
+subscriptions.configure({paySwgVersion: "2"});
+subscriptions.init("process.env.PUBLICATION_ID");
 
-  console.log({availableInterventions});
+await registerEventManager(subscriptions);
+const availableInterventions = await subscriptions.getAvailableInterventions();
 
+console.log({availableInterventions});
+
+if (buttonContainer) {
   await createButtonsForCtas(
     buttonContainer, 
     ctaConfigurationType, 
     ctaConfigurations,
     availableInterventions)
-});
+}

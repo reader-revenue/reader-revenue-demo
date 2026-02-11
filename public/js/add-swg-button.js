@@ -53,7 +53,9 @@ function analyticsEventLogger(subs) {
 
     //Only if the above evaluates to '2' do we use subscriptions.configure()
     if (paySwgVersion == '2') {
-      subscriptions.configure({paySwgVersion: '2'});
+      subscriptions.configure({
+        paySwgVersion,
+      });
     }
     subscriptions.init('process.env.PUBLICATION_ID');
 
