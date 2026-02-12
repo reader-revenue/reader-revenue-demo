@@ -69,6 +69,9 @@ router.get('/check-free-access', async (req, res) => {
         },
     });
 
+    console.log({endpoint, queryParams, url, accessToken})
+
+
     let data;
     const contentType = response.headers.get("content-type");
     if (contentType && contentType.includes("application/json")) {
