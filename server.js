@@ -22,6 +22,7 @@ import readme from './app/routes/readme.js';
 //APIs for content sections
 import accountLinkingApi from './app/routes/account-linking/api.js';
 import extendedAccess from './app/routes/extended-access.js';
+import eafsApi from './app/routes/eafs.js';
 import monetizationApi from './app/routes/monetization/api.js';
 import pubSub from './app/routes/pub-sub.js';
 import publicationApi from './app/routes/publication-api.js';
@@ -56,6 +57,7 @@ app.use('/api/publication', publicationApi);
 app.use('/api/pub-sub', pubSub);
 app.use('/api/account-linking', accountLinkingApi);
 app.use('/api/extended-access', extendedAccess);
+app.use('/api/eafs', eafsApi);
 app.use('/api/monetization', monetizationApi);
 app.use('/api/validate-purchases', validationApi);
 app.use('/api/cancellation', cancellationApi);
