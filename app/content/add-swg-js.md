@@ -6,7 +6,7 @@
 !!! info ★**No Demo**: Only code samples are available 
 !!!
 
-Initialize SwG client `swg.js` to access all SwG functions on the web. The SwG client is distributed as a JavaScript library at `https://news.google.com/swg/js/v1/swg.js`. There are two methods of initializing the JavaScript library:
+Initialize SwG client `swg.js` to access all SwG functions on the web. The SwG client is distributed as a JavaScript library at `{{env.SWG_JS_URL}}`. There are two methods of initializing the JavaScript library:
 
 
 
@@ -35,7 +35,7 @@ Read the [documentation](https://developers.google.com/news/subscribe/guides/add
   <head>
     <!-- 2. Include the swg client -->
     <script async type="application/javascript"
-            src="https://news.google.com/swg/js/v1/swg.js"></script>
+            src="{{env.SWG_JS_URL}}"></script>
 
     <!-- 3. Add a client ready callback -->
     <script>
@@ -101,7 +101,7 @@ Read the [documentation](https://developers.google.com/news/subscribe/guides/add
     <script async 
       subscriptions-control="manual"
       type="application/javascript"
-      src="https://news.google.com/swg/js/v1/swg.js"></script>
+      src="{{env.SWG_JS_URL}}"></script>
 
     <!-- 2. Add a client ready callback -->
     <script>
