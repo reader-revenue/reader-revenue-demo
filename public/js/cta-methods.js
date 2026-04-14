@@ -39,7 +39,7 @@ async function launchSpecificCta(cta, ctaType) {
   cta?.show({
     isClosable: true,
     onResult: (response) => {
-      console.log(response);
+      console.log('onResult response ', response);
       ctaCache.record(response, ctaType)
 
       if (isGTAGEnabled()) {
@@ -234,10 +234,10 @@ function parseCtaConfigurations(ctaConfigurationType) {
     replaced while rendering, and just exists as the string itself.
     */
     if ('process.env.CTA_CONFIG' !== '' && 'process.env.CTA_CONFIG' !== atob('cHJvY2Vzcy5lbnYuQ1RBX0NPTkZJRw==')) {
-      console.log('loading from CTA_CONFIG')
-      configurationString = 'process.env.CTA_CONFIG'
+      console.log('loading from CTA_CONFIG');
+      configurationString = 'process.env.CTA_CONFIG';
     } else {
-      console.log('loading from CTA_CONFIG_BASE64')
+      console.log('loading from CTA_CONFIG_BASE64');
 
       try {
         configurationString = atob('process.env.CTA_CONFIG_BASE64');
