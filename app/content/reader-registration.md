@@ -1,3 +1,4 @@
+<script async src="https://accounts.google.com/gsi/client" defer></script>
 <script async
   subscriptions-control="manual"
   type="application/javascript"

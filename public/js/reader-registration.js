@@ -48,3 +48,23 @@ import {
     // Create buttons for the filtered interventions
     await createButtonsForAvailableCtas(buttonContainer, filteredInterventions);
   });
+
+  const OAUTH_CLIENT_ID = 'process.env.OAUTH_CLIENT_ID';
+
+  function handleCredentialResponse(response) {
+    console.log('Google One Tap response:', response);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+      console.log('Google Identity Services script loaded and available.');
+      google.accounts.id.initialize({
+        client_id: OAUTH_CLIENT_ID,
+        callback: handleCredentialResponse,
+        rrmInterop: true,
+      });
+      google.accounts.id.prompt();
+    } else {
+      console.log('Google Identity Services script not loaded or available yet.');
+    }
+  });
