@@ -15,17 +15,15 @@
  */
 
 /**
- * @fileoverview This client-side js file to handle Reader Registration CTAs
+ * @fileoverview This client-side js file to handle automatic Reader Registration CTAs
  */
 
 import {
-    createButtonsForAvailableCtas,
     registerEventManager,
+    launchSpecificCta,
   } from './cta-methods.js';
   
   const ctaConfigurationType = 'TYPE_REGISTRATION_WALL';
-  
-  const buttonContainer = document.querySelector('#ctas');
   
   (self.SWG = self.SWG || []).push(async (subscriptions) => {
     subscriptions.configure({ paySwgVersion: '2' });
@@ -45,26 +43,20 @@ import {
   
     console.log(filteredInterventions);
   
-    // Handle clear storage button
-    const clearButton = document.getElementById('clear-storage');
-    if (clearButton) {
-      clearButton.addEventListener('click', () => {
-        localStorage.clear();
-        location.reload();
-      });
+    // Show the CTA automatically if found
+    if (filteredInterventions.length > 0) {
+        launchSpecificCta(filteredInterventions[0], ctaConfigurationType);
     }
-  
-    // Create buttons for the filtered interventions
-    await createButtonsForAvailableCtas(buttonContainer, filteredInterventions);
   });
-
+  
   const OAUTH_CLIENT_ID = 'process.env.OAUTH_CLIENT_ID';
-
+  
   function handleCredentialResponse(response) {
     console.log('Google One Tap response:', response);
   }
-
+  
   document.addEventListener('DOMContentLoaded', () => {
+    // Initialize GIS if available
     if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
       console.log('Google Identity Services script loaded and available.');
       google.accounts.id.initialize({
@@ -75,5 +67,14 @@ import {
       google.accounts.id.prompt();
     } else {
       console.log('Google Identity Services script not loaded or available yet.');
+    }
+  
+    // Handle clear storage button
+    const clearButton = document.getElementById('clear-storage');
+    if (clearButton) {
+        clearButton.addEventListener('click', () => {
+            localStorage.clear();
+            location.reload();
+        });
     }
   });
