@@ -5,16 +5,16 @@
   src="https://news.google.com/swg/js/v1/swg{{#env.SWG_OVERRIDE}}-{{.}}{{/env.SWG_OVERRIDE}}.js">
 </script>
 
-# Reader Registration
+# Reader Registration - Automatic
 
-This page demonstrates how Reader Registration CTAs work and documents how to implement them.
+This page demonstrates how Reader Registration CTAs work with automatic invocation.
 Refer to [the Developer documentation](https://developers.google.com/news/reader-revenue/content-access/ctas/type/reader-registration) for more information.
 
-## Test the manual reader registration invocation
+## Test the automatic reader registration invocation
+
+The CTA should appear automatically on this page.
 
 <button id="clear-storage">Clear Local Storage & Reload</button>
-
-<div id="ctas"></div>
 
 ## Reader Registration Overview
 
@@ -38,7 +38,7 @@ To invoke a Reader Registration CTA, the publisher can use the `subscriptions.ge
 const availableInterventions = await subscriptions.getAvailableInterventions();
 
 const cta = availableInterventions.find(({type}) => {
-    return type === 'TYPE_REGSTRATION_WALL';
+    return type === 'TYPE_REGISTRATION_WALL';
 });
 ```
 
