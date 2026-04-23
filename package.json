@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "local": "env $(cat .env) node server.js"
+    "local": "env $(cat .env) node server.js",
+    "local-swg": "node scripts/local-swg.js"
   },
   "dependencies": {
     "@google-cloud/datastore": "^7.5.1",

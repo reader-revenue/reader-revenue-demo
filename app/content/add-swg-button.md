@@ -1,7 +1,7 @@
 <script async
   subscriptions-control="manual"
   type="application/javascript"
-  src="https://news.google.com/swg/js/v1/swg.js">
+  src="{{env.SWG_JS_URL}}">
 </script>
 
 # Add Subscribe with Google button
@@ -52,7 +52,7 @@ Read the [documentation](https://developers.google.com/news/subscribe/guides/sel
   <head>
     <!-- 1. Configure swg.js ... -->
     <script async type="application/javascript"
-            src="https://news.google.com/swg/js/v1/swg.js"></script>
+            src="{{env.SWG_JS_URL}}"></script>
     <script>
       (self.SWG = self.SWG || []).push( subscriptions => {
           // 3. Render the smart button onto the DOM element
@@ -95,7 +95,7 @@ Read the [documentation](https://developers.google.com/news/subscribe/guides/sel
   <head>
     <!-- 1. Add swg.js ... -->
     <script async type="application/javascript"
-            src="https://news.google.com/swg/js/v1/swg.js"></script>
+            src="{{env.SWG_JS_URL}}"></script>
     <script>
       (self.SWG = self.SWG || []).push( subscriptions => {
           // 3. Render the smart button onto the DOM element
