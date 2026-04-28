@@ -32,9 +32,21 @@ async function checkEntitlements() {
     try {
       const result = await queryLocalEntitlements(getAuthzCred('accessToken'));
       if (result.entitlements && result.entitlements.length > 0) {
-        // Find the most recent productId
+        // Find the most recent entitlement
         const mostRecent = result.entitlements[0];
-        updateEligibilityUI(mostRecent.productId);
+        
+        // The SKU ID (e.g. SWGPD.xxx) is often inside the subscriptionToken string
+        let skuId = mostRecent.productId;
+        if (!skuId && mostRecent.subscriptionToken) {
+          try {
+            const tokenData = JSON.parse(mostRecent.subscriptionToken);
+            skuId = tokenData.productId;
+          } catch (e) {
+            console.warn('Failed to parse subscriptionToken', e);
+          }
+        }
+
+        updateEligibilityUI(skuId);
       } else {
         updateEligibilityUI(null);
       }
@@ -48,9 +60,9 @@ async function checkEntitlements() {
 /**
  * handleRedirectFromOAuth (custom version for this page)
  */
-async function handleRedirect(authorization_code) {
+async function handleRedirect(authorization_code, redirectUri) {
   console.log('Redirect from OAuth endpoint (custom)');
-  const tokens = await exchangeAuthCodeForTokens(authorization_code);
+  const tokens = await exchangeAuthCodeForTokens(authorization_code, redirectUri);
   setAuthzCreds(authorization_code, tokens.access_token, tokens.refresh_token);
   // Redirect back to this page without the OAuth params
   window.location.href = window.location.pathname;
@@ -76,13 +88,14 @@ function analyticsEventLogger(subs) {
   analyticsEventLogger(subscriptions);
 
   // Initialize GIS
-  initializeClient();
+  const redirectUri = `${location.origin}${location.pathname}`;
+  initializeClient(redirectUri);
   renderButton('#siwgButton .button');
 
   // handle redirect
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('state') === 'redirect_from_gis_authz_client') {
-    await handleRedirect(urlParams.get('code'));
+    await handleRedirect(urlParams.get('code'), redirectUri);
   }
 
   // Check for cached credentials
