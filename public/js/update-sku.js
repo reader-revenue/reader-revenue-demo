@@ -8,20 +8,24 @@ console.log('update-sku.js script loaded');
 let activeSku = null;
 
 function updateEligibilityUI(sku) {
-  const statusEl = document.getElementById('eligibility-status');
-  const updateOffersButton = document.getElementById('swg-update-offers-button');
-  const updateSubscriptionButton = document.getElementById('swg-update-subscription-button');
+  const statusEl = document.querySelector('#eligibility-status');
+  const updateOffersButton = document.querySelector('#swg-update-offers-button');
+  const updateSubscriptionButton = document.querySelector('#swg-update-subscription-button');
 
   if (sku) {
     activeSku = sku;
-    statusEl.className = 'alert alert-success mt-3';
-    statusEl.innerText = `Eligible to update! Current SKU: ${sku}`;
+    if (statusEl) {
+      statusEl.className = 'alert alert-success mt-3';
+      statusEl.innerText = `Eligible to update! Current SKU: ${sku}`;
+    }
     if (updateOffersButton) updateOffersButton.disabled = false;
     if (updateSubscriptionButton) updateSubscriptionButton.disabled = false;
   } else {
     activeSku = null;
-    statusEl.className = 'alert alert-warning mt-3';
-    statusEl.innerText = 'No active subscription found. You must have a subscription to test the update flow.';
+    if (statusEl) {
+      statusEl.className = 'alert alert-warning mt-3';
+      statusEl.innerText = 'No active subscription found. You must have a subscription to test the update flow.';
+    }
     if (updateOffersButton) updateOffersButton.disabled = true;
     if (updateSubscriptionButton) updateSubscriptionButton.disabled = true;
   }
@@ -104,7 +108,7 @@ function analyticsEventLogger(subs) {
   }
 
   // Button for showUpdateOffers
-  let updateOffersButton = document.getElementById('swg-update-offers-button');
+  let updateOffersButton = document.querySelector('#swg-update-offers-button');
   console.log('updateOffersButton found:', !!updateOffersButton);
   if (updateOffersButton) {
     updateOffersButton.onclick = function() {
@@ -118,7 +122,7 @@ function analyticsEventLogger(subs) {
   }
 
   // Button for updateSubscription
-  let updateSubscriptionButton = document.getElementById('swg-update-subscription-button');
+  let updateSubscriptionButton = document.querySelector('#swg-update-subscription-button');
   console.log('updateSubscriptionButton found:', !!updateSubscriptionButton);
   if (updateSubscriptionButton) {
     updateSubscriptionButton.onclick = function() {
