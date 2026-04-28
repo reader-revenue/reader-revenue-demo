@@ -15,7 +15,8 @@
  */
 
 import {getAuthzCred} from './publication-api-storage.js';
-import {parseJwt} from './utils.js';
+import {queryLocalEntitlements} from './publication-api-entitlements.js';
+import {insertHighlightedJson, parseJwt} from './utils.js';
 
 /**
  * @fileoverview Description of this file.
@@ -27,15 +28,19 @@ const REQUESTED_SCOPES = [
 ];
 
 const REQUESTED_SCOPE = REQUESTED_SCOPES.join(' ');
-const REDIRECT = `${location.origin}/reference/publication-api`;
+const DEFAULT_REDIRECT = `${location.origin}/reference/publication-api`;
 const OAUTH_CLIENT_ID =
     'process.env.OAUTH_CLIENT_ID';
+
+let customRedirectUri = null;
 
 /**
  * initializeClient
  * Initializes a GIS authentication client
+ * @param {string} redirectUri
  */
-function initializeClient() {
+function initializeClient(redirectUri) {
+  customRedirectUri = redirectUri || DEFAULT_REDIRECT;
   // Initialise the GIS Authentication client
   google.accounts.id.initialize(
       {client_id: OAUTH_CLIENT_ID, callback: handleClientInitialization});
@@ -55,7 +60,7 @@ function initGISAuthCodeClientRedirect(hint) {
     scope: REQUESTED_SCOPE,
     hint: hint,
     ux_mode: 'redirect',
-    redirect_uri: REDIRECT,
+    redirect_uri: customRedirectUri,
     state: 'redirect_from_gis_authz_client',
     select_account: false
   });
@@ -81,15 +86,20 @@ async function handleClientInitialization(response) {
     console.log({accessToken, refreshToken});
 
     // display to user
-    insertHighlightedJson(
-        '#GISOutput', getAuthzCred('refreshToken'), 'Refresh token');
+    const outputEl = document.querySelector('#GISOutput');
+    if (outputEl) {
+      insertHighlightedJson(
+          '#GISOutput', getAuthzCred('refreshToken'), 'Refresh token');
+    }
 
     const entitlements = await queryLocalEntitlements(accessToken);
 
     console.log({entitlements});
-    insertHighlightedJson(
-        '#GISOutput', entitlements,
-        'Entitlements after using the Sign-in with Google button');
+    if (outputEl) {
+      insertHighlightedJson(
+          '#GISOutput', entitlements,
+          'Entitlements after using the Sign-in with Google button');
+    }
   } else {  // redirect
     console.log('No authorizationCode found for this user in our systems.');
     let auth_client = initGISAuthCodeClientRedirect(parsedJwt.sub);

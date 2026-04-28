@@ -18,10 +18,11 @@
  * exchangeAuthCodeForTokens
  * Exchange authorization code with access+refresh token
  * @param {string} code
+ * @param {string} redirectUri
  * @returns {{object}}
  */
-async function exchangeAuthCodeForTokens(code) {
-  const redirect = `${location.origin}/reference/publication-api`;
+async function exchangeAuthCodeForTokens(code, redirectUri) {
+  const redirect = redirectUri || `${location.origin}/reference/publication-api`;
   const url = `${location.origin}/api/publication/exchange`;
   const requestOptions = {
     method: 'POST',

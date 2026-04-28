@@ -61,6 +61,9 @@ substitutions can occur at build-time:
 -   `CTA_CONFIG_BASE64` - Base64-encoded version of CTA_CONFIG.
 -   `NEWSLETTER_CTA_CONFIGURATION_ID` - Used in newsletter-automatic.js
 -   `SWG_SKU` - Used in add-swg-button.js
+-   `OTHER_SKU1` - Used in update-sku.js as an initial subscription SKU
+-   `OTHER_SKU2` - Used in update-sku.js as an upgrade/downgrade target SKU
+-   `OTHER_SKU3` - Used in update-sku.js as an upgrade/downgrade target SKU
 -   `GTAG_PROPERTY_ID` - A unique id to send data to Google Analytics and/or Google Ads. It's also called [Google ID](https://support.google.com/analytics/answer/9539598).
 -   `GTAG_CONSENT_MODE_ALL_DENIED` - Set [default consent status](https://developers.google.com/tag-platform/security/guides/consent?consentmode=advanced#default-consent) to all denied
 -   `GTAG_DEBUG_MODE` - Enable [gtag debug mode](https://support.google.com/analytics/answer/7201382#zippy=%2Cgoogle-tag-gtagjs)
@@ -108,6 +111,9 @@ NEWSLETTER_CTA_CONFIGURATION_ID=newsletter-config-1234
 
 # SwG configuration
 SWG_SKU=SWGPD.1234
+OTHER_SKU1=SWGPD.7396-1992-3713-93389
+OTHER_SKU2=SWGPD.3391-5185-7663-76625
+OTHER_SKU3=SWGPD.1622-6200-3088-81282
 
 # Google Analytics
 GTAG_PROPERTY_ID=G-12345ABCDE
