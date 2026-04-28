@@ -57,7 +57,7 @@ In this demo, we'll trigger an update from your current SKU to `{{env.OTHER_SKU2
 <button id="swg-update-subscription-button" class="demo-button" disabled>Update Subscription Directly</button>
 
 ## Implementation
-...
+
 ### showUpdateOffers
 
 1. Identify the user's current SKU (e.g., from `getEntitlements()`).
