@@ -87,6 +87,10 @@ cta?.show({
         // For example, store the engagement and return true to confirm.
         console.log(result);
         return true;
+    },
+    onAlternateAction: () => {
+        // Must be set to show the Subscribe button in the Rewarded Ads CTA.
+        subscriptions.showOffers({isClosable: true});
     }
 });
 ```
@@ -94,6 +98,8 @@ cta?.show({
 ### Handle the response
 
 The `onResult` callback includes the user engagement result. The `configurationId` matches the ID provided to the publisher from Google in the Publisher Center.
+
+`onAlternateAction` must be set to show the `Subscribe` button in the Rewarded Ads CTA. When the user clicks the `Subscribe` button, this callback is invoked (for example, to display subscription offers via `subscriptions.showOffers({isClosable: true})`).
 
 !!! note The `onResult` callback conforms to the documented type in [SwG GitHub](https://github.com/subscriptions-project/swg-js/blob/main/src/api/available-intervention.ts#L43).
 !!!
@@ -183,6 +189,11 @@ async function launchSpecificCta(cta) {
     onResult: (result) => {
       console.log(result);
       ctaCache.record(result); // Record the engagement result
+    },
+    onAlternateAction: () => {
+      (self.SWG = self.SWG || []).push((subscriptions) => {
+        subscriptions.showOffers({isClosable: true});
+      });
     },
   });
 }

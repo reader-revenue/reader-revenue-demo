@@ -35,22 +35,33 @@ async function getCtaByType(availableInterventions, ctaType) {
 }
 
 async function launchSpecificCta(cta, ctaType) {
+  const type = cta?.type || ctaType;
 
-  cta?.show({
+  const options = {
     isClosable: true,
     onResult: (response) => {
       console.log('onResult response ', response);
-      ctaCache.record(response, ctaType)
+      ctaCache.record(response, type);
 
       if (isGTAGEnabled()) {
-        gtag('event', `${ctaType}-response`, {
-          'response': JSON.stringify(response)
-        })
+        gtag('event', `${type}-response`, {
+          'response': JSON.stringify(response),
+        });
       }
 
       return true;
     },
-  });
+  };
+
+  if (type === 'TYPE_REWARDED_AD') {
+    options.onAlternateAction = () => {
+      (self.SWG = self.SWG || []).push((subscriptions) => {
+        subscriptions.showOffers({ isClosable: true });
+      });
+    };
+  }
+
+  cta?.show(options);
 }
 
 // A boolean function to handle the potential of surfacing
@@ -133,7 +144,7 @@ async function createButtonForAvailableCta(
   );
 
   button.onclick = () => {
-    launchSpecificCta(cta);
+    launchSpecificCta(cta, intervention.type);
   };
 
   button.textContent = getButtonText(intervention, index);
