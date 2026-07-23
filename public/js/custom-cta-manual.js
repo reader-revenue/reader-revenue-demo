@@ -47,6 +47,6 @@ import {
     console.log(filteredInterventions);
   
     // Create buttons for the filtered interventions
-    await createButtonsForAvailableCtas(buttonContainer, filteredInterventions);
+    await createButtonsForAvailableCtas(buttonContainer, filteredInterventions, subscriptions);
   });
   

@@ -55,7 +55,7 @@ import {
     }
   
     // Create buttons for the filtered interventions
-    await createButtonsForAvailableCtas(buttonContainer, filteredInterventions);
+    await createButtonsForAvailableCtas(buttonContainer, filteredInterventions, subscriptions);
   });
 
   const OAUTH_CLIENT_ID = 'process.env.OAUTH_CLIENT_ID';

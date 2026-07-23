@@ -41,6 +41,7 @@ const buttonContainer = document.querySelector('#ctas');
   await createButtonsForCtas(
     buttonContainer, 
     ctaConfigurationType, 
-    ctaConfigurations,
-    availableInterventions)
+    ctaConfigurations, 
+    availableInterventions,
+    subscriptions);
 });

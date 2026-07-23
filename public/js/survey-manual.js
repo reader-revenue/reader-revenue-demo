@@ -44,6 +44,7 @@ const buttonContainer = document.querySelector('#ctas');
     buttonContainer, 
     ctaConfigurationType, 
     ctaConfigurations,
-    availableInterventions)
+    availableInterventions,
+    subscriptions)
   
 });

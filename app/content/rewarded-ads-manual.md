@@ -168,7 +168,8 @@ const buttonContainer = document.querySelector('#ctas');
       availableInterventions,
       ctaConfiguration,
       buttonEnabledState,
-      buttonContainer
+      buttonContainer,
+      () => subscriptions.showOffers({isClosable: true})
     );
   }
 });
@@ -183,18 +184,14 @@ async function getCta(availableInterventions, specifiedConfigurationId) {
 }
 
 // Launch a given rewarded ad
-async function launchSpecificCta(cta) {
+async function launchSpecificCta(cta, onAlternateAction) {
   cta?.show({
     isClosable: true,
     onResult: (result) => {
       console.log(result);
       ctaCache.record(result); // Record the engagement result
     },
-    onAlternateAction: () => {
-      (self.SWG = self.SWG || []).push((subscriptions) => {
-        subscriptions.showOffers({isClosable: true});
-      });
-    },
+    onAlternateAction: onAlternateAction || (() => {}),
   });
 }
 
@@ -203,7 +200,8 @@ async function createButtonForCta(
   availableInterventions,
   ctaConfiguration,
   buttonEnabledState,
-  container
+  container,
+  onAlternateAction
 ) {
   const button = document.createElement('button');
   const cta = await getCta(
@@ -213,7 +211,7 @@ async function createButtonForCta(
 
   if (buttonEnabledState == true) {
     button.onclick = () => {
-      launchSpecificCta(cta);
+      launchSpecificCta(cta, onAlternateAction);
     };
   } else {
     button.setAttribute('disabled', 'true');

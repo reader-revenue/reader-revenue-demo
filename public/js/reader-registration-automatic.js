@@ -45,7 +45,7 @@ import {
   
     // Show the CTA automatically if found
     if (filteredInterventions.length > 0) {
-        launchSpecificCta(filteredInterventions[0], ctaConfigurationType);
+        launchSpecificCta(filteredInterventions[0], ctaConfigurationType, subscriptions);
     }
   });
   
