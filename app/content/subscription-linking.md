@@ -1,7 +1,7 @@
 <script async
   subscriptions-control="manual" 
   type="application/javascript"
-  src="https://news.google.com/swg/js/v1/swg.js">
+  src="{{env.SWG_JS_URL}}">
 </script>
 
 # Subscription Linking

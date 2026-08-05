@@ -1,7 +1,7 @@
 <script async
   subscriptions-control="manual"
   type="application/javascript"
-  src="https://news.google.com/swg/js/v1/swg{{#env.SWG_OVERRIDE}}-{{.}}{{/env.SWG_OVERRIDE}}.js">
+  src="{{env.SWG_JS_URL}}">
 </script>
 
 # Newsletter CTAs
@@ -259,7 +259,7 @@ account or customer management system.
 <script async
     subscriptions-control="manual"
     type="application/javascript"
-    src="https://news.google.com/swg/js/v1/swg.js">
+    src="{{env.SWG_JS_URL}}">
 </script>
 
 <!-- configuring swg.js to invoke and handle newsletter CTAs -->

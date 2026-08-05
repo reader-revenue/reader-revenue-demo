@@ -1,6 +1,6 @@
 <script async src="https://accounts.google.com/gsi/client" defer></script>
-<script async subscriptions-control="manual" src="https://news.google.com/swg/js/v1/swg.js"></script>
-<script async src="https://news.google.com/swg/js/v1/swg-gaa.js"></script>
+<script async subscriptions-control="manual" src="{{env.SWG_JS_URL}}"></script>
+<script async src="{{env.SWG_JS_GAA_URL}}"></script>
 
 # Extended Access - Registration Flow
 

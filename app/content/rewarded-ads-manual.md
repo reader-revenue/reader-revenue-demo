@@ -1,7 +1,7 @@
 <script async
   subscriptions-control="manual"
   type="application/javascript"
-  src="https://news.google.com/swg/js/v1/swg{{#env.SWG_OVERRIDE}}-{{.}}{{/env.SWG_OVERRIDE}}.js">
+  src="{{env.SWG_JS_URL}}">
 </script>
 
 <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous">
@@ -116,7 +116,7 @@ In a production environment, a publisher would use the rewarded ad response to s
 <script async
     subscriptions-control="manual"
     type="application/javascript"
-    src="https://news.google.com/swg/js/v1/swg.js">
+    src="{{env.SWG_JS_URL}}">
 </script>
 
 <!-- configuring swg.js to invoke and handle rewarded ads -->

@@ -1,7 +1,7 @@
 <script async
   subscriptions-control="manual" 
   type="application/javascript"
-  src="https://news.google.com/swg/js/v1/swg.js">
+  src="{{env.SWG_JS_URL}}">
 </script>
 
 # Account Linking
@@ -36,12 +36,12 @@ The Console DevTool is available to test account linking. For more information, 
 
 ## Sample Implementation
 
-1. Include [swg.js](https://developers.google.com/news/reader-revenue/monetization/prerequisites/configure-javascript): `<script async src="https://news.google.com/swg/js/v1/swg.js"></script>`.
+1. Include [swg.js](https://developers.google.com/news/reader-revenue/monetization/prerequisites/configure-javascript): `<script async src="{{env.SWG_JS_URL}}"></script>`.
 1. Include the appropriate [structured data markup](https://developers.google.com/news/reader-revenue/monetization/prerequisites/structured-data-markup) for the page.
 1. Load the sample page and click on "Link your account" button.
 
 ```html
-<script async type="application/javascript" src="https://news.google.com/swg/js/v1/swg.js"></script>
+<script async type="application/javascript" src="{{env.SWG_JS_URL}}"></script>
 <script type="application/ld+json">
   {
     "@context": "http://schema.org",

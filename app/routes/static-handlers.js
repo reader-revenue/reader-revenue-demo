@@ -20,11 +20,23 @@ import { renderStaticFile, renderStaticImage } from '../../lib/renderers.js';
 const img = express.Router();
 const js = express.Router();
 const css = express.Router();
+const assets = express.Router();
 
 img.get('/*', async (req, res)=>{
   try {
     const image = await renderStaticImage(`public/img/${req.path}`);
     res.set('Content-Type',`image/${req.path.split('.').pop()}`).end(image);
+  } catch(e) {
+    res.status(500).end(`Error: failed to render ${req.path}`);
+  }
+})
+
+assets.get('/*', async (req, res)=>{
+  try {
+    const file = await renderStaticFile(`public/assets/${req.path}`);
+    const ext = req.path.split('.').pop();
+    const contentType = ext === 'css' ? 'text/css' : (ext === 'svg' ? 'image/svg+xml' : 'text/plain');
+    res.set('Content-Type', contentType).end(file);
   } catch(e) {
     res.status(500).end(`Error: failed to render ${req.path}`);
   }
@@ -49,4 +61,4 @@ css.get('/*', async (req, res)=>{
   }
 })
 
-export { img, js, css };
+export { img, js, css, assets };

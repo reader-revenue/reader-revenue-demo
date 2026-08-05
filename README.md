@@ -78,6 +78,55 @@ This application is designed to allow content edits to happen with ease, but
 allow enough flexibility to accommodate significant deviations from the
 templated methods.
 
+### Local swg-js development
+
+You can run this demo using a local copy of the `swg-js` library. This is useful
+for testing changes to the library before they are published.
+
+#### 1. Setup local links
+
+The project includes a script to automate building a local `swg-js` repository
+and linking its output into this demo.
+
+```shell
+# Assuming swg-js is in a sibling directory
+npm run local-swg
+```
+
+Alternatively, you can provide a custom path to the `swg-js` repository:
+```shell
+npm run local-swg -- ../path/to/swg-js
+```
+
+#### 2. Configure environment
+
+The `local-swg` script automatically updates your `.env` file to include:
+```shell
+SWG_OVERRIDE=local
+ENV_OVERRIDES=SWG_OVERRIDE
+```
+
+- `SWG_OVERRIDE=local`: Tells the renderer to use local `/js/swg-local.js` instead of the production CDN.
+- `ENV_OVERRIDES`: Enables overriding environment variables via query parameters (e.g., `?swg-override=production` to switch back temporarily).
+
+You can also enable the mock buy flow by setting:
+```shell
+SWG_MOCK_BUYFLOW=true
+```
+This is useful for testing purchase flows without requiring real payment methods.
+
+#### 3. Run the demo
+
+Once linked and configured, start the demo server as usual:
+
+```shell
+npm run local
+```
+
+The demo will now serve `swg.js` (and its variants) and library assets (CSS/SVG)
+directly from your local `swg-js` checkout. Any changes you make and rebuild in 
+`swg-js` will be reflected in the demo.
+
 ### Sample Env File
 
 ```shell
@@ -114,6 +163,7 @@ SWG_SKU=SWGPD.1234
 OTHER_SKU1=SWGPD.7396-1992-3713-93389
 OTHER_SKU2=SWGPD.3391-5185-7663-76625
 OTHER_SKU3=SWGPD.1622-6200-3088-81282
+SWG_MOCK_BUYFLOW=true
 
 # Google Analytics
 GTAG_PROPERTY_ID=G-12345ABCDE
