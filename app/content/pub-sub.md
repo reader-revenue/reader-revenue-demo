@@ -16,6 +16,7 @@ Datastore can run in multiple modes in GCP. This sample pub/sub logger is design
 4. Configure a Pub/Sub topic and Subscription. 
     1. Please refer to the [devsite article on on handling Cloud Pub/Sub](https://developers.google.com/news/reader-revenue/monetization/sell/handle-pub-sub) for information oncreating a topic.
     2. When creating the subscription, configure it as a [Push Subscription](https://cloud.google.com/pubsub/docs/create-push-subscription#create_a_push_subscription), and set the **Endpoint URL** to `<Your-AppEngine-Url>.appspot.com/api/pub-sub/receive`.
+    3. Under **Authentication**, check **Enable authentication**, select your service account, and optionally configure your audience URL (or set `PUBSUB_VERIFICATION_AUDIENCE` in your server environment). Google Cloud Pub/Sub will automatically attach a Google-signed OIDC bearer token (`Authorization: Bearer <token>`) to each push notification for verification.
 
 After completing these steps, every time a notification is sent to the configured topic, the subscription will pick it up and push it to your application. The application then displays and stores it for future analysis. 
 
