@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-import {OAuth2Client} from 'google-auth-library';
 import {Storage} from '../../lib/datastore.js';
+import {verifyPubSubToken} from '../../middleware/pub-sub.js';
 import express from 'express';
 
 const router = express.Router();
-const authClient = new OAuth2Client();
 
 /**
  * Instantiate the storage library with the namespace
@@ -29,57 +28,6 @@ const authClient = new OAuth2Client();
 function getStorage(namespace) {
   const storage = new Storage(namespace);
   return storage;
-}
-
-/**
- * Middleware to verify Google Cloud Pub/Sub push notification OIDC bearer tokens.
- * Validates that incoming push requests carry a genuine Google-signed JWT in the
- * Authorization: Bearer <token> header before allowing payloads to be persisted.
- */
-export async function verifyPubSubToken(req, res, next) {
-  // Allow bypassing verification strictly in local testing if explicitly configured
-  if (process.env.SKIP_PUBSUB_AUTH === 'true') {
-    return next();
-  }
-
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res
-      .status(401)
-      .send('Unauthorized: Missing or invalid Authorization header');
-  }
-
-  const token = authHeader.substring(7).trim();
-  if (!token) {
-    return res.status(401).send('Unauthorized: Empty Bearer token');
-  }
-
-  try {
-    const audience =
-      process.env.PUBSUB_VERIFICATION_AUDIENCE || process.env.PUBSUB_AUDIENCE;
-    const ticket = await authClient.verifyIdToken({
-      idToken: token,
-      audience: audience || undefined,
-    });
-    const payload = ticket.getPayload();
-
-    // Verify token issuer is Google Accounts
-    if (
-      !payload ||
-      (payload.iss !== 'accounts.google.com' &&
-        payload.iss !== 'https://accounts.google.com')
-    ) {
-      return res.status(401).send('Unauthorized: Invalid token issuer');
-    }
-
-    req.pubsubTokenPayload = payload;
-    next();
-  } catch (err) {
-    console.error('Pub/Sub token verification failed:', err.message);
-    return res
-      .status(401)
-      .send(`Unauthorized: Token verification failed (${err.message})`);
-  }
 }
 
 router.post('/receive', express.json(), verifyPubSubToken, async (req, res) => {

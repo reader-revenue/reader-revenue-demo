@@ -34,7 +34,7 @@ describe('verifyPubSubToken middleware', () => {
       })),
     }));
 
-    const module = await import('../app/routes/pub-sub.js');
+    const module = await import('../middleware/pub-sub.js');
     verifyPubSubToken = module.verifyPubSubToken;
   });
 
