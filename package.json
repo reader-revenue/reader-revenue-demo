@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "local": "env $(cat .env) node server.js",
+    "local": "node --env-file=.env server.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testMatch='**/test/**/*.test.js'"
   },
   "dependencies": {
