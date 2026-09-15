@@ -102,6 +102,12 @@ npm run local
 
 The application will dynamically resolve and serve your custom endpoints across all interactive demo pages!
 
+### Local SSL Proxy & Domain Interception
+
+When testing features that enforce strict origin verification (`window.location.origin`), such as Google Sign-In OAuth or `swg.js`, you can enable the built-in forward SSL proxy to intercept an authorized production domain (e.g., `https://reader-revenue-demo.ue.r.appspot.com`) and route it locally to Express (`127.0.0.1:8080`).
+
+See [app/content/ssl-proxy.md](./app/content/ssl-proxy.md) (or visit `/ssl-proxy` when running locally) for full setup instructions.
+
 ### Sample Env File
 
 ```shell
@@ -143,6 +149,11 @@ OTHER_SKU3=SWGPD.1622-6200-3088-81282
 GTAG_PROPERTY_ID=G-12345ABCDE
 GTAG_CONSENT_MODE_ALL_DENIED=true
 GTAG_DEBUG_MODE=true
+
+# SSL Proxy Configuration (Opt-In)
+SSL_PROXY_ENABLED=false
+SSL_PROXY_PORT=8888
+SSL_TARGET_DOMAIN=reader-revenue-demo.ue.r.appspot.com
 ```
 
 ## Next Steps

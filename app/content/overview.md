@@ -238,18 +238,23 @@ header that is clickable and fires a custom event.
 
 ```javascript
 {
-  section: "Content examples",
+  section: "Setup and Editing",
   links: [
     {
-      label: 'admonition callouts',
+      label: 'How to edit this site',
+      url: '/contributing',
+      content: 'app/content/overview.md',
+      script: 'js/readme.js'
+    },
+    {
+      label: 'Markdown callout examples',
       url: '/examples',
       content: 'app/content/examples.md'
     },
     {
-      label: 'How to edit this site',
-      url: '/contributing',
-      content: 'README.md',
-      script: 'js/readme.js'
+      label: 'Local SSL proxy setup',
+      url: '/ssl-proxy',
+      content: 'app/content/ssl-proxy.md'
     }
   ]
 }

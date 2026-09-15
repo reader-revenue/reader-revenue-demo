@@ -21,20 +21,21 @@ import readme from './app/routes/readme.js';
 
 //APIs for content sections
 import accountLinkingApi from './app/routes/account-linking/api.js';
-import extendedAccess from './app/routes/extended-access.js';
+import cancellationApi from './app/routes/cancellation/api.js';
 import eafsApi from './app/routes/eafs.js';
+import extendedAccess from './app/routes/extended-access.js';
 import monetizationApi from './app/routes/monetization/api.js';
 import pubSub from './app/routes/pub-sub.js';
 import publicationApi from './app/routes/publication-api.js';
 import subscriptionLinkingApi from './app/routes/subscription-linking/api.js';
 import validationApi from './app/routes/validation/validate-purchases.js';
-import cancellationApi from './app/routes/cancellation/api.js';
 
 // Proxy handles https and reverse proxy settings for running locally
 import cookies from './middleware/cookies.js';
 import overrides from './middleware/overrides.js';
 import proxy from './middleware/proxy.js';
 import ssl from './middleware/ssl.js';
+import sslProxy from './middleware/ssl-proxy.js';
 
 // Static routers with some custom behavior
 import {css, img, js} from './app/routes/static-handlers.js';
@@ -42,6 +43,7 @@ import {css, img, js} from './app/routes/static-handlers.js';
 // Configure app globals
 const app = express();
 app.set('trust proxy', 'loopback');
+app.use(sslProxy);
 app.use(proxy);
 app.use(ssl);
 app.use(overrides);
