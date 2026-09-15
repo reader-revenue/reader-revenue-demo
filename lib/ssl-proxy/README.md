@@ -17,8 +17,8 @@ This folder (`lib/ssl-proxy/`) is designed to be **fully portable and framework-
 ```text
 lib/ssl-proxy/
 ├── README.md                     # Standalone documentation & architecture guide
+├── index.js                      # SslStreamProxy entrypoint & package exports
 ├── certs.js                      # CertificateManager: Root CA & dynamic SNI leaf cert generator
-├── ssl-stream-proxy.js           # SslStreamProxy: Forward proxy & selective TLS termination server
 └── templates/
     ├── openssl-ca.cnf            # OpenSSL config template for the Name-Constrained Root CA
     └── openssl-leaf.ext          # OpenSSL v3 extension template for SAN leaf certificates
@@ -84,7 +84,7 @@ To embed the proxy into your own application:
 
 ```javascript
 import express from 'express';
-import {SslStreamProxy} from './lib/ssl-proxy/ssl-stream-proxy.js';
+import {SslStreamProxy} from './lib/ssl-proxy/index.js';
 
 const app = express();
 app.set('trust proxy', 'loopback');
