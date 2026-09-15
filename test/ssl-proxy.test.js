@@ -18,14 +18,14 @@ import {
   CertificateManager,
   doKeyAndCertMatch,
   validateDomainName,
-} from '../lib/certs.js';
-import {SslStreamProxy} from '../lib/ssl-stream-proxy.js';
+} from '../lib/ssl-proxy/certs.js';
+import {SslStreamProxy} from '../lib/ssl-proxy/ssl-stream-proxy.js';
 import {join} from 'node:path';
 import {mkdtempSync, rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import sslProxy, {getSslProxyInstance} from '../middleware/ssl-proxy.js';
 
-describe('lib/certs.js, lib/ssl-stream-proxy.js, and middleware/ssl-proxy.js', () => {
+describe('lib/ssl-proxy and middleware/ssl-proxy.js', () => {
   let tempDir;
 
   beforeEach(() => {
