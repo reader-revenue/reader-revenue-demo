@@ -19,12 +19,13 @@ import {
   doKeyAndCertMatch,
   validateDomainName,
 } from '../lib/certs.js';
+import {SslStreamProxy} from '../lib/ssl-stream-proxy.js';
 import {join} from 'node:path';
 import {mkdtempSync, rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import sslProxy, {getSslProxyInstance} from '../middleware/ssl-proxy.js';
 
-describe('lib/certs.js and middleware/ssl-proxy.js', () => {
+describe('lib/certs.js, lib/ssl-stream-proxy.js, and middleware/ssl-proxy.js', () => {
   let tempDir;
 
   beforeEach(() => {
@@ -52,7 +53,7 @@ describe('lib/certs.js and middleware/ssl-proxy.js', () => {
   });
 
   describe('CertificateManager', () => {
-    test('mints Root CA and matching SAN leaf certificate in custom directory', () => {
+    test('mints Root CA and matching SAN leaf certificate using template files', () => {
       const manager = new CertificateManager({
         certsDir: tempDir,
         targetDomains: ['reader-revenue-demo.ue.r.appspot.com'],
@@ -66,6 +67,28 @@ describe('lib/certs.js and middleware/ssl-proxy.js', () => {
       );
       expect(doKeyAndCertMatch(leaf.key, leaf.cert)).toBe(true);
       expect(leaf.secureContext).toBeDefined();
+    });
+
+    test('respects SSL_CERTS_DIR environment variable', () => {
+      process.env.SSL_CERTS_DIR = tempDir;
+      const manager = new CertificateManager();
+      expect(manager.certsDir).toBe(tempDir);
+      delete process.env.SSL_CERTS_DIR;
+    });
+  });
+
+  describe('SslStreamProxy', () => {
+    test('identifies configured target domains and subdomains', () => {
+      const proxy = new SslStreamProxy({
+        certsDir: tempDir,
+        targetDomains: ['reader-revenue-demo.ue.r.appspot.com'],
+        port: 0,
+      });
+
+      expect(
+        proxy.isTargetDomain('reader-revenue-demo.ue.r.appspot.com:443')
+      ).toBe(true);
+      expect(proxy.isTargetDomain('accounts.google.com:443')).toBe(false);
     });
   });
 

@@ -154,6 +154,7 @@ GTAG_DEBUG_MODE=true
 SSL_PROXY_ENABLED=false
 SSL_PROXY_PORT=8888
 SSL_TARGET_DOMAIN=reader-revenue-demo.ue.r.appspot.com
+SSL_CERTS_DIR=.certs
 ```
 
 ## Next Steps

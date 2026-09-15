@@ -15,12 +15,12 @@
 ## 2. Architecture & Components
 
 ### A. Certificate Manager (`lib/certs.js`)
-* Zero external dependencies (uses standard `node:crypto`, `node:fs`, and `openssl`).
-* Automatically generates and manages local certificates in `~/.config/reader-revenue-demo/certs/`.
+* Zero external dependencies (uses standard `node:crypto`, `node:fs`, and `openssl` with configuration templates in `lib/templates/`).
+* Automatically generates and manages local certificates in `.certs/` (configurable via `SSL_CERTS_DIR`).
 * Employs X.509 `nameConstraints` (`permitted;DNS:reader-revenue-demo.ue.r.appspot.com`) so the local CA cannot be used outside the configured target domain scope.
 * Dynamically mints and caches leaf certificates with Subject Alternative Names (SAN) matching the requested domain during TLS SNI negotiation.
 
-### B. SSL Proxy Middleware (`middleware/ssl-proxy.js`)
+### B. SSL Stream Proxy (`lib/ssl-stream-proxy.js` & `middleware/ssl-proxy.js`)
 * Opt-in via `SSL_PROXY_ENABLED=true`.
 * Listens on `0.0.0.0:8888` (configurable via `SSL_PROXY_PORT`).
 * Spawns an internal HTTPS server on an ephemeral loopback port (`127.0.0.1:0`) using dynamic SNI certificates from `CertificateManager`.
@@ -49,6 +49,7 @@ GOOGLE_APPLICATION_CREDENTIALS=/path/to/application_default_credentials.json
 SSL_PROXY_ENABLED=true
 SSL_PROXY_PORT=8888
 SSL_TARGET_DOMAIN=reader-revenue-demo.ue.r.appspot.com
+SSL_CERTS_DIR=.certs
 ```
 
 ---
