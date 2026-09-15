@@ -16,10 +16,10 @@
 
 import {
   CertificateManager,
+  SslStreamProxy,
   doKeyAndCertMatch,
   validateDomainName,
-} from '../lib/ssl-proxy/certs.js';
-import {SslStreamProxy} from '../lib/ssl-proxy/ssl-stream-proxy.js';
+} from '../lib/ssl-proxy/index.js';
 import {join} from 'node:path';
 import {mkdtempSync, rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';

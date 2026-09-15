@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {SslStreamProxy} from '../lib/ssl-proxy/ssl-stream-proxy.js';
+import {SslStreamProxy} from '../lib/ssl-proxy/index.js';
 
 let proxyInstance = null;
 
@@ -22,7 +22,7 @@ let proxyInstance = null;
  * Retrieves or initializes the singleton SslStreamProxy instance.
  * Automatically starts the proxy server if SSL_PROXY_ENABLED is set to 'true'.
  *
- * @param {import('../lib/ssl-proxy/ssl-stream-proxy.js').SslStreamProxyOptions} [options] - Optional proxy configuration.
+ * @param {import('../lib/ssl-proxy/index.js').SslStreamProxyOptions} [options] - Optional proxy configuration.
  * @return {SslStreamProxy} The singleton SslStreamProxy instance.
  */
 export function getSslProxyInstance(options) {

@@ -20,7 +20,7 @@
 * Employs X.509 `nameConstraints` (`permitted;DNS:reader-revenue-demo.ue.r.appspot.com`) so the local CA cannot be used outside the configured target domain scope.
 * Dynamically mints and caches leaf certificates with Subject Alternative Names (SAN) matching the requested domain during TLS SNI negotiation.
 
-### B. SSL Stream Proxy (`lib/ssl-proxy/ssl-stream-proxy.js` & `middleware/ssl-proxy.js`)
+### B. SSL Stream Proxy (`lib/ssl-proxy/index.js` & `middleware/ssl-proxy.js`)
 * Opt-in via `SSL_PROXY_ENABLED=true`.
 * Listens on `0.0.0.0:8888` (configurable via `SSL_PROXY_PORT`).
 * Spawns an internal HTTPS server on an ephemeral loopback port (`127.0.0.1:0`) using dynamic SNI certificates from `CertificateManager`.
