@@ -34,23 +34,30 @@ async function getCtaByType(availableInterventions, ctaType) {
   });
 }
 
-async function launchSpecificCta(cta, ctaType) {
+async function launchSpecificCta(cta, ctaType, onAlternateAction) {
+  const type = cta?.type || ctaType;
 
-  cta?.show({
+  const options = {
     isClosable: true,
     onResult: (response) => {
       console.log('onResult response ', response);
-      ctaCache.record(response, ctaType)
+      ctaCache.record(response, type);
 
       if (isGTAGEnabled()) {
-        gtag('event', `${ctaType}-response`, {
-          'response': JSON.stringify(response)
-        })
+        gtag('event', `${type}-response`, {
+          'response': JSON.stringify(response),
+        });
       }
 
       return true;
     },
-  });
+  };
+
+  if (type === 'TYPE_REWARDED_AD' && typeof onAlternateAction === 'function') {
+    options.onAlternateAction = onAlternateAction;
+  }
+
+  cta?.show(options);
 }
 
 // A boolean function to handle the potential of surfacing
@@ -65,7 +72,8 @@ async function createButtonForCta(
   newsletterConfiguration,
   buttonEnabledState,
   container,
-  ctaType
+  ctaType,
+  onAlternateAction
 ) {
   const button = document.createElement('button');
   const cta = await getCta(
@@ -75,7 +83,7 @@ async function createButtonForCta(
 
   if (buttonEnabledState == true) {
     button.onclick = () => {
-      launchSpecificCta(cta, ctaType);
+      launchSpecificCta(cta, ctaType, onAlternateAction);
     };
   } else {
     button.setAttribute('disabled', 'true');
@@ -118,13 +126,15 @@ function getButtonText(intervention, index) {
  * @param {Object} intervention - The specific intervention object for which the button is being created.
  * @param {HTMLElement} container - The DOM element to which the button will be appended.
  * @param {number} index - The index of the intervention in the list, used for numbering the button text.
+ * @param {Function|Object} [onAlternateAction] - Optional callback function or subscriptions instance for alternate action.
  * @returns {Promise<void>} Resolves when the button is created and appended to the container.
  */
 async function createButtonForAvailableCta(
   availableInterventions,
   intervention,
   container,
-  index
+  index,
+  onAlternateAction
 ) {
   const button = document.createElement('button');
   const cta = await getCta(
@@ -133,7 +143,7 @@ async function createButtonForAvailableCta(
   );
 
   button.onclick = () => {
-    launchSpecificCta(cta);
+    launchSpecificCta(cta, intervention.type, onAlternateAction);
   };
 
   button.textContent = getButtonText(intervention, index);
@@ -144,7 +154,8 @@ async function createButtonsForCtas(
   buttonContainer,
   ctaConfigurationType,
   ctaConfigurations,
-  availableInterventions
+  availableInterventions,
+  onAlternateAction
 ) {
 
   const availableInterventionConfigurationIds = availableInterventions.map(
@@ -161,7 +172,8 @@ async function createButtonsForCtas(
       ctaConfiguration,
       buttonEnabledState,
       buttonContainer,
-      ctaConfigurationType
+      ctaConfigurationType,
+      onAlternateAction
     );
   }
 }
@@ -175,11 +187,14 @@ async function createButtonsForCtas(
  * fetched from the server, as opposed to hardcoded or static configurations.
  *
  * @param {HTMLElement} buttonContainer - The container element where buttons will be appended.
- * @param {Array<Object>} availableInterventions - Array of available interventions returned by the API.
+ * @param {Array<Object>} filteredInterventions - Array of available interventions returned by the API.
+ * @param {Function|Object} [onAlternateAction] - Optional callback function or subscriptions instance for alternate action.
  * @returns {Promise<void>} Resolves when buttons are created and added to the DOM.
  */
 async function createButtonsForAvailableCtas(
-  buttonContainer, filteredInterventions
+  buttonContainer,
+  filteredInterventions,
+  onAlternateAction
 ) {
   for (let index = 0; index < filteredInterventions.length; index++) {
     const intervention = filteredInterventions[index];
@@ -188,7 +203,8 @@ async function createButtonsForAvailableCtas(
       filteredInterventions,
       intervention,
       buttonContainer,
-      index
+      index,
+      onAlternateAction
     );
   }
 }
