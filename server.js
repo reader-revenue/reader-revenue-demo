@@ -29,6 +29,7 @@ import pubSub from './app/routes/pub-sub.js';
 import publicationApi from './app/routes/publication-api.js';
 import subscriptionLinkingApi from './app/routes/subscription-linking/api.js';
 import validationApi from './app/routes/validation/validate-purchases.js';
+import webContentPublisherApi from './app/routes/web-content-publisher/api.js';
 
 // Proxy handles https and reverse proxy settings for running locally
 import cookies from './middleware/cookies.js';
@@ -63,6 +64,7 @@ app.use('/api/eafs', eafsApi);
 app.use('/api/monetization', monetizationApi);
 app.use('/api/validate-purchases', validationApi);
 app.use('/api/cancellation', cancellationApi);
+app.use('/api/web-content-publisher', webContentPublisherApi);
 
 // Mount custom static file handlers
 app.use('/img', img);
