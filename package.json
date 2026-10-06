@@ -13,6 +13,7 @@
     "@google-cloud/firestore": "^6.5.0",
     "@google-cloud/pubsub": "^3.7.0",
     "@googleapis/subscribewithgoogle": "file:lib/client/googleapis-subscribewithgoogle-0.2.0.tgz",
+    "@googleapis/webcontentpublisher": "file:lib/client/googleapis-webcontentpublisher-5.0.1.tgz",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
