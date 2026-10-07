@@ -15,18 +15,11 @@
  */
 
 import {
-  Loader,
   createButton,
   createForm,
-  createHeaderRow,
   createInput,
-  createRow,
-  generateHighlightedJson,
+  executeApiCall,
 } from './utils.js';
-import {
-  buildCreatorPublicationsTable,
-  buildPublicationDetailsCard,
-} from './web-content-publisher-api-ui.js';
 import {
   createCreatorPublication,
   getPublicationDetails,
@@ -41,424 +34,226 @@ function randomSuffix() {
   return String(Math.floor(1000 + Math.random() * 9000));
 }
 
-const publisherApiData = {
-  list: {
-    portalPublicationId: 'process.env.PORTAL_PUBLICATION_ID',
-    organizationId: 'process.env.PORTAL_ORGANIZATION_ID',
-  },
-  create: {
-    organizationId: 'process.env.PORTAL_ORGANIZATION_ID',
-    displayName: `Creator Publication #${randomSuffix()}`,
-    primaryDomainUrl: '',
-    languageCode: 'en',
-    regionCode: 'US',
-    gcpProjectNumber: 'process.env.GCP_PROJECT_NUMBER',
-  },
-  read: {
-    organizationId: 'process.env.PORTAL_ORGANIZATION_ID',
-    publicationId: 'process.env.PORTAL_PUBLICATION_ID',
-  },
+const wcpState = {
+  organizationId: 'process.env.PORTAL_ORGANIZATION_ID',
+  publicationId: 'process.env.PORTAL_PUBLICATION_ID',
+  displayName: `Creator Publication #${randomSuffix()}`,
+  primaryDomainUrl: '',
+  languageCode: 'en',
+  regionCode: 'US',
+  gcpProjectNumber: 'process.env.GCP_PROJECT_NUMBER',
 };
 
-let readOrgIdInputRef = null;
-let readPubIdInputRef = null;
-let triggerReadPublicationRef = null;
-let triggerListPublicationsRef = null;
-
 /**
- * Updates the Read (Get) form state and optionally triggers a read request.
- * @param {string} organizationId
- * @param {string} publicationId
- * @param {boolean} scrollAndTrigger
+ * Updates the disabled state of the List, Create, and Get buttons based on
+ * current form input values.
  */
-async function selectPublicationForRead(
-  organizationId,
-  publicationId,
-  scrollAndTrigger = false
-) {
-  if (organizationId) {
-    publisherApiData.read.organizationId = organizationId;
-    if (readOrgIdInputRef) {
-      readOrgIdInputRef.value = organizationId;
-    }
+function handleButtonAvailability() {
+  const listButton = document.querySelector('#listPublicationsBtn');
+  if (listButton) {
+    listButton.disabled = !(
+      wcpState.organizationId.trim() || wcpState.publicationId.trim()
+    );
   }
-  if (publicationId) {
-    publisherApiData.read.publicationId = publicationId;
-    if (readPubIdInputRef) {
-      readPubIdInputRef.value = publicationId;
-    }
+
+  const createButtonEl = document.querySelector('#createPublicationBtn');
+  if (createButtonEl) {
+    createButtonEl.disabled = !(
+      wcpState.organizationId.trim() &&
+      wcpState.displayName.trim() &&
+      wcpState.primaryDomainUrl.trim() &&
+      wcpState.gcpProjectNumber.trim()
+    );
   }
-  if (scrollAndTrigger && triggerReadPublicationRef) {
-    await triggerReadPublicationRef();
-    document
-      .querySelector('#getPublication')
-      ?.scrollIntoView({behavior: 'smooth'});
+
+  const getButton = document.querySelector('#getPublicationBtn');
+  if (getButton) {
+    getButton.disabled = !(
+      wcpState.organizationId.trim() && wcpState.publicationId.trim()
+    );
   }
 }
 
 /**
- * Creates the List Creator Publications form and mounts it after the given selector.
+ * Renders the organizationId input form.
  * @param {string} selector
  */
-function createListPublicationsForm(selector) {
-  const listState = publisherApiData.list;
-  const summaryContainer = document.createElement('div');
-  summaryContainer.style.marginTop = '12px';
-  const outputContainer = document.createElement('div');
-
-  const updateButtonState = (button) => {
-    button.disabled = !(
-      listState.organizationId.trim() || listState.portalPublicationId.trim()
-    );
-  };
-
-  const runList = async () => {
-    summaryContainer.replaceChildren();
-    outputContainer.replaceChildren();
-    const loader = new Loader(outputContainer);
-    loader.start();
-    try {
-      const result = await listOrganizationPublications(
-        listState.organizationId,
-        listState.portalPublicationId
-      );
-      loader.stop();
-
-      if (result.organizationId) {
-        listState.organizationId = result.organizationId;
-        publisherApiData.create.organizationId = result.organizationId;
-        publisherApiData.read.organizationId = result.organizationId;
-      }
-
-      if (Array.isArray(result.creatorPublications)) {
-        const tableCard = buildCreatorPublicationsTable(
-          result.creatorPublications,
-          result.portalPublication,
-          result.organizationId || listState.organizationId,
-          listState.portalPublicationId,
-          async (targetOrgId, targetPubId) => {
-            await selectPublicationForRead(targetOrgId, targetPubId, true);
-          }
-        );
-        summaryContainer.appendChild(tableCard);
-      }
-
-      outputContainer.appendChild(
-        generateHighlightedJson(result.data || result)
-      );
-    } catch (e) {
-      loader.stop();
-      outputContainer.appendChild(generateHighlightedJson({error: e.message}));
-    }
-  };
-
-  triggerListPublicationsRef = runList;
-
-  const listButton = createButton({
-    buttonText: 'List Creator Publications in Org',
-    id: 'wcp-list-button',
-    classNames: ['btn', 'btn-primary'],
-    callback: async (event) => {
-      event.preventDefault();
-      await runList();
-    },
-  });
-
-  const portalPubInput = createInput({
-    initialValue: listState.portalPublicationId,
-    id: 'wcp-portal-pubid-input',
+function renderOrganizationIdForm(selector) {
+  const input = createInput({
+    initialValue: wcpState.organizationId,
+    id: 'organizationId',
     classNames: ['id-input'],
-    placeHolder: 'Portal Publication ID',
+    placeHolder: 'Paste organizationId here',
     callback: (newValue) => {
-      listState.portalPublicationId = newValue;
-      updateButtonState(listButton);
+      wcpState.organizationId = newValue;
+      handleButtonAvailability();
     },
   });
-
-  const orgIdInput = createInput({
-    initialValue: listState.organizationId,
-    id: 'wcp-list-orgid-input',
-    placeHolder: 'Organization ID',
-    callback: (newValue) => {
-      listState.organizationId = newValue;
-      updateButtonState(listButton);
-    },
-  });
-
-  const headerRow = createHeaderRow([
-    'Portal Publication ID',
-    'Organization ID',
-  ]);
-  const inputRow = createRow('input-row', [portalPubInput, orgIdInput]);
-  const form = createForm([
-    headerRow,
-    inputRow,
-    listButton,
-    summaryContainer,
-    outputContainer,
-  ]);
-
-  document.querySelector(selector)?.insertAdjacentElement('afterend', form);
+  const form = createForm([input]);
+  document.querySelector(selector).appendChild(form);
 }
 
 /**
- * Creates the Create Creator Publication form and mounts it after the given selector.
+ * Renders the publicationId input form.
  * @param {string} selector
  */
-function createCreatePublicationForm(selector) {
-  const createState = publisherApiData.create;
-  const detailsContainer = document.createElement('div');
-  detailsContainer.style.marginTop = '12px';
-  const outputContainer = document.createElement('div');
-
-  const createBtn = createButton({
-    buttonText: 'Create Creator Publication',
-    id: 'wcp-create-button',
-    classNames: ['btn', 'btn-primary'],
-    callback: async (event) => {
-      event.preventDefault();
-      detailsContainer.replaceChildren();
-      outputContainer.replaceChildren();
-      const loader = new Loader(outputContainer);
-      loader.start();
-      try {
-        const result = await createCreatorPublication(createState);
-        loader.stop();
-
-        if (result.data) {
-          const createdPub = result.data;
-          detailsContainer.appendChild(
-            buildPublicationDetailsCard(
-              createdPub,
-              `Created Creator Publication: ${createdPub.displayName || createdPub.publicationId}`
-            )
-          );
-
-          await selectPublicationForRead(
-            createdPub.organizationId,
-            createdPub.publicationId,
-            false
-          );
-
-          if (triggerListPublicationsRef) {
-            await triggerListPublicationsRef();
-          }
-        }
-
-        outputContainer.appendChild(
-          generateHighlightedJson(result.data || result)
-        );
-      } catch (e) {
-        loader.stop();
-        outputContainer.appendChild(
-          generateHighlightedJson({error: e.message})
-        );
-      }
-    },
-  });
-
-  const updateButtonState = () => {
-    createBtn.disabled = !(
-      createState.organizationId.trim() &&
-      createState.displayName.trim() &&
-      createState.primaryDomainUrl.trim() &&
-      createState.gcpProjectNumber.trim()
-    );
-  };
-
-  const orgInput = createInput({
-    initialValue: createState.organizationId,
-    id: 'wcp-create-orgid-input',
-    placeHolder: 'Organization ID',
+function renderPublicationIdForm(selector) {
+  const input = createInput({
+    initialValue: wcpState.publicationId,
+    id: 'publicationId',
+    classNames: ['id-input'],
+    placeHolder: 'Paste publicationId here',
     callback: (newValue) => {
-      createState.organizationId = newValue;
-      updateButtonState();
+      wcpState.publicationId = newValue;
+      handleButtonAvailability();
     },
   });
+  const form = createForm([input]);
+  document.querySelector(selector).appendChild(form);
+}
 
-  const displayNameInput = createInput({
-    initialValue: createState.displayName,
-    id: 'wcp-create-displayname-input',
+/**
+ * Renders the displayName input form for creating a Creator publication.
+ * @param {string} selector
+ */
+function renderDisplayNameForm(selector) {
+  const input = createInput({
+    initialValue: wcpState.displayName,
+    id: 'displayName',
     classNames: ['id-input'],
     placeHolder: 'Creator Display Name',
     callback: (newValue) => {
-      createState.displayName = newValue;
-      updateButtonState();
+      wcpState.displayName = newValue;
+      handleButtonAvailability();
     },
   });
-
-  const domainUrlInput = createInput({
-    initialValue: createState.primaryDomainUrl,
-    id: 'wcp-create-domain-input',
-    classNames: ['id-input'],
-    placeHolder: 'https://example.com',
-    callback: (newValue) => {
-      createState.primaryDomainUrl = newValue;
-      updateButtonState();
-    },
-  });
-
-  const languageInput = createInput({
-    initialValue: createState.languageCode,
-    id: 'wcp-create-lang-input',
-    placeHolder: 'en',
-    callback: (newValue) => {
-      createState.languageCode = newValue;
-      updateButtonState();
-    },
-  });
-
-  const regionInput = createInput({
-    initialValue: createState.regionCode,
-    id: 'wcp-create-region-input',
-    placeHolder: 'US',
-    callback: (newValue) => {
-      createState.regionCode = newValue;
-      updateButtonState();
-    },
-  });
-
-  const projectNumberInput = createInput({
-    initialValue: createState.gcpProjectNumber,
-    id: 'wcp-create-project-input',
-    placeHolder: 'GCP Project Number',
-    callback: (newValue) => {
-      createState.gcpProjectNumber = newValue;
-      updateButtonState();
-    },
-  });
-
-  const headerRow1 = createHeaderRow([
-    'Organization ID',
-    'Creator Display Name',
-    'Primary Domain URL',
-  ]);
-  const row1 = createRow('input-row', [
-    orgInput,
-    displayNameInput,
-    domainUrlInput,
-  ]);
-
-  const headerRow2 = createHeaderRow([
-    'Language Code',
-    'Region Code',
-    'GCP Project Number',
-  ]);
-  const row2 = createRow('input-row', [
-    languageInput,
-    regionInput,
-    projectNumberInput,
-  ]);
-
-  const form = createForm([
-    headerRow1,
-    row1,
-    headerRow2,
-    row2,
-    createBtn,
-    detailsContainer,
-    outputContainer,
-  ]);
-
-  document.querySelector(selector)?.insertAdjacentElement('afterend', form);
+  const form = createForm([input]);
+  document.querySelector(selector).appendChild(form);
 }
 
 /**
- * Creates the Read (Get) Publication Details form and mounts it after the given selector.
+ * Renders the primaryDomain.url input form for creating a Creator publication.
  * @param {string} selector
  */
-function createGetPublicationForm(selector) {
-  const readState = publisherApiData.read;
-  const detailsContainer = document.createElement('div');
-  detailsContainer.style.marginTop = '12px';
-  const outputContainer = document.createElement('div');
-
-  const runRead = async () => {
-    detailsContainer.replaceChildren();
-    outputContainer.replaceChildren();
-    const loader = new Loader(outputContainer);
-    loader.start();
-    try {
-      const result = await getPublicationDetails(
-        readState.organizationId,
-        readState.publicationId
-      );
-      loader.stop();
-
-      if (result.data) {
-        detailsContainer.appendChild(
-          buildPublicationDetailsCard(
-            result.data,
-            `Publication Details: ${result.data.displayName || result.data.publicationId}`
-          )
-        );
-      }
-
-      outputContainer.appendChild(
-        generateHighlightedJson(result.data || result)
-      );
-    } catch (e) {
-      loader.stop();
-      outputContainer.appendChild(generateHighlightedJson({error: e.message}));
-    }
-  };
-
-  triggerReadPublicationRef = runRead;
-
-  const getButton = createButton({
-    buttonText: 'Read Publication Details',
-    id: 'wcp-get-button',
-    classNames: ['btn', 'btn-primary'],
-    callback: async (event) => {
-      event.preventDefault();
-      await runRead();
-    },
-  });
-
-  const updateButtonState = () => {
-    getButton.disabled = !(
-      readState.organizationId.trim() && readState.publicationId.trim()
-    );
-  };
-
-  const orgIdInput = createInput({
-    initialValue: readState.organizationId,
-    id: 'wcp-get-orgid-input',
-    placeHolder: 'Organization ID',
-    callback: (newValue) => {
-      readState.organizationId = newValue;
-      updateButtonState();
-    },
-  });
-  readOrgIdInputRef = orgIdInput;
-
-  const pubIdInput = createInput({
-    initialValue: readState.publicationId,
-    id: 'wcp-get-pubid-input',
+function renderPrimaryDomainUrlForm(selector) {
+  const input = createInput({
+    initialValue: wcpState.primaryDomainUrl,
+    id: 'primaryDomainUrl',
     classNames: ['id-input'],
-    placeHolder: 'Publication ID',
+    placeHolder: 'https://example.com',
     callback: (newValue) => {
-      readState.publicationId = newValue;
-      updateButtonState();
+      wcpState.primaryDomainUrl = newValue;
+      handleButtonAvailability();
     },
   });
-  readPubIdInputRef = pubIdInput;
+  const form = createForm([input]);
+  document.querySelector(selector).appendChild(form);
+}
 
-  const headerRow = createHeaderRow(['Organization ID', 'Publication ID']);
-  const inputRow = createRow('input-row', [orgIdInput, pubIdInput]);
-  const form = createForm([
-    headerRow,
-    inputRow,
-    getButton,
-    detailsContainer,
-    outputContainer,
-  ]);
+/**
+ * Renders the gcpProjectNumber input form for creating a Creator publication.
+ * @param {string} selector
+ */
+function renderGcpProjectNumberForm(selector) {
+  const input = createInput({
+    initialValue: wcpState.gcpProjectNumber,
+    id: 'gcpProjectNumber',
+    classNames: ['id-input'],
+    placeHolder: 'Paste GCP project number here',
+    callback: (newValue) => {
+      wcpState.gcpProjectNumber = newValue;
+      handleButtonAvailability();
+    },
+  });
+  const form = createForm([input]);
+  document.querySelector(selector).appendChild(form);
+}
 
-  document.querySelector(selector)?.insertAdjacentElement('afterend', form);
+/**
+ * Renders the button to list publications in an organization.
+ * @param {string} selector
+ */
+function renderListPublicationsButton(selector) {
+  const button = createButton({
+    buttonText: 'List publications',
+    id: 'listPublicationsBtn',
+    classNames: ['btn', 'btn-primary'],
+    disable: !(wcpState.organizationId.trim() || wcpState.publicationId.trim()),
+    callback: () =>
+      executeApiCall(
+        () =>
+          listOrganizationPublications(
+            wcpState.organizationId,
+            wcpState.publicationId
+          ),
+        'Publications for the given <code>organizationId</code>'
+      ),
+  });
+  document.querySelector(selector).appendChild(button);
+}
+
+/**
+ * Renders the button to create a new Creator publication in an organization.
+ * @param {string} selector
+ */
+function renderCreatePublicationButton(selector) {
+  const button = createButton({
+    buttonText: 'Create publication',
+    id: 'createPublicationBtn',
+    classNames: ['btn', 'btn-primary'],
+    disable: !(
+      wcpState.organizationId.trim() &&
+      wcpState.displayName.trim() &&
+      wcpState.primaryDomainUrl.trim() &&
+      wcpState.gcpProjectNumber.trim()
+    ),
+    callback: () =>
+      executeApiCall(async () => {
+        const result = await createCreatorPublication(wcpState);
+        if (result.data?.publicationId) {
+          wcpState.publicationId = result.data.publicationId;
+          const pubInput = document.querySelector('#publicationId');
+          if (pubInput) {
+            pubInput.value = result.data.publicationId;
+          }
+          handleButtonAvailability();
+        }
+        return result;
+      }, 'Created Creator publication for the given <code>organizationId</code>'),
+  });
+  document.querySelector(selector).appendChild(button);
+}
+
+/**
+ * Renders the button to fetch a single publication's details.
+ * @param {string} selector
+ */
+function renderGetPublicationButton(selector) {
+  const button = createButton({
+    buttonText: 'Query publication details',
+    id: 'getPublicationBtn',
+    classNames: ['btn', 'btn-primary'],
+    disable: !(wcpState.organizationId.trim() && wcpState.publicationId.trim()),
+    callback: () =>
+      executeApiCall(
+        () =>
+          getPublicationDetails(
+            wcpState.organizationId,
+            wcpState.publicationId
+          ),
+        'Publication details for the given <code>publicationId</code>'
+      ),
+  });
+  document.querySelector(selector).appendChild(button);
 }
 
 export {
-  createCreatePublicationForm,
-  createGetPublicationForm,
-  createListPublicationsForm,
+  renderCreatePublicationButton,
+  renderDisplayNameForm,
+  renderGcpProjectNumberForm,
+  renderGetPublicationButton,
+  renderListPublicationsButton,
+  renderOrganizationIdForm,
+  renderPrimaryDomainUrlForm,
+  renderPublicationIdForm,
 };

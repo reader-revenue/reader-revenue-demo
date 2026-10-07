@@ -15,13 +15,24 @@
  */
 
 import {
-  createCreatePublicationForm,
-  createGetPublicationForm,
-  createListPublicationsForm,
+  renderCreatePublicationButton,
+  renderDisplayNameForm,
+  renderGcpProjectNumberForm,
+  renderGetPublicationButton,
+  renderListPublicationsButton,
+  renderOrganizationIdForm,
+  renderPrimaryDomainUrlForm,
+  renderPublicationIdForm,
 } from './web-content-publisher-api-buttons.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-  createListPublicationsForm('#listPublications');
-  createCreatePublicationForm('#createPublication');
-  createGetPublicationForm('#getPublication');
+  renderOrganizationIdForm('#organizationIdForm');
+  renderPublicationIdForm('#publicationIdForm');
+  renderDisplayNameForm('#displayNameForm');
+  renderPrimaryDomainUrlForm('#primaryDomainUrlForm');
+  renderGcpProjectNumberForm('#gcpProjectNumberForm');
+
+  renderListPublicationsButton('#listPublicationsButton .button');
+  renderCreatePublicationButton('#createPublicationButton .button');
+  renderGetPublicationButton('#getPublicationButton .button');
 });

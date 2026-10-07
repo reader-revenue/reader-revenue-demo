@@ -1,4 +1,4 @@
-# Web Content Publisher API (Creator Publications)
+# Manage Creator Publications with the Web Content Publisher API
 
 Portal publications can use the **Web Content Publisher API**
 (`webcontentpublisher.googleapis.com/v1`) to programmatically provision, list,
@@ -18,61 +18,60 @@ gcloud auth application-default login \
 ```
 !!!
 
-## Server-side API call demo
+#### API Tests
 
-### List Creator Publications in Organization {#listPublications}
-
-Lists all publications under the Portal publication's organization
-(`organizations/{organizationId}/publications`) and highlights the Creator
-publications associated with the Portal. Click **Inspect Details** on any
-Creator publication in the table to read its individual resource details below.
-
-```javascript
-const response = await client.organizations.publications.list({
-  parent: `organizations/${organizationId}`,
-});
-```
-
-### Create a Creator Publication {#createPublication}
-
-Creates a new Creator publication under the Portal publication's organization
-(`organizations/{organizationId}/publications`) with Subscription Linking
-enabled (`slProduct.enabled = true`).
+<div id="organizationIdForm"><code>organizationId</code> input:</div>
+<div id="publicationIdForm"><code>publicationId</code> input:</div>
+<div id="displayNameForm"><code>displayName</code> input (for create):</div>
+<div id="primaryDomainUrlForm"><code>primaryDomain.url</code> input (for create):</div>
+<div id="gcpProjectNumberForm"><code>gcpProjectNumber</code> input (for create):</div>
 
 !!! hint **Primary Domain URL Format**
-`primaryDomain.url` must be a valid `http://` or `https://` origin with no
-trailing slash, URL path, query parameters, or fragments (for example,
-`https://example.com`).
+When creating a Creator publication, `primaryDomain.url` must be a valid
+`http://` or `https://` origin with no trailing slash, URL path, query
+parameters, or fragments (for example, `https://example.com`).
 !!!
 
-```javascript
-const response = await client.organizations.publications.create({
-  parent: `organizations/${organizationId}`,
-  requestBody: {
-    displayName: 'Creator Publication',
-    languageCode: 'en',
-    regionCode: 'US',
-    primaryDomain: {
-      url: 'https://example.com',
-    },
-    slProduct: {
-      enabled: true,
-      gcpProjectNumber: '{{env.GCP_PROJECT_NUMBER}}',
-    },
-  },
-});
-```
+<table>
+  <thead>
+    <tr>
+      <th>
+        Button
+      </th>
+      <th>
+        Details
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id="listPublicationsButton">
+      <td>
+        <div class="button"></div>
+      </td>
+      <td>
+        <p>Use the Web Content Publisher API's <code>organizations.publications.list</code> endpoint to list all publications under a given <code>organizationId</code>.</p>
+      </td>
+    </tr>
+    <tr id="createPublicationButton">
+      <td>
+        <div class="button"></div>
+      </td>
+      <td>
+        <p>Use the Web Content Publisher API's <code>organizations.publications.create</code> endpoint to create a new Creator publication under a given <code>organizationId</code> with Subscription Linking enabled.</p>
+      </td>
+    </tr>
+    <tr id="getPublicationButton">
+      <td>
+        <div class="button"></div>
+      </td>
+      <td>
+        <p>Use the Web Content Publisher API's <code>organizations.publications.get</code> endpoint to query details and domain verification status for a given <code>organizationId</code> and <code>publicationId</code>.</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
-### Read (Get) Creator Publication Details {#getPublication}
-
-Fetches the full configuration and domain verification status for a specific
-Creator (or Portal) publication (`organizations/{organizationId}/publications/{publicationId}`).
-
-```javascript
-const response = await client.organizations.publications.get({
-  name: `organizations/${organizationId}/publications/${publicationId}`,
-});
-```
+<div id="APIOutput"></div>
 
 <br>
 
