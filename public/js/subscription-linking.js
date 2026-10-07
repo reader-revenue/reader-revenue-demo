@@ -94,30 +94,46 @@ function randomPpid() {
  * createSingleSLForm()
  * Creates a form, and appends it to the DOM after #initiateLink
  */
-function createSingleSLForm(singleLinkData, eventHandler) {
-  const button = createButton({
-    'buttonText': 'Initiate Link',
-    'callback' : (event)=>{
+function createSingleSLForm(singleLinkData, eventHandler, customButton) {
+  const button =
+    customButton ||
+    createButton({
+      buttonText: 'Initiate Link',
+      callback: (event) => {
+        event.preventDefault();
+        linkSubscription(singleLinkData.ppid, eventHandler);
+      },
+    });
+  if (customButton) {
+    customButton.onclick = (event) => {
       event.preventDefault();
-      linkSubscription(singleLinkData.ppid, eventHandler)
-    }
-  });
-  const inputPubId = createInput({'initialValue': singleLinkData.publicationId, 'id': 'single-sl-pubid-input',
-    'callback': (newValue)=> {
+      linkSubscription(singleLinkData.ppid, eventHandler);
+    };
+  }
+  const inputPubId = createInput({
+    initialValue: singleLinkData.publicationId,
+    id: 'single-sl-pubid-input',
+    callback: (newValue) => {
       singleLinkData.publicationId = newValue;
       button.disabled = !!singleLinkData.publicationId ? false : true;
-    }
+    },
   });
-  const ppidInput = createInput({'initialValue': singleLinkData.ppid, 'id': 'ppid-input', 
-    'callback': (newValue)=> {
+  const ppidInput = createInput({
+    initialValue: singleLinkData.ppid,
+    id: 'ppid-input',
+    callback: (newValue) => {
       singleLinkData.ppid = newValue;
       button.disabled = !!singleLinkData.ppid ? false : true;
-    }
+    },
   });
   const headerRow = createHeaderRow(['PublicationID', 'PPID']);
   const row = createRow('input-row', [inputPubId, ppidInput]);
-  const form = createForm([headerRow, row, button]);
-  document.querySelector('#initiateLink').insertAdjacentElement('afterend', form);
+  const form = createForm(
+    customButton ? [headerRow, row] : [headerRow, row, button]
+  );
+  document
+    .querySelector('#initiateLink')
+    .insertAdjacentElement('afterend', form);
 }
 
 /**
@@ -395,6 +411,9 @@ function analyticsEventLogger(subscription, eventHandler) {
  * Create and render forms on DOMContentLoaded
  */
 document.addEventListener('DOMContentLoaded', function () {
+  if (!document.querySelector('#bundleLink')) {
+    return;
+  }
   const eventHandler = new AnalyticsEventHandler();
   createBundleSLForm(subscriptionLinkingData.bundle, eventHandler);
   createQueryEntitlementsForm(subscriptionLinkingData.single);
@@ -405,3 +424,19 @@ document.addEventListener('DOMContentLoaded', function () {
     createSingleSLForm(subscriptionLinkingData.single, eventHandler);
   });
 });
+
+export {
+  analyticsEventLogger,
+  createBundleSLForm,
+  createQueryEntitlementsForm,
+  createSingleSLForm,
+  createUnlinkForm,
+  createUpdateEntitlementsForm,
+  linkSubscription,
+  linkSubscriptions,
+  queryEntitlementsForPpid,
+  randomPpid,
+  subscriptionLinkingData,
+  unlinkSubscription,
+  updateEntitlementsForPpid,
+};

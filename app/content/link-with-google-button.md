@@ -135,7 +135,7 @@ Sample page rendering the pill-shaped **Link with Google** button (`border-radiu
 </button>
 </div>
 
-### Interactive Subscription Linking Configuration {#linkConfig}
+### Interactive Subscription Linking Configuration {#initiateLink}
 
 Clicking the **Link with Google** button above invokes `subscriptions.linkSubscription({ publisherProvidedId })` using the PPID below:
 
