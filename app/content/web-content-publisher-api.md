@@ -57,7 +57,7 @@ const response = await client.organizations.publications.create({
     },
     slProduct: {
       enabled: true,
-      gcpProjectNumber: '{{data.env.GCP_PROJECT_NUMBER}}',
+      gcpProjectNumber: '{{env.GCP_PROJECT_NUMBER}}',
     },
   },
 });
@@ -122,12 +122,12 @@ const client = api.init();
 
 // 1. List publications in the Portal's organization
 const listResponse = await client.organizations.publications.list({
-  parent: 'organizations/{{data.env.PORTAL_ORGANIZATION_ID}}',
+  parent: 'organizations/{{env.PORTAL_ORGANIZATION_ID}}',
 });
 
 // 2. Create a new Creator publication in the organization
 const createResponse = await client.organizations.publications.create({
-  parent: 'organizations/{{data.env.PORTAL_ORGANIZATION_ID}}',
+  parent: 'organizations/{{env.PORTAL_ORGANIZATION_ID}}',
   requestBody: {
     displayName: 'Creator Publication',
     languageCode: 'en',
@@ -137,7 +137,7 @@ const createResponse = await client.organizations.publications.create({
     },
     slProduct: {
       enabled: true,
-      gcpProjectNumber: '{{data.env.GCP_PROJECT_NUMBER}}',
+      gcpProjectNumber: '{{env.GCP_PROJECT_NUMBER}}',
     },
   },
 });
@@ -145,6 +145,6 @@ const createResponse = await client.organizations.publications.create({
 // 3. Read (Get) the created Creator publication's details
 const createdPubId = createResponse.data.publicationId;
 const getResponse = await client.organizations.publications.get({
-  name: `organizations/{{data.env.PORTAL_ORGANIZATION_ID}}/publications/${createdPubId}`,
+  name: `organizations/{{env.PORTAL_ORGANIZATION_ID}}/publications/${createdPubId}`,
 });
 ```
