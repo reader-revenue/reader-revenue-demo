@@ -67,10 +67,10 @@ async function fetchPublication(client, organizationId, publicationId) {
     } catch (getError) {
       const listFallback = await client.organizations.publications.list({
         parent: `organizations/${effectiveOrgId}`,
-        filter: `publication_id = "${publicationId}"`,
-        pageSize: 1,
       });
-      const matched = listFallback.data?.publications?.[0];
+      const matched = listFallback.data?.publications?.find(
+        (pub) => pub.publicationId === publicationId
+      );
       if (matched) {
         return matched;
       }
@@ -80,10 +80,10 @@ async function fetchPublication(client, organizationId, publicationId) {
 
   const listResponse = await client.organizations.publications.list({
     parent: 'organizations/-',
-    filter: `publication_id = "${publicationId}"`,
-    pageSize: 1,
   });
-  const matched = listResponse.data?.publications?.[0];
+  const matched = listResponse.data?.publications?.find(
+    (pub) => pub.publicationId === publicationId
+  );
   if (matched) {
     return matched;
   }
