@@ -18,13 +18,18 @@ gcloud auth application-default login \
 ```
 !!!
 
-#### API Tests
+## Server-side API call demo
 
-<div id="organizationIdForm"><code>organizationId</code> input:</div>
-<div id="publicationIdForm"><code>publicationId</code> input:</div>
-<div id="displayNameForm"><code>displayName</code> input (for create):</div>
-<div id="primaryDomainUrlForm"><code>primaryDomain.url</code> input (for create):</div>
-<div id="gcpProjectNumberForm"><code>gcpProjectNumber</code> input (for create):</div>
+### 1. List publications in an organization {#listPublications}
+
+Use the `organizations.publications.list` endpoint to list the Portal
+publication and all Creator publications under a given `organizationId`.
+
+### 2. Create a Creator publication {#createPublication}
+
+Use the `organizations.publications.create` endpoint to provision a new Creator
+publication under the organization with Subscription Linking enabled. Creating a
+publication automatically populates its `publicationId` in Step 3 below.
 
 !!! hint **Primary Domain URL Format**
 When creating a Creator publication, `primaryDomain.url` must be a valid
@@ -32,48 +37,26 @@ When creating a Creator publication, `primaryDomain.url` must be a valid
 parameters, or fragments (for example, `https://example.com`).
 !!!
 
-<table>
-  <thead>
-    <tr>
-      <th>
-        Button
-      </th>
-      <th>
-        Details
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr id="listPublicationsButton">
-      <td>
-        <div class="button"></div>
-      </td>
-      <td>
-        <p>Use the Web Content Publisher API's <code>organizations.publications.list</code> endpoint to list all publications under a given <code>organizationId</code>.</p>
-      </td>
-    </tr>
-    <tr id="createPublicationButton">
-      <td>
-        <div class="button"></div>
-      </td>
-      <td>
-        <p>Use the Web Content Publisher API's <code>organizations.publications.create</code> endpoint to create a new Creator publication under a given <code>organizationId</code> with Subscription Linking enabled.</p>
-      </td>
-    </tr>
-    <tr id="getPublicationButton">
-      <td>
-        <div class="button"></div>
-      </td>
-      <td>
-        <p>Use the Web Content Publisher API's <code>organizations.publications.get</code> endpoint to query details and domain verification status for a given <code>organizationId</code> and <code>publicationId</code>.</p>
-      </td>
-    </tr>
-  </tbody>
-</table>
+```json
+{
+  "displayName": "{displayName}",
+  "languageCode": "en",
+  "regionCode": "US",
+  "primaryDomain": {
+    "url": "{primaryDomainUrl}"
+  },
+  "slProduct": {
+    "enabled": true,
+    "gcpProjectNumber": "{{env.GCP_PROJECT_NUMBER}}"
+  }
+}
+```
 
-<div id="APIOutput"></div>
+### 3. Query publication details {#queryPublication}
 
-<br>
+Use the `organizations.publications.get` endpoint to inspect configuration
+details and `primaryDomain.ownershipVerified` status for a specific
+`publicationId`.
 
 # Implementation Samples
 
