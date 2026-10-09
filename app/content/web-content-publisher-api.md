@@ -83,8 +83,12 @@ parameters, or fragments (for example, `https://example.com`).
 
 You can use the `google-api-nodejs-client` generator to build a standalone
 client package from the Web Content Publisher API Discovery Document
-(`https://webcontentpublisher.googleapis.com/$discovery/rest?version=v1`). Refer
-to [how to generate a client from the API Discovery Document](https://developers.google.com/news/reader-revenue/monetization/reference/client-configuration#generate_a_client_from_the_api_discovery_document)
+(`https://webcontentpublisher.googleapis.com/$discovery/rest?version=v1`). Note
+that `google-api-nodejs-client` is just one of the
+[Google API Client Library generators](https://developers.google.com/api-client-library)
+that can be used to generate a custom client from the Discovery Document across
+supported languages. Refer to
+[how to generate a client from the API Discovery Document](https://developers.google.com/news/reader-revenue/monetization/reference/client-configuration#generate_a_client_from_the_api_discovery_document)
 and [lib/client/README.md](https://github.com/reader-revenue/reader-revenue-demo/blob/main/lib/client/README.md)
 for step-by-step instructions.
 
