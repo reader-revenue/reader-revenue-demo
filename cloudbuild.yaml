@@ -46,6 +46,9 @@ steps:
         sed -i "s/##OTHER_SKU1##/${_OTHER_SKU1}/g" app.yaml
         sed -i "s/##OTHER_SKU2##/${_OTHER_SKU2}/g" app.yaml
         sed -i "s/##OTHER_SKU3##/${_OTHER_SKU3}/g" app.yaml
+        sed -i "s/##PORTAL_PUBLICATION_ID##/${_PORTAL_PUBLICATION_ID}/g" app.yaml
+        sed -i "s/##PORTAL_ORGANIZATION_ID##/${_PORTAL_ORGANIZATION_ID}/g" app.yaml
+        sed -i "s/##GCP_PROJECT_NUMBER##/${_GCP_PROJECT_NUMBER}/g" app.yaml
         gcloud config set app/cloud_build_timeout 1600
         gcloud app deploy
 timeout: 1600s

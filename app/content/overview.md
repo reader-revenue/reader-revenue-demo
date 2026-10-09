@@ -65,6 +65,9 @@ GOOGLE_APPLICATION_CREDENTIALS=/path/to/application_default_credentials.json
 
 # Publication configuration
 PUBLICATION_ID=publisher-center-ppid.google.com
+PORTAL_PUBLICATION_ID=portal-publication-id.example.com
+PORTAL_ORGANIZATION_ID=ABCD1234
+GCP_PROJECT_NUMBER=123456789012
 OAUTH_CLIENT_ID=abcd-1234.apps.googleusercontent.com
 OAUTH_CLIENT_SECRET=secret-abc-1234
 GOOGLE_SITE_VERIFICATION=public-abc-1234
