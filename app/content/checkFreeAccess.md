@@ -1,6 +1,6 @@
-# Extended Access from Search (EAfS)
+# `checkFreeAccess` API Endpoint
 
-This example demonstrates how to call the `checkFreeAccess` API for Extended Access from Search (EAfS).
+This example demonstrates how to call the `checkFreeAccess` API endpoint.
 
 ## API Configuration
 
@@ -21,5 +21,5 @@ This example demonstrates how to call the `checkFreeAccess` API for Extended Acc
 <div id="output"></div>
 
 !!! info **Note**
-This API call is performed server-side using a service account with the `subscribewithgoogle.publications.entitlements.readonly` scope.
+This API call is performed server-side using a service account with the `webcontentpublisher.publications.readonly` scope.
 !!!
