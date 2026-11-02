@@ -8,7 +8,7 @@ The simplest method for integrating Google Preferred Sources is zero-configurati
 Below is a live interactive Add Preferred Source button rendered automatically by `publisher.js`:
 
 <div class="demo-widget-container" style="margin: 20px 0;">
-  <button google-add-preferred-source-btn></button>
+  <span google-add-preferred-source-btn></span>
 </div>
 
 ---
@@ -26,7 +26,7 @@ Below is a live interactive Add Preferred Source button rendered automatically b
     <script async src="{{env.SWG_JS_PUBLISHER_URL}}"></script>
   </head>
   <body>
-    <button google-add-preferred-source-btn></button>
+    <span google-add-preferred-source-btn></span>
   </body>
 </html>
 ```
